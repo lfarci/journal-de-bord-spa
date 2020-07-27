@@ -9,6 +9,7 @@ interface ILocationFieldProps {
     placeholder: string;
     hint: string;
     options: string[];
+    value: string;
 }
 
 /**
@@ -31,6 +32,7 @@ function LocationField(props: ILocationFieldProps) {
                 fullWidth={true}
                 margin="normal"
                 helperText={props.hint}
+                value={props.value}
             />
         )}
     />;

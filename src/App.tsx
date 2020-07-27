@@ -1,14 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import IconButton from '@material-ui/core/IconButton';
-import Typography from '@material-ui/core/Typography';
-import MenuIcon from '@material-ui/icons/Menu';
 import RideForm from './components/ride/RideForm';
-import { Container, Box } from '@material-ui/core';
+import { Box, Typography } from '@material-ui/core';
+import ApplicationBar from './components/navigation/ApplicationBar';
+import { Ride } from './types/Ride';
+import { TrafficCondition } from './components/ride/fields';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -24,27 +22,53 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
+function startANewRide(ride: Ride) {
+  console.log()
+}
+
+function finishLastRide(ride: Ride) {
+
+}
+
+// temporary this is mocking fetching from the api
+const model: Ride = {
+  departure: {
+      moment: new Date(),
+      location: {
+          id: 3,
+          name: "locationName",
+          latitude: 23.45,
+          longitude: 23.45
+      },
+      odometerValue: 10000
+  },
+  arrival: undefined,
+  driverPseudonym: undefined,
+  trafficCondition: TrafficCondition.NORMAL,
+  comment: undefined
+};
+
 function App() {
   const classes = useStyles();
+  const [driving, setDriving] = useState(false);
+  // get last ride from API
   return (
     <Box className={classes.root}>
-      <AppBar position="static">
-        <Toolbar>
-          <IconButton
-            edge="start"
-            className={classes.menuButton}
-            color="inherit"
-            aria-label="menu"
-            onClick={() => console.log("Menu clicked! An app drawer should open!")}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" className={classes.title}>
-            Journal de bord
-          </Typography>
-        </Toolbar>
-      </AppBar>
-      <RideForm />
+      <ApplicationBar title="Journal de bord"/>
+      <RideForm
+        model={model}
+        showRetrospectiveField={driving}
+        onSubmit={(ride: Ride) => {
+          console.log(JSON.stringify(ride, null, 2));
+          if (driving) {
+            finishLastRide(ride);
+            setDriving(false);
+          } else {
+            startANewRide(ride);
+            setDriving(true);
+          }
+        }}
+      />
     </Box>
   );
 }
