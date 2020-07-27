@@ -5,7 +5,7 @@ import "./RideForm.css";
 import { Button, Container } from '@material-ui/core';
 
 import { LocationField, CommentField, OdometerField, TrafficCondition, TrafficConditionField } from './fields';
-import { Ride } from '../../types';
+import { Ride, Location } from '../../types';
 
 interface IRideFormState {
     isDriving: boolean;
@@ -41,9 +41,12 @@ function getSubmitButtonText(isDriving: boolean): string {
     return isDriving ? "Finish" : "Start";
 }
 
-function isValid(ride: Ride) {
-
-}
+const locations: Location[] = [
+    {id: 0, name: "Home", latitude: 34.34, longitude: 23.23},
+    {id: 1, name: "Workplace", latitude: 34.34, longitude: 23.23},
+    {id: 2, name: "Store", latitude: 34.34, longitude: 23.23},
+    {id: 3, name: "Library", latitude: 34.34, longitude: 23.23},
+];
 
 function RideForm(props: IRideFormProps) {
     const [state, setState] = useState<IRideFormState>({isDriving: false, isValid: false});
@@ -63,8 +66,9 @@ function RideForm(props: IRideFormProps) {
                 label="Location"
                 placeholder="e.g. Home"
                 hint="Enter your current location name"
-                options={["Home", "Workplace", "Store", "Library"]}
+                options={locations}
                 value={"Home"}
+                onChange={(location: Location) => console.log(JSON.stringify(location, null, 2))}
             />
             {props.showRetrospectiveField && <div>
                 <TrafficConditionField
