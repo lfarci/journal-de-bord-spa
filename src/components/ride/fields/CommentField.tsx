@@ -7,7 +7,7 @@ interface ICommentFieldProps {
     label: string;
     hint: string;
     value: string | undefined;
-    onChange: (event: React.ChangeEvent<any>, child?: React.ReactNode) => void | undefined;
+    onChange: (comment: string) => void;
 }
 
 /**
@@ -23,7 +23,10 @@ function CommentField(props: ICommentFieldProps) {
         margin="normal"
         helperText={props.hint}
         value={props.value}
-        onChange={props.onChange}
+        onChange={(event: React.ChangeEvent<any>) => {
+            const comment = event.target.value;
+            props.onChange(comment);
+        }}
     />;
 }
 

@@ -28,8 +28,7 @@ const useStyles = makeStyles((theme: Theme) =>
  * @param ride is the new ride.
  */
 function startANewRide(ride: Ride) {
-  console.log("=== Start a new ride. ===");
-  console.log(JSON.stringify(ride, null, 2));
+  console.log("[DEBUG] Starting a new ride.");
 }
 
 /**
@@ -38,8 +37,7 @@ function startANewRide(ride: Ride) {
  * @param ride is the ride that is finished.
  */
 function finishLastRide(ride: Ride) {
-  console.log("Finish the last ride");
-  console.log(JSON.stringify(ride, null, 2));
+  console.log("[DEBUG] Finishing the last ride");
 }
 
 // temporary this is mocking fetching from the api
@@ -70,7 +68,12 @@ function App() {
       <RideForm
         ride={model}
         isDriving={driving}
+        onChange={(ride: Ride) => {
+          console.log(JSON.stringify(ride, null, 2));
+        }}
         onSubmit={(ride: Ride) => {
+          console.log("[DEBUG] Submitted ride.");
+          console.log(JSON.stringify(ride, null, 2));
           if (driving) {
             finishLastRide(ride);
             setDriving(false);

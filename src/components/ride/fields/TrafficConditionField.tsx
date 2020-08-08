@@ -12,13 +12,13 @@ interface ITrafficConditionFieldProps {
     label: string;
     hint: string;
     value: TrafficCondition;
-    onChange: (event: React.ChangeEvent<any>, child?: React.ReactNode) => void | undefined;
+    onChange: (value: TrafficCondition) => void;
 }
 
 /**
  * Renders a text field that take a required odometer value (number) as an
  * input.
- * 
+ *
  * Note: it would nice to use a rating component:
  * https://material-ui.com/components/rating/
  */
@@ -29,7 +29,11 @@ function TrafficConditionField(props: ITrafficConditionFieldProps) {
             id={props.id}
             labelId="traffic-condition-label"
             value={props.value}
-            onChange={props.onChange}
+            onChange={(event: React.ChangeEvent<any>) => {
+                const value: TrafficCondition = event.target.value;
+                props.onChange(value);
+                console.log("value: " + value);
+            }}
             label={props.label}
         >
             <MenuItem value={TrafficCondition.VERY_CALM}>Very calm</MenuItem>
