@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import "./RideForm.css";
 
-import { Button, Container } from '@material-ui/core';
+import { Button, Container, Typography, Divider } from '@material-ui/core';
 
 import { CommentField, TrafficConditionField } from './fields';
 import { Ride, Stop, Location } from '../../types';
@@ -14,10 +14,9 @@ interface IRideFormProps {
      */
     ride: Ride;
     /**
-     * if set to true then the form shows the traffic condition and the comment
-     * fields.
+     * if set to true then the form shows arrival and retrospective ones.
      */
-    showRetrospectiveField: boolean;
+    isDriving: boolean;
     /**
      * Called when the submit button is clicked. data contain the data
      * submitted by the user.
@@ -57,14 +56,16 @@ function RideForm(props: IRideFormProps) {
                     console.log("New stop: " + JSON.stringify(data, null, 2));
                 }}
             />
-            <StopForm
-                title="Arrival"
-                value={props.ride.arrival!!}
-                onChange={(data: Stop) => {
-                    console.log("New stop: " + JSON.stringify(data, null, 2));
-                }}
-            />
-            {props.showRetrospectiveField && <div>
+            {props.isDriving && <div>
+                <StopForm
+                    title="Arrival"
+                    value={props.ride.arrival!!}
+                    onChange={(data: Stop) => {
+                        console.log("New stop: " + JSON.stringify(data, null, 2));
+                    }}
+                />
+                <Typography variant="h6">Retrospective</Typography>
+                <Divider />
                 <TrafficConditionField
                     id="traffic-condition"
                     label="Traffic condition"
@@ -86,7 +87,7 @@ function RideForm(props: IRideFormProps) {
                 size="large"
                 onClick={() => props.onSubmit(props.ride)}
             >
-                {getSubmitButtonText(props.showRetrospectiveField)}
+                {getSubmitButtonText(props.isDriving)}
             </Button>
         </Container >
     );

@@ -69,7 +69,7 @@ function App() {
       <ApplicationBar title="Journal de bord" />
       <RideForm
         ride={model}
-        showRetrospectiveField={driving}
+        isDriving={driving}
         onSubmit={(ride: Ride) => {
           if (driving) {
             finishLastRide(ride);
