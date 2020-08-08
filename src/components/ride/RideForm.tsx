@@ -4,19 +4,15 @@ import "./RideForm.css";
 
 import { Button, Container } from '@material-ui/core';
 
-import { LocationField, CommentField, OdometerField, TrafficCondition, TrafficConditionField } from './fields';
-import { Ride, Location } from '../../types';
-
-interface IRideFormState {
-    isDriving: boolean;
-    isValid: boolean;
-}
+import { CommentField, TrafficConditionField } from './fields';
+import { Ride, Stop, Location } from '../../types';
+import StopForm from './StopForm';
 
 interface IRideFormProps {
     /**
      * Is the form ride.
      */
-    model: Ride;
+    ride: Ride;
     /**
      * if set to true then the form shows the traffic condition and the comment
      * fields.
@@ -41,63 +37,58 @@ function getSubmitButtonText(isDriving: boolean): string {
     return isDriving ? "Finish" : "Start";
 }
 
-const locations: Location[] = [
-    {id: 0, name: "Home", latitude: 34.34, longitude: 23.23},
-    {id: 1, name: "Workplace", latitude: 34.34, longitude: 23.23},
-    {id: 2, name: "Store", latitude: 34.34, longitude: 23.23},
-    {id: 3, name: "Library", latitude: 34.34, longitude: 23.23},
-];
 
 function RideForm(props: IRideFormProps) {
-    const [state, setState] = useState<IRideFormState>({isDriving: false, isValid: false});
+
+    const [] = useState<number>(0);
+    const [] = useState<boolean>(false);
+    const [] = useState<boolean>(false);
+
+    const isDepartureOnly = () => props.ride.arrival != null;
+
     return (
         <Container id="ride-form-container">
             {/* TODO: the departure odometer should be smaller */}
-            <OdometerField
-                id="odometer-value"
-                label="Odometer Value"
-                placeholder="e.g. 454543"
-                hint="Enter the current odometer value of your vehicle."
-                value={props.model.departure?.odometerValue}
-                onChange={(odometerValue: number) => {console.log("odometer: " + odometerValue)}}
+            <StopForm
+                title="Departure"
+                description="Please enter the information relative to the ride departure."
+                value={props.ride.departure}
+                onChange={(data: Stop) => {
+                    console.log("New stop: " + JSON.stringify(data, null, 2));
+                }}
             />
-            <LocationField
-                id="location-name"
-                label="Location"
-                placeholder="e.g. Home"
-                hint="Enter your current location name"
-                options={locations}
-                value={"Home"}
-                onChange={(location: Location) => console.log(JSON.stringify(location, null, 2))}
+            <StopForm
+                title="Arrival"
+                value={props.ride.arrival!!}
+                onChange={(data: Stop) => {
+                    console.log("New stop: " + JSON.stringify(data, null, 2));
+                }}
             />
             {props.showRetrospectiveField && <div>
                 <TrafficConditionField
                     id="traffic-condition"
                     label="Traffic condition"
                     hint="Select the option that represent the most the traffic condition of your last ride."
-                    value={props.model.trafficCondition}
+                    value={props.ride.trafficCondition}
                     onChange={onTrafficConditionChange}
                 />
                 <CommentField
                     id="comment"
                     label="Comment"
                     hint="Let us know if you encountered any difficulties during your ride."
-                    value={props.model.comment}
+                    value={props.ride.comment}
                     onChange={onCommentChange}
                 />
-
             </div>}
             <Button
                 variant="contained"
                 color="primary"
                 size="large"
-                onClick={() => {
-
-                }}
+                onClick={() => props.onSubmit(props.ride)}
             >
                 {getSubmitButtonText(props.showRetrospectiveField)}
             </Button>
-        </Container>
+        </Container >
     );
 
 }

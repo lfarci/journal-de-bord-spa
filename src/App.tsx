@@ -22,25 +22,37 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
+/**
+ * Starts a new ride.
+ *
+ * @param ride is the new ride.
+ */
 function startANewRide(ride: Ride) {
-  console.log()
+  console.log("=== Start a new ride. ===");
+  console.log(JSON.stringify(ride, null, 2));
 }
 
+/**
+ * Should call the backend and finish the last started ride.
+ *
+ * @param ride is the ride that is finished.
+ */
 function finishLastRide(ride: Ride) {
-
+  console.log("Finish the last ride");
+  console.log(JSON.stringify(ride, null, 2));
 }
 
 // temporary this is mocking fetching from the api
 const model: Ride = {
   departure: {
-      moment: new Date(),
-      location: {
-          id: 3,
-          name: "locationName",
-          latitude: 23.45,
-          longitude: 23.45
-      },
-      odometerValue: 10000
+    moment: new Date(),
+    location: {
+      id: 3,
+      name: "locationName",
+      latitude: 23.45,
+      longitude: 23.45
+    },
+    odometerValue: 10000
   },
   arrival: undefined,
   driverPseudonym: undefined,
@@ -54,12 +66,11 @@ function App() {
   // get last ride from API
   return (
     <Box className={classes.root}>
-      <ApplicationBar title="Journal de bord"/>
+      <ApplicationBar title="Journal de bord" />
       <RideForm
-        model={model}
+        ride={model}
         showRetrospectiveField={driving}
         onSubmit={(ride: Ride) => {
-          console.log(JSON.stringify(ride, null, 2));
           if (driving) {
             finishLastRide(ride);
             setDriving(false);
