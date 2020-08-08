@@ -30,6 +30,32 @@ interface IRideFormProps {
     onSubmit: (data: Ride) => void;
 }
 
+function isDepartureBeforeArrival(ride: Ride): boolean {
+    return ride.arrival != undefined
+        && ride.departure.moment.getTime() < ride.arrival?.moment.getTime();
+}
+
+function areOdometerValuesValid(ride: Ride): boolean {
+    return ride.arrival != undefined
+        && ride.departure.odometerValue < ride.arrival?.odometerValue;
+}
+
+function isValid(ride: Ride): boolean {
+    return ride.arrival == undefined
+        || (areOdometerValuesValid(ride) && isDepartureBeforeArrival(ride));
+}
+
+function getErrorMessages(ride: Ride): string[] {
+    const errorMessages: string[] = [];
+    if (!isDepartureBeforeArrival(ride)) {
+        errorMessages.push("The departure should be before the arrival.");
+    }
+    if (!areOdometerValuesValid(ride)) {
+        errorMessages.push("The departure odometer value should be smaller than the arrival one.");
+    }
+    return errorMessages;
+}
+
 function getSubmitButtonText(isDriving: boolean): string {
     return isDriving ? "Finish" : "Start";
 }
@@ -37,6 +63,14 @@ function getSubmitButtonText(isDriving: boolean): string {
 function RideForm(props: IRideFormProps) {
 
     const [ride, setRide] = useState<Ride>(props.ride);
+    const [messages, setMessages] = useState<string[]>(getErrorMessages(ride));
+
+    const handleChange = (ride: Ride) => {
+        if (isValid(ride)) {
+            setRide(ride);
+        }
+        setMessages(getErrorMessages(ride));
+    }
 
     return (
         <Container id="ride-form-container">
@@ -44,21 +78,21 @@ function RideForm(props: IRideFormProps) {
             {/* TODO: the departure should be before arrival */}
             <StopForm
                 title="Departure"
-                value={props.ride.departure}
+                value={ride.departure}
                 onChange={(data: Stop) => {
-                    const newRide = {...ride};
-                    newRide.departure = {...data};
-                    setRide(newRide);
+                    const newRide = { ...ride };
+                    newRide.departure = { ...data };
+                    handleChange(newRide);
                 }}
             />
             {props.isDriving && <div>
                 <StopForm
                     title="Arrival"
-                    value={props.ride.arrival!!}
+                    value={ride.arrival!!}
                     onChange={(data: Stop) => {
-                        const newRide = {...ride};
-                        newRide.arrival = {...data};
-                        setRide(newRide);
+                        const newRide = { ...ride };
+                        newRide.arrival = { ...data };
+                        handleChange(newRide);
                     }}
                 />
                 <Typography variant="h6">Retrospective</Typography>
@@ -67,29 +101,38 @@ function RideForm(props: IRideFormProps) {
                     id="traffic-condition"
                     label="Traffic condition"
                     hint="Select the option that represent the best the traffic condition of your last ride."
-                    value={props.ride.trafficCondition}
+                    value={ride.trafficCondition}
                     onChange={(data: TrafficCondition) => {
-                        const newRide = {...ride};
+                        const newRide = { ...ride };
                         newRide.trafficCondition = data;
-                        setRide(newRide);
+                        handleChange(newRide);
                     }}
                 />
                 <CommentField
                     id="comment"
                     label="Comment"
                     hint="Let us know if you encountered any difficulties during your ride."
-                    value={props.ride.comment}
+                    value={ride.comment}
                     onChange={(data: string) => {
-                        const newRide = {...ride};
+                        const newRide = { ...ride };
                         newRide.comment = data;
-                        setRide(newRide);
+                        handleChange(newRide);
                     }}
                 />
             </div>}
+            <div className="ride-form-messages">
+                {messages.map(message => <Typography
+                    className="ride-form-message"
+                    variant="body2"
+                    color="error">
+                    {message}
+                </Typography>)}
+            </div>
             <Button
                 variant="contained"
                 color="primary"
                 size="large"
+                disabled={!isValid(ride)}
                 onClick={() => props.onSubmit(ride)}
             >
                 {getSubmitButtonText(props.isDriving)}

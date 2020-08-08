@@ -46,25 +46,34 @@ const model: Ride = {
     moment: new Date(),
     location: {
       id: 3,
-      name: "locationName",
+      name: "Magasin",
       latitude: 23.45,
       longitude: 23.45
     },
     odometerValue: 10000
   },
-  arrival: undefined,
+  arrival: {
+    moment: new Date(),
+    location: {
+      id: 4,
+      name: "Maison",
+      latitude: 25,
+      longitude: 26
+    },
+    odometerValue: 12000
+  },
   driverPseudonym: undefined,
   trafficCondition: TrafficCondition.NORMAL,
-  comment: undefined
+  comment: "Je suis un brave."
 };
 
 function App() {
   const classes = useStyles();
-  const [driving, setDriving] = useState(false);
+  const [driving, setDriving] = useState(true);
   // get last ride from API
   return (
     <Box className={classes.root}>
-      <ApplicationBar title="Journal de bord" />
+      <ApplicationBar title="Ride" />
       <RideForm
         ride={model}
         isDriving={driving}
@@ -73,7 +82,6 @@ function App() {
         }}
         onSubmit={(ride: Ride) => {
           console.log("[DEBUG] Submitted ride.");
-          console.log(JSON.stringify(ride, null, 2));
           if (driving) {
             finishLastRide(ride);
             setDriving(false);

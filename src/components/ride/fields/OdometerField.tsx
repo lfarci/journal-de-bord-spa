@@ -28,6 +28,7 @@ function OdometerField(props: IOdometerFieldProps) {
         label={props.label}
         type="number"
         placeholder={props.placeholder}
+        value={props.value}
         variant="outlined"
         fullWidth={true}
         helperText={hint}

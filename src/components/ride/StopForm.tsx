@@ -47,8 +47,7 @@ function getDefaultValue(value: Stop | null): Stop {
  */
 function StopForm(props: IStopFormProps) {
 
-    const defaultValue = getDefaultValue(props.value);
-    const [stop, setStop] = useState<Stop>(defaultValue);
+    const [stop, setStop] = useState<Stop>(getDefaultValue(props.value));
 
     const fetchLocations = (): Location[] => {
         return [
@@ -58,7 +57,6 @@ function StopForm(props: IStopFormProps) {
             { id: 3, name: "Library", latitude: 34.34, longitude: 23.23 },
         ];
     }
-
     return (
         <div>
             <Typography variant="h6">
