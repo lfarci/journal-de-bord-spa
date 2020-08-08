@@ -38,8 +38,8 @@ function LocationField(props: ILocationFieldProps) {
             />
         )}
         onChange={(event: React.ChangeEvent<any>, newValue: string | null) => {
-            let location = props.options.find(o => o.name == newValue);
-            if (location == undefined) {
+            let location = props.options.find(o => o.name === newValue);
+            if (location === undefined) {
                 navigator.geolocation.getCurrentPosition((position) => {
                     console.log("Got position", position.coords);
                     location = {

@@ -49,9 +49,6 @@ function StopForm(props: IStopFormProps) {
 
     const defaultValue = getDefaultValue(props.value);
     const [stop, setStop] = useState<Stop>(defaultValue);
-    const [odometerValue, setOdometerValue] = useState<number>(defaultValue.odometerValue);
-    const [location, setLocation] = useState<Location>(defaultValue.location);
-    const [moment, setMoment] = useState<Date>(defaultValue.moment);
 
     const fetchLocations = (): Location[] => {
         return [
@@ -73,9 +70,9 @@ function StopForm(props: IStopFormProps) {
                 label="Odometer Value"
                 placeholder="e.g. 454543"
                 hint="Enter the current odometer value of your vehicle."
-                value={odometerValue}
+                value={stop.odometerValue}
                 onChange={(value: number) => {
-                    const editedStop = {... stop};
+                    const editedStop = {...stop};
                     editedStop.odometerValue = value;
                     setStop(editedStop);
                     props.onChange(editedStop);
@@ -87,9 +84,9 @@ function StopForm(props: IStopFormProps) {
                 placeholder="e.g. Home"
                 hint="Enter your current location name"
                 options={fetchLocations()}
-                value={location}
+                value={stop.location}
                 onChange={(value: Location) => {
-                    const editedStop = {... stop};
+                    const editedStop = {...stop};
                     editedStop.location = value;
                     setStop(editedStop);
                     props.onChange(editedStop);
@@ -99,9 +96,9 @@ function StopForm(props: IStopFormProps) {
                 id="stop-datetime"
                 label="Date and time"
                 hint="Enter the stop date and time."
-                value={moment}
+                value={stop.moment}
                 onChange={(value: Date) => {
-                    const editedStop = {... stop};
+                    const editedStop = {...stop};
                     editedStop.moment = value;
                     setStop(editedStop);
                     props.onChange(editedStop);

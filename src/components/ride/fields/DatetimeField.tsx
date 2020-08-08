@@ -1,7 +1,6 @@
 import React from 'react';
 
 import { TextField } from '@material-ui/core';
-import { Moment } from 'moment';
 
 const moment = require("moment");
 
@@ -22,9 +21,7 @@ function DatetimeField(props: IDatetimeFieldProps) {
     }
 
     const getDefaultValue = (date: Date): string => {
-        const dateValue: string = moment(date).format("YYYY-MM-DDTHH:mm");
-        console.log("Default value: " + dateValue);
-        return dateValue;
+        return moment(date).format("YYYY-MM-DDTHH:mm");
     }
 
     return <TextField

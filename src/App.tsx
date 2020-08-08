@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 
 import RideForm from './components/ride/RideForm';
-import { Box, Typography } from '@material-ui/core';
+import { Box } from '@material-ui/core';
 import ApplicationBar from './components/navigation/ApplicationBar';
 import { Ride } from './types/Ride';
 import { TrafficCondition } from './components/ride/fields';

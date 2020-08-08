@@ -5,7 +5,7 @@ import "./RideForm.css";
 import { Button, Container, Typography, Divider } from '@material-ui/core';
 
 import { CommentField, TrafficConditionField, TrafficCondition } from './fields';
-import { Ride, Stop, Location } from '../../types';
+import { Ride, Stop } from '../../types';
 import StopForm from './StopForm';
 
 interface IRideFormProps {
@@ -46,8 +46,8 @@ function RideForm(props: IRideFormProps) {
                 title="Departure"
                 value={props.ride.departure}
                 onChange={(data: Stop) => {
-                    const newRide = {... ride};
-                    newRide.departure = {... data};
+                    const newRide = {...ride};
+                    newRide.departure = {...data};
                     setRide(newRide);
                 }}
             />
@@ -56,8 +56,8 @@ function RideForm(props: IRideFormProps) {
                     title="Arrival"
                     value={props.ride.arrival!!}
                     onChange={(data: Stop) => {
-                        const newRide = {... ride};
-                        newRide.arrival = {... data};
+                        const newRide = {...ride};
+                        newRide.arrival = {...data};
                         setRide(newRide);
                     }}
                 />
@@ -69,7 +69,7 @@ function RideForm(props: IRideFormProps) {
                     hint="Select the option that represent the best the traffic condition of your last ride."
                     value={props.ride.trafficCondition}
                     onChange={(data: TrafficCondition) => {
-                        const newRide = {... ride};
+                        const newRide = {...ride};
                         newRide.trafficCondition = data;
                         setRide(newRide);
                     }}
@@ -80,7 +80,7 @@ function RideForm(props: IRideFormProps) {
                     hint="Let us know if you encountered any difficulties during your ride."
                     value={props.ride.comment}
                     onChange={(data: string) => {
-                        const newRide = {... ride};
+                        const newRide = {...ride};
                         newRide.comment = data;
                         setRide(newRide);
                     }}
