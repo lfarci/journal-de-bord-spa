@@ -31,17 +31,17 @@ interface IRideFormProps {
 }
 
 function isDepartureBeforeArrival(ride: Ride): boolean {
-    return ride.arrival != undefined
+    return ride.arrival !== undefined
         && ride.departure.moment.getTime() < ride.arrival?.moment.getTime();
 }
 
 function areOdometerValuesValid(ride: Ride): boolean {
-    return ride.arrival != undefined
+    return ride.arrival !== undefined
         && ride.departure.odometerValue < ride.arrival?.odometerValue;
 }
 
 function isValid(ride: Ride): boolean {
-    return ride.arrival == undefined
+    return ride.arrival === undefined
         || (areOdometerValuesValid(ride) && isDepartureBeforeArrival(ride));
 }
 
