@@ -1,4 +1,4 @@
-import { TrafficCondition } from "../components/ride/fields";
+import { TrafficCondition } from "../components/rides/fields";
 import { Stop } from "./Stop";
 
 export type Ride = {

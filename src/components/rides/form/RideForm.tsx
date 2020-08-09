@@ -4,8 +4,8 @@ import "./RideForm.css";
 
 import { Button, Container, Typography, Divider } from '@material-ui/core';
 
-import { CommentField, TrafficConditionField, TrafficCondition } from './fields';
-import { Ride, Stop } from '../../types';
+import { CommentField, TrafficConditionField, TrafficCondition } from '../fields';
+import { Ride, Stop } from '../../../types';
 import StopForm from './StopForm';
 
 interface IRideFormProps {
@@ -74,8 +74,6 @@ function RideForm(props: IRideFormProps) {
 
     return (
         <Container id="ride-form-container">
-            {/* TODO: the departure odometer should be smaller */}
-            {/* TODO: the departure should be before arrival */}
             <StopForm
                 title="Departure"
                 value={ride.departure}
