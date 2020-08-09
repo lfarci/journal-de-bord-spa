@@ -74,8 +74,6 @@ function RideForm(props: IRideFormProps) {
 
     return (
         <Container id="ride-form-container">
-            {/* TODO: the departure odometer should be smaller */}
-            {/* TODO: the departure should be before arrival */}
             <StopForm
                 title="Departure"
                 value={ride.departure}

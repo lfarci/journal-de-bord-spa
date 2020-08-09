@@ -3,10 +3,14 @@ import React, { useState } from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 
 import RideForm from './components/ride/RideForm';
-import { Box } from '@material-ui/core';
+import { Box, BottomNavigation, BottomNavigationAction, Drawer, List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
 import ApplicationBar from './components/navigation/ApplicationBar';
 import { Ride } from './types/Ride';
 import { TrafficCondition } from './components/ride/fields';
+
+import LocationOnIcon from '@material-ui/icons/LocationOn';
+import DriveEtaIcon from '@material-ui/icons/DriveEta';
+import EqualizerIcon from '@material-ui/icons/Equalizer';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -18,7 +22,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     title: {
       flexGrow: 1,
-    },
+    }
   }),
 );
 
@@ -68,20 +72,63 @@ const model: Ride = {
 };
 
 function App() {
+
   const classes = useStyles();
+
+  const [showDrawer, setShowDrawer] = useState<boolean>(false);
+  const [selectedIndex, setSelectedIndex] = useState<number>(0);
   const [driving, setDriving] = useState(true);
+
   // get last ride from API
+
   return (
     <Box className={classes.root}>
-      <ApplicationBar title="Ride" />
+      <ApplicationBar
+        title="Ride"
+        onMenuClicked={() => setShowDrawer(true)}
+      />
+      <Drawer anchor="left" open={showDrawer} onClose={() => setShowDrawer(false)} defaultValue="rides">
+        <List>
+            <ListItem button
+              key="rides"
+              selected={0 == selectedIndex}
+              onClick={(event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+                console.log("Rides clicked");
+                setSelectedIndex(0);
+              }}
+            >
+              <ListItemIcon>{ <DriveEtaIcon /> }</ListItemIcon>
+              <ListItemText primary="Rides" />
+            </ListItem>
+            <ListItem button
+              key="locations"
+              selected={1 == selectedIndex}
+              onClick={(event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+                console.log("Locations clicked");
+                setSelectedIndex(1);
+              }}
+            >
+              <ListItemIcon>{ <LocationOnIcon /> }</ListItemIcon>
+              <ListItemText primary="Locations" />
+            </ListItem>
+            <ListItem button
+              key="statistics"
+              selected={2 == selectedIndex}
+              onClick={(event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+                console.log("Statistics clicked");
+                setSelectedIndex(2);
+              }}
+            >
+              <ListItemIcon>{ <EqualizerIcon /> }</ListItemIcon>
+              <ListItemText primary="Statistics" />
+            </ListItem>
+        </List>
+      </Drawer>
       <RideForm
         ride={model}
         isDriving={driving}
-        onChange={(ride: Ride) => {
-          console.log(JSON.stringify(ride, null, 2));
-        }}
+        onChange={(ride: Ride) => {}}
         onSubmit={(ride: Ride) => {
-          console.log("[DEBUG] Submitted ride.");
           if (driving) {
             finishLastRide(ride);
             setDriving(false);
@@ -89,6 +136,7 @@ function App() {
             startANewRide(ride);
             setDriving(true);
           }
+          console.log(JSON.stringify(ride, null, 2));
         }}
       />
     </Box>

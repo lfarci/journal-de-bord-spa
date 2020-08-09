@@ -6,6 +6,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 
 interface IApplicationBarProps {
     title: string;
+    onMenuClicked: () => void;
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -28,7 +29,7 @@ function ApplicationBar(props: IApplicationBarProps) {
                 className={classes.menuButton}
                 color="inherit"
                 aria-label="menu"
-                onClick={() => console.log("Application bar menu has been clicked")}
+                onClick={props.onMenuClicked}
             >
             <MenuIcon />
             </IconButton>
