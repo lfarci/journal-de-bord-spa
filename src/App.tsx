@@ -56,10 +56,10 @@ function App() {
           }
         }}
       />
-      { selected == "home" && <Home /> }
-      { selected == "rides" && <Rides /> }
-      { selected == "locations" && <p>Locations</p> }
-      { selected == "statistics" && <p>Statistics</p> }
+      { selected === "home" && <Home /> }
+      { selected === "rides" && <Rides /> }
+      { selected === "locations" && <p>Locations</p> }
+      { selected === "statistics" && <p>Statistics</p> }
     </Box>
   );
 }
