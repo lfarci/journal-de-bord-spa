@@ -1,15 +1,10 @@
-import React, { useState } from 'react';
-
+import { Box } from '@material-ui/core';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-
-import RideForm from './components/rides/form/RideForm';
-import { Box, BottomNavigation, BottomNavigationAction, Drawer, List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
+import React, { useState } from 'react';
+import Home from './components/home/Home';
 import ApplicationBar from './components/navigation/ApplicationBar';
-import { Ride } from './types/Ride';
-import { TrafficCondition } from './components/rides/fields';
 import NavigationDrawer, { NavigationDrawerKey } from './components/navigation/NavigationDrawer';
 import Rides from './components/rides/Rides';
-import Home from './components/home/Home';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
