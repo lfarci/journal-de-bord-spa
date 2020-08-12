@@ -1,8 +1,10 @@
 import React from "react";
-import { Typography, Container, createStyles, makeStyles, Theme } from "@material-ui/core";
+import { Typography, Container, createStyles, makeStyles, Theme, Fab } from "@material-ui/core";
 import RideListItem from "./list/RideListItem";
 import { Ride } from "../../types";
 import { TrafficCondition } from "./fields";
+
+import AddIcon from '@material-ui/icons/Add';
 
 const moment = require("moment");
 
@@ -10,6 +12,12 @@ const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         root: {
             marginTop: 10,
+            overflow: "auto"
+        },
+        fab: {
+            position: 'fixed',
+            bottom: theme.spacing(2),
+            right: theme.spacing(2),
         },
     })
 );
@@ -70,9 +78,13 @@ function Rides(props: {}) {
                     trafficCondition={ride.trafficCondition}
                     distance={getDistance(ride)}
                     duration={getDuration(ride)}
+                    onDelete={() => console.log("A ride has been clicked to be deleted")}
+                    onDetails={() => console.log("A ride has been clicked to show details")}
                 />)
             }
-
+            <Fab color="primary" aria-label="add" className={classes.fab}>
+                <AddIcon />
+            </Fab>
         </Container>
     );
 }

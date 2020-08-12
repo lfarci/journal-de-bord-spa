@@ -11,6 +11,11 @@ interface IApplicationBarProps {
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
+        root: {
+            top: -1,
+            letf: 0,
+            right: 0
+        },
         menuButton: {
             marginRight: theme.spacing(2),
         },
@@ -22,7 +27,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 function ApplicationBar(props: IApplicationBarProps) {
     const classes = useStyles();
-    return <AppBar position="static">
+    return <AppBar position="sticky" className={classes.root}>
         <Toolbar>
             <IconButton
                 edge="start"

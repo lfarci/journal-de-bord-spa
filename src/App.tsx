@@ -10,6 +10,7 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       flexGrow: 1,
+      margin: -10,
     },
     menuButton: {
       marginRight: theme.spacing(2),
@@ -56,10 +57,10 @@ function App() {
           }
         }}
       />
-      { selected === "home" && <Home /> }
-      { selected === "rides" && <Rides /> }
-      { selected === "locations" && <p>Locations</p> }
-      { selected === "statistics" && <p>Statistics</p> }
+      {selected === "home" && <Home />}
+      {selected === "rides" && <Rides />}
+      {selected === "locations" && <p>Locations</p>}
+      {selected === "statistics" && <p>Statistics</p>}
     </Box>
   );
 }
