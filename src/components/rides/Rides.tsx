@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import { Typography, Container, createStyles, makeStyles, Theme, Fab } from "@material-ui/core";
-import RideListItem from "./list/RideListItem";
+import { Container, createStyles, makeStyles, Theme, Fab } from "@material-ui/core";
 import { Ride } from "../../types";
 import { TrafficCondition } from "./fields";
 
 import AddIcon from '@material-ui/icons/Add';
+import RideList from "./list/RideList";
+import RideForm from "./form/RideForm";
 
-const moment = require("moment");
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -53,46 +53,47 @@ const rides: Ride[] = [0, 1, 2, 3, 4, 5, 6].map(e => {
     return { ...model };
 });
 
-function Rides(props: {}) {
+/**
+ * The component acts as the entry point of the rides entry. It allows a user
+ * to visualize rides, add a new ride, edit and consult a specific ride.
+ */
+function Rides() {
 
     const classes = useStyles();
 
+    const [showList, setShowList] = useState<boolean>(true);
     const [showForm, setShowForm] = useState<boolean>(false);
 
     return (
         <Container>
             {
-                rides.map((ride: Ride) => <RideListItem
-                    className={classes.root}
-                    ride={ride}
-                    onDelete={() => {
-                        // TODO: Show confirmation dialog
-                        console.log(`[DELETE] Ride { id: ${ride.id} }`)
-                        if (window.confirm("Do you really want to delete this ride?")) {
-                            // TODO: request deletion to the backend
-                            console.log("[DELETE] Deletion has been confirmed.");
-                        } else {
-                            console.log("[DELETE] Deletion has been canceled.");
-                        }
-                    }}
-                    onDetails={() => {
-                        // TODO: request details to the backend
-                        // TODO: show ride details page
-                        console.log(`[DETAILS] Ride { id: ${ride.id} }`)
-                    }}
-                />)
+                showList && <div>
+                    <RideList rides={rides} />
+                    <Fab
+                        color="primary"
+                        aria-label="add"
+                        className={classes.fab}
+                        onClick={() => {
+                            // TODO: show ride form (the current ride should be found in the state)
+                            setShowList(false);
+                            setShowForm(true);
+                            console.log("Add ride action clicked");
+                        }}
+                    >
+                        <AddIcon />
+                    </Fab>
+                </div>
             }
-            <Fab
-                color="primary"
-                aria-label="add"
-                className={classes.fab}
-                onClick={() => {
-                    // TODO: show ride form
-                    console.log("Add ride action clicked");
-                }}
-            >
-                <AddIcon />
-            </Fab>
+            {
+                showForm && <div>
+                    <RideForm
+                        ride={model}
+                        isDriving={false}
+                        onChange={(ride: Ride) => { }}
+                        onSubmit={(ride: Ride) => { }}
+                    />
+                </div>
+            }
         </Container>
     );
 }
