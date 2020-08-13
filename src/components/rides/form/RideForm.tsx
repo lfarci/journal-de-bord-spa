@@ -4,7 +4,7 @@ import "./RideForm.css";
 
 import { Button, Container, Typography, Divider } from '@material-ui/core';
 
-import { CommentField, TrafficConditionField, TrafficCondition } from '../fields';
+import { CommentField, TrafficConditionField, TrafficCondition } from './fields';
 import { Ride, Stop } from '../../../types';
 import StopForm from './StopForm';
 

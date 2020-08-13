@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Ride } from "../../types/Ride";
 import RideForm from "../rides/form/RideForm";
-import { TrafficCondition } from "../rides/fields";
+import { TrafficCondition } from "../rides/form/fields";
 
 /**
  * Starts a new ride.

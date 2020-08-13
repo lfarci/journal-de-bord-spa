@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Container, createStyles, makeStyles, Theme, Fab } from "@material-ui/core";
 import { Ride } from "../../types";
-import { TrafficCondition } from "./fields";
+import { TrafficCondition } from "./form/fields";
 
 import AddIcon from '@material-ui/icons/Add';
 import RideList from "./list/RideList";

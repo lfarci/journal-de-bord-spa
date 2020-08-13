@@ -1,6 +1,6 @@
 import React from "react";
 
-import { TrafficCondition } from "../fields";
+import { TrafficCondition } from "../form/fields";
 import { Card, Typography, CardContent, Grid, Chip, createStyles, makeStyles, Theme, Button, CardActions } from "@material-ui/core";
 
 import SpeedRoundedIcon from '@material-ui/icons/SpeedRounded';
