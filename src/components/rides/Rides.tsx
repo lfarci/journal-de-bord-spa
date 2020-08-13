@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Typography, Container, createStyles, makeStyles, Theme, Fab } from "@material-ui/core";
 import RideListItem from "./list/RideListItem";
 import { Ride } from "../../types";
@@ -48,41 +48,49 @@ const model: Ride = {
     comment: "Je suis un brave."
 };
 
-const rides: Ride[] = [0, 1, 2, 3, 4, 5, 6].map(e => model);
+const rides: Ride[] = [0, 1, 2, 3, 4, 5, 6].map(e => {
+    model.id = e;
+    return { ...model };
+});
 
 function Rides(props: {}) {
 
     const classes = useStyles();
 
-    const getDistance = (ride: Ride) => {
-        if (ride.arrival == null) throw new RangeError();
-        return ride.arrival?.odometerValue - ride.departure.odometerValue;
-    }
-
-    const getDuration = (ride: Ride): number => {
-        if (ride.arrival == null) throw new RangeError();
-        const departureDate = moment(ride.departure.moment);
-        const arrivalDate = moment(ride.arrival.moment);
-        const duration = moment.duration(departureDate.diff(arrivalDate));
-        return duration.asMilliseconds();
-    }
+    const [showForm, setShowForm] = useState<boolean>(false);
 
     return (
         <Container>
             {
                 rides.map((ride: Ride) => <RideListItem
                     className={classes.root}
-                    departureLocationName={ride.departure.location.name}
-                    arrivalLocationName={ride.arrival!!.location.name}
-                    date={ride.departure.moment}
-                    trafficCondition={ride.trafficCondition}
-                    distance={getDistance(ride)}
-                    duration={getDuration(ride)}
-                    onDelete={() => console.log("A ride has been clicked to be deleted")}
-                    onDetails={() => console.log("A ride has been clicked to show details")}
+                    ride={ride}
+                    onDelete={() => {
+                        // TODO: Show confirmation dialog
+                        console.log(`[DELETE] Ride { id: ${ride.id} }`)
+                        if (window.confirm("Do you really want to delete this ride?")) {
+                            // TODO: request deletion to the backend
+                            console.log("[DELETE] Deletion has been confirmed.");
+                        } else {
+                            console.log("[DELETE] Deletion has been canceled.");
+                        }
+                    }}
+                    onDetails={() => {
+                        // TODO: request details to the backend
+                        // TODO: show ride details page
+                        console.log(`[DETAILS] Ride { id: ${ride.id} }`)
+                    }}
                 />)
             }
-            <Fab color="primary" aria-label="add" className={classes.fab}>
+            <Fab
+                color="primary"
+                aria-label="add"
+                className={classes.fab}
+                onClick={() => {
+                    // TODO: show ride form
+                    console.log("Add ride action clicked");
+                }}
+            >
                 <AddIcon />
             </Fab>
         </Container>
