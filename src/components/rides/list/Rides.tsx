@@ -9,55 +9,55 @@ import { useHistory } from "react-router-dom";
 
 
 const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
-        root: {
-            marginTop: 10,
-            overflow: "auto"
-        },
-        fab: {
-            position: 'fixed',
-            bottom: theme.spacing(2),
-            right: theme.spacing(2),
-        },
-    })
+	createStyles({
+		root: {
+			marginTop: 10,
+			overflow: "auto"
+		},
+		fab: {
+			position: 'fixed',
+			bottom: theme.spacing(2),
+			right: theme.spacing(2),
+		},
+	})
 );
 
 const model: Ride = {
-    departure: {
-        moment: new Date(),
-        location: {
-            id: 3,
-            name: "Magasin",
-            latitude: 23.45,
-            longitude: 23.45
-        },
-        odometerValue: 10000
-    },
-    arrival: {
-        moment: new Date(),
-        location: {
-            id: 4,
-            name: "Maison",
-            latitude: 25,
-            longitude: 26
-        },
-        odometerValue: 12000
-    },
-    driverPseudonym: undefined,
-    trafficCondition: TrafficCondition.NORMAL,
-    comment: "Je suis un brave."
+	departure: {
+		moment: new Date(),
+		location: {
+			id: 3,
+			name: "Magasin",
+			latitude: 23.45,
+			longitude: 23.45
+		},
+		odometerValue: 10000
+	},
+	arrival: {
+		moment: new Date(),
+		location: {
+			id: 4,
+			name: "Maison",
+			latitude: 25,
+			longitude: 26
+		},
+		odometerValue: 12000
+	},
+	driverPseudonym: undefined,
+	trafficCondition: TrafficCondition.NORMAL,
+	comment: "Je suis un brave."
 };
 
 const rides: Ride[] = [0, 1, 2, 3, 4, 5, 6].map(e => {
-    model.id = e;
-    return { ...model };
+	model.id = e;
+	return { ...model };
 });
 
 export type RideScreenContentKey = "form" | "list" | "details";
 
 
 interface IRidesProps {
-    onAddActionClicked: () => void;
+	onAddActionClicked: () => void;
 }
 
 /**
@@ -66,29 +66,29 @@ interface IRidesProps {
  */
 function Rides(props: IRidesProps) {
 
-    const classes = useStyles();
-    const history = useHistory();
+	const classes = useStyles();
+	const history = useHistory();
 
-    const showDetails = (rideId: number) => {
-        console.log(`[DETAILS] Ride { id: ${rideId} }`);
-    }
+	const showDetails = (rideId: number) => {
+		console.log(`[DETAILS] Ride { id: ${rideId} }`);
+	}
 
-    return (
-        <Container>
-            <RideList rides={rides} onShowDetails={(rideId: number) => showDetails(rideId)} />
-            <Fab
-                color="primary"
-                aria-label="add"
-                className={classes.fab}
-                onClick={() => {
-                    history.push("/rides/form");
-                    props.onAddActionClicked();
-                }}
-            >
-                <AddIcon />
-            </Fab>
-        </Container>
-    );
+	return (
+		<Container>
+			<RideList rides={rides} onShowDetails={(rideId: number) => showDetails(rideId)} />
+			<Fab
+				color="primary"
+				aria-label="add"
+				className={classes.fab}
+				onClick={() => {
+					history.push("/rides/form");
+					props.onAddActionClicked();
+				}}
+			>
+				<AddIcon />
+			</Fab>
+		</Container>
+	);
 }
 
 export default Rides;

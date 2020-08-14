@@ -4,15 +4,15 @@ import { InputLabel, FormControl, FormHelperText, Select, MenuItem } from '@mate
 
 
 enum TrafficCondition {
-    VERY_CALM, CALM, NORMAL, SLOW, VERY_SLOW
+	VERY_CALM, CALM, NORMAL, SLOW, VERY_SLOW
 }
 
 interface ITrafficConditionFieldProps {
-    id: string;
-    label: string;
-    hint: string;
-    value: TrafficCondition;
-    onChange: (value: TrafficCondition) => void;
+	id: string;
+	label: string;
+	hint: string;
+	value: TrafficCondition;
+	onChange: (value: TrafficCondition) => void;
 }
 
 /**
@@ -23,29 +23,29 @@ interface ITrafficConditionFieldProps {
  * https://material-ui.com/components/rating/
  */
 function TrafficConditionField(props: ITrafficConditionFieldProps) {
-    return <FormControl variant="outlined" fullWidth={true} margin="normal">
-        <InputLabel id="traffic-condition-label">{props.label}</InputLabel>
-        <Select
-            id={props.id}
-            labelId="traffic-condition-label"
-            value={props.value}
-            onChange={(event: React.ChangeEvent<any>) => {
-                const value: TrafficCondition = event.target.value;
-                props.onChange(value);
-                console.log("value: " + value);
-            }}
-            label={props.label}
-        >
-            <MenuItem value={TrafficCondition.VERY_CALM}>Very calm</MenuItem>
-            <MenuItem value={TrafficCondition.CALM}>Calm</MenuItem>
-            <MenuItem value={TrafficCondition.NORMAL}>Normal</MenuItem>
-            <MenuItem value={TrafficCondition.SLOW}>Slow</MenuItem>
-            <MenuItem value={TrafficCondition.VERY_SLOW}>Very slow</MenuItem>
-        </Select>
-        <FormHelperText id="traffic-condition-help">
-            {props.hint}
-        </FormHelperText>
-    </FormControl>;
+	return <FormControl variant="outlined" fullWidth={true} margin="normal">
+		<InputLabel id="traffic-condition-label">{props.label}</InputLabel>
+		<Select
+			id={props.id}
+			labelId="traffic-condition-label"
+			value={props.value}
+			onChange={(event: React.ChangeEvent<any>) => {
+				const value: TrafficCondition = event.target.value;
+				props.onChange(value);
+				console.log("value: " + value);
+			}}
+			label={props.label}
+		>
+			<MenuItem value={TrafficCondition.VERY_CALM}>Very calm</MenuItem>
+			<MenuItem value={TrafficCondition.CALM}>Calm</MenuItem>
+			<MenuItem value={TrafficCondition.NORMAL}>Normal</MenuItem>
+			<MenuItem value={TrafficCondition.SLOW}>Slow</MenuItem>
+			<MenuItem value={TrafficCondition.VERY_SLOW}>Very slow</MenuItem>
+		</Select>
+		<FormHelperText id="traffic-condition-help">
+			{props.hint}
+		</FormHelperText>
+	</FormControl>;
 }
 
 export { TrafficCondition, TrafficConditionField};
