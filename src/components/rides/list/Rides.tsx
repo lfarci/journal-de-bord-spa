@@ -1,12 +1,12 @@
-import React, {  } from "react";
+import React, { } from "react";
 import { Container, createStyles, makeStyles, Theme, Fab } from "@material-ui/core";
 import { Ride } from "../../../types";
 import { TrafficCondition } from "../form/fields";
 
 import AddIcon from '@material-ui/icons/Add';
 import RideList from "./RideList";
-import { useHistory } from "react-router-dom";
-
+import { Route, Switch, useHistory, useRouteMatch } from "react-router-dom";
+import RideForm from "../form/RideForm";
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
@@ -55,7 +55,6 @@ const rides: Ride[] = [0, 1, 2, 3, 4, 5, 6].map(e => {
 
 export type RideScreenContentKey = "form" | "list" | "details";
 
-
 interface IRidesProps {
 	onAddActionClicked: () => void;
 }
@@ -68,9 +67,10 @@ function Rides(props: IRidesProps) {
 
 	const classes = useStyles();
 	const history = useHistory();
+	const { path } = useRouteMatch();
 
 	const showDetails = (rideId: number) => {
-		console.log(`[DETAILS] Ride { id: ${rideId} }`);
+		history.push(`${path}/${rideId}`)
 	}
 
 	return (
@@ -81,12 +81,23 @@ function Rides(props: IRidesProps) {
 				aria-label="add"
 				className={classes.fab}
 				onClick={() => {
-					history.push("/rides/form");
+					history.push(`${path}/form`);
 					props.onAddActionClicked();
 				}}
 			>
 				<AddIcon />
 			</Fab>
+			<Switch>
+				<Route path={`${path}/:rideId`} children={<p>details</p>} />
+				<Route path={`${path}/form`}>
+					<RideForm
+						ride={model}
+						isDriving={false}
+						onChange={() => { }}
+						onSubmit={() => { }}
+					/>
+				</Route>
+			</Switch>
 		</Container>
 	);
 }

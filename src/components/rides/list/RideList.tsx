@@ -17,9 +17,7 @@ interface IRideList {
 }
 
 function RideList(props: IRideList) {
-s
 	const classes = useStyles();
-
 	return (
 		<div>
 			{

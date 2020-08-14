@@ -5,37 +5,7 @@ import { Route, Switch, useHistory } from "react-router-dom";
 import Home from './components/home/Home';
 import ApplicationBar from './components/navigation/ApplicationBar';
 import NavigationDrawer, { INavigationDrawerEntry, NavigationDrawerKey } from './components/navigation/NavigationDrawer';
-import { TrafficCondition } from './components/rides/form/fields';
-import RideForm from './components/rides/form/RideForm';
-import Rides from './components/rides/list/Rides';
-import { Ride } from './types';
-
-
-const model: Ride = {
-	departure: {
-			moment: new Date(),
-			location: {
-					id: 3,
-					name: "Magasin",
-					latitude: 23.45,
-					longitude: 23.45
-			},
-			odometerValue: 10000
-	},
-	arrival: {
-			moment: new Date(),
-			location: {
-					id: 4,
-					name: "Maison",
-					latitude: 25,
-					longitude: 26
-			},
-			odometerValue: 12000
-	},
-	driverPseudonym: undefined,
-	trafficCondition: TrafficCondition.NORMAL,
-	comment: "Je suis un brave."
-};
+import RidesRoutes from './components/rides/RidesRoutes';
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
@@ -57,7 +27,7 @@ function App() {
 	const classes = useStyles();
 	const history = useHistory();
 
-	const [title, setTitle] = useState<string>("Rides");
+	const [title, setTitle] = useState<string>("Home");
 	const [isBackArrowShown, setShowBackArrow] = useState<boolean>(false);
 	const [showDrawer, setShowDrawer] = useState<boolean>(false);
 	const [selected, setSelected] = useState<NavigationDrawerKey>("home");
@@ -81,24 +51,15 @@ function App() {
 				selected={selected}
 				onClose={() => setShowDrawer(false)}
 				onClick={(entry: INavigationDrawerEntry) => {
-					setTitle(title)
+					setTitle(entry.label)
 					setSelected(entry.key);
 				}}
 			/>
 			<Switch>
 				<Route exact path="/"><Home /></Route>
-				<Route exact path="/rides"><Rides onAddActionClicked={() => setShowBackArrow(true) }/>
-				</Route>
-				<Route exact path="/rides/form">
-					<RideForm
-						ride={model}
-						isDriving={false}
-						onChange={() => { }}
-						onSubmit={() => { }}
-					/>
-				</Route>
-				<Route path="/locations"><p>Locations</p></Route>
-				<Route path="/statistics"><p>Statistics</p></Route>
+				<RidesRoutes onHistoryPushed={() => setShowBackArrow(true)} />
+				<Route exact path="/locations"><p>Locations</p></Route>
+				<Route exact path="/statistics"><p>Statistics</p></Route>
 			</Switch>
 		</Box>
 	);
