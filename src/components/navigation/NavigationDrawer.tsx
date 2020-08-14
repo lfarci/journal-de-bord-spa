@@ -24,17 +24,16 @@ interface INavigationDrawer {
      */
     onClose: () => void;
     /**
-     * Called when the navigation drawer is clicked. clickedKey argument is the
-     * key of the drawer that has been clicked.
+     * Called when the navigation drawer is clicked. item is the clicked entry.
      */
-    onClick: (title: string) => void;
+    onClick: (item: INavigationDrawerEntry) => void;
 }
 
 /**
  * Item represents an entry of the navigation drawer. You can specify a new
  * entry by specifying a label, an icon (material-ui-icons) and a key.
  */
-interface INavigationDrawerEntry {
+export interface INavigationDrawerEntry {
     /**
      * The key is used to identify a navigation entry and should be unique.
      */
@@ -90,7 +89,7 @@ function NavigationDrawer(props: INavigationDrawer) {
                     selected={props.selected === item.key}
                     onClick={(e) => {
                         history.push(item.url);
-                        props.onClick(item.label);
+                        props.onClick(item);
                         props.onClose();
                     }}
                 >

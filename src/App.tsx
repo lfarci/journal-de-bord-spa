@@ -3,7 +3,7 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import React, { useState } from 'react';
 import Home from './components/home/Home';
 import ApplicationBar from './components/navigation/ApplicationBar';
-import NavigationDrawer, { NavigationDrawerKey } from './components/navigation/NavigationDrawer';
+import NavigationDrawer, { NavigationDrawerKey, INavigationDrawerEntry } from './components/navigation/NavigationDrawer';
 import Rides from './components/rides/list/Rides';
 
 import {
@@ -64,7 +64,7 @@ function App() {
   const [title, setTitle] = useState<string>("Rides");
   const [isBackArrowShown, setShowBackArrow] = useState<boolean>(false);
   const [showDrawer, setShowDrawer] = useState<boolean>(false);
-  const [selected] = useState<NavigationDrawerKey>("rides");
+  const [selected, setSelected] = useState<NavigationDrawerKey>("home");
 
   return (
     <Box className={classes.root}>
@@ -73,7 +73,6 @@ function App() {
         showBackArrow={isBackArrowShown}
         onMenuClicked={() => {
           if (isBackArrowShown) {
-            // setScreenContent("list");
             history.goBack();
             setShowBackArrow(false)
           } else {
@@ -85,7 +84,10 @@ function App() {
         open={showDrawer}
         selected={selected}
         onClose={() => setShowDrawer(false)}
-        onClick={(title: string) => setTitle(title)}
+        onClick={(entry: INavigationDrawerEntry) => {
+          setTitle(title)
+          setSelected(entry.key);
+        }}
       />
       <Switch>
         <Route exact path="/"><Home /></Route>
