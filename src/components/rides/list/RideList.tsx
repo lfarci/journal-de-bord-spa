@@ -13,6 +13,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface IRideList {
     rides: Ride[];
+    onShowDetails: (rideId: number) => void;
 }
 
 function RideList(props: IRideList) {
@@ -35,11 +36,7 @@ function RideList(props: IRideList) {
                             console.log("[DELETE] Deletion has been canceled.");
                         }
                     }}
-                    onDetails={() => {
-                        // TODO: request details to the backend
-                        // TODO: show ride details page
-                        console.log(`[DETAILS] Ride { id: ${ride.id} }`);
-                    }}
+                    onDetails={() => props.onShowDetails(ride.id!!) }
                 />)
             }
         </div>

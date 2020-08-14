@@ -137,7 +137,6 @@ function RideForm(props: IRideFormProps) {
             </Button>
         </Container >
     );
-
 }
 
 export default RideForm;

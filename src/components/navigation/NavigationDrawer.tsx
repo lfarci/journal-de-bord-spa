@@ -6,6 +6,7 @@ import HomeIcon from '@material-ui/icons/Home';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
 import DriveEtaIcon from '@material-ui/icons/DriveEta';
 import EqualizerIcon from '@material-ui/icons/Equalizer';
+import { useHistory } from "react-router-dom";
 
 export type NavigationDrawerKey = "home" | "rides" | "locations" | "statistics";
 
@@ -26,7 +27,7 @@ interface INavigationDrawer {
      * Called when the navigation drawer is clicked. clickedKey argument is the
      * key of the drawer that has been clicked.
      */
-    onClick: (clickedKey: NavigationDrawerKey) => void;
+    onClick: (title: string) => void;
 }
 
 /**
@@ -43,6 +44,10 @@ interface INavigationDrawerEntry {
      */
     label: string;
     /**
+     * Path to the component.
+     */
+    url: string;
+    /**
      * Is a material ui icon object.
      */
     icon: object;
@@ -52,36 +57,45 @@ const entries: INavigationDrawerEntry[] = [
     {
         key: "home",
         label: "Home",
+        url: "/",
         icon: <HomeIcon />
     },
     {
         key: "rides",
         label: "Rides",
+        url: "/rides",
         icon: <DriveEtaIcon />
     },
     {
         key: "locations",
         label: "Locations",
+        url: "/locations",
         icon: <LocationOnIcon />
     },
     {
         key: "statistics",
         label: "Statistics",
+        url: "/statistics",
         icon:  <EqualizerIcon />
     }
 ];
 
 function NavigationDrawer(props: INavigationDrawer) {
+    const history = useHistory();
     return (
         <Drawer anchor="left" open={props.open} onClose={props.onClose}>
             <List>
                 {entries.map((item: INavigationDrawerEntry, index: number) => <ListItem button
                     key={item.key}
                     selected={props.selected === item.key}
-                    onClick={(e) => props.onClick(item.key)}
+                    onClick={(e) => {
+                        history.push(item.url);
+                        props.onClick(item.label);
+                        props.onClose();
+                    }}
                 >
                     <ListItemIcon>{item.icon}</ListItemIcon>
-                    <ListItemText primary={item.label} />
+                    <ListItemText primary={item.label} ></ListItemText>
                 </ListItem>)}
             </List>
         </Drawer>

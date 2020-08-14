@@ -4,7 +4,42 @@ import React, { useState } from 'react';
 import Home from './components/home/Home';
 import ApplicationBar from './components/navigation/ApplicationBar';
 import NavigationDrawer, { NavigationDrawerKey } from './components/navigation/NavigationDrawer';
-import Rides from './components/rides/Rides';
+import Rides from './components/rides/list/Rides';
+
+import {
+  Switch,
+  Route,
+  useHistory
+} from "react-router-dom";
+import RideForm from './components/rides/form/RideForm';
+import { Ride } from './types';
+import { TrafficCondition } from './components/rides/form/fields';
+
+const model: Ride = {
+  departure: {
+      moment: new Date(),
+      location: {
+          id: 3,
+          name: "Magasin",
+          latitude: 23.45,
+          longitude: 23.45
+      },
+      odometerValue: 10000
+  },
+  arrival: {
+      moment: new Date(),
+      location: {
+          id: 4,
+          name: "Maison",
+          latitude: 25,
+          longitude: 26
+      },
+      odometerValue: 12000
+  },
+  driverPseudonym: undefined,
+  trafficCondition: TrafficCondition.NORMAL,
+  comment: "Je suis un brave."
+};
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -24,43 +59,49 @@ const useStyles = makeStyles((theme: Theme) =>
 function App() {
 
   const classes = useStyles();
+  const history = useHistory();
 
   const [title, setTitle] = useState<string>("Rides");
+  const [isBackArrowShown, setShowBackArrow] = useState<boolean>(false);
   const [showDrawer, setShowDrawer] = useState<boolean>(false);
-  const [selected, setSelected] = useState<NavigationDrawerKey>("rides");
+  const [selected] = useState<NavigationDrawerKey>("rides");
 
   return (
     <Box className={classes.root}>
       <ApplicationBar
         title={title}
-        onMenuClicked={() => setShowDrawer(true)}
+        showBackArrow={isBackArrowShown}
+        onMenuClicked={() => {
+          if (isBackArrowShown) {
+            // setScreenContent("list");
+            history.goBack();
+            setShowBackArrow(false)
+          } else {
+            setShowDrawer(true);
+          }
+        }}
       />
       <NavigationDrawer
         open={showDrawer}
         selected={selected}
         onClose={() => setShowDrawer(false)}
-        onClick={(selectedKey: NavigationDrawerKey) => {
-          setSelected(selectedKey);
-          setShowDrawer(false);
-          switch (selectedKey) {
-            case "home":
-              setTitle("Home");
-              break;
-            case "rides":
-              setTitle("Rides");
-              break;
-            case "locations":
-              setTitle("Locations");
-              break;
-            default:
-              setTitle("Statistics");
-          }
-        }}
+        onClick={(title: string) => setTitle(title)}
       />
-      {selected === "home" && <Home />}
-      {selected === "rides" && <Rides />}
-      {selected === "locations" && <p>Locations</p>}
-      {selected === "statistics" && <p>Statistics</p>}
+      <Switch>
+        <Route exact path="/"><Home /></Route>
+        <Route exact path="/rides"><Rides onAddActionClicked={() => setShowBackArrow(true) }/>
+        </Route>
+        <Route exact path="/rides/form">
+          <RideForm
+            ride={model}
+            isDriving={false}
+            onChange={() => { }}
+            onSubmit={() => { }}
+          />
+        </Route>
+        <Route path="/locations"><p>Locations</p></Route>
+        <Route path="/statistics"><p>Statistics</p></Route>
+      </Switch>
     </Box>
   );
 }
