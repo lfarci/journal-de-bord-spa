@@ -34,13 +34,19 @@ const model: Ride = {
 
 export default function RidesRoutes(props: { onHistoryPushed: () => void }) {
 	return <>
-		<Route exact path="/rides"><Rides onAddActionClicked={props.onHistoryPushed} /></Route>
-		<Route path="/rides/form"><RideForm
-			ride={model}
-			isDriving={false}
-			onChange={() => { }}
-			onSubmit={() => { }}
-		/></Route>
-		<Route path="/rides/:rideId(^[0-9]*$)?"><RideDetails /></Route>
+		<Route exact strict path="/rides">
+			<Rides onAddActionClicked={props.onHistoryPushed} />
+		</Route>
+		<Route exact strict path="/rides/form">
+			<RideForm
+				ride={model}
+				isDriving={false}
+				onChange={() => { }}
+				onSubmit={() => { }}
+			/>
+		</Route>
+		<Route path="/rides/:rideId(\d+)">
+			<RideDetails />
+		</Route>
 	</>;
 }
