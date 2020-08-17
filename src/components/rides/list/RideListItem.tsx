@@ -7,7 +7,6 @@ import SpeedRoundedIcon from '@material-ui/icons/SpeedRounded';
 import AccessTimeRoundedIcon from '@material-ui/icons/AccessTimeRounded';
 import DriveEtaRoundedIcon from '@material-ui/icons/DriveEtaRounded';
 import { Ride } from "../../../types";
-import { keys } from "@material-ui/core/styles/createBreakpoints";
 
 const humanizeDuration = require("humanize-duration");
 const moment = require("moment");

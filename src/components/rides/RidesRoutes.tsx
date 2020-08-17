@@ -32,11 +32,9 @@ const model: Ride = {
 	comment: "Je suis un brave."
 };
 
-export default function RidesRoutes(props: { onHistoryPushed: () => void }) {
+export default function RidesRoutes(props: {}) {
 	return <>
-		<Route exact strict path="/rides">
-			<Rides onAddActionClicked={props.onHistoryPushed} />
-		</Route>
+		<Route exact strict path="/rides"><Rides /></Route>
 		<Route exact strict path="/rides/form">
 			<RideForm
 				ride={model}
@@ -45,8 +43,6 @@ export default function RidesRoutes(props: { onHistoryPushed: () => void }) {
 				onSubmit={() => { }}
 			/>
 		</Route>
-		<Route path="/rides/:rideId(\d+)">
-			<RideDetails />
-		</Route>
+		<Route path="/rides/:rideId(\d+)"><RideDetails /></Route>
 	</>;
 }

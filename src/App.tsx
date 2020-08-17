@@ -64,7 +64,7 @@ function App() {
 		setTitle(getTitle());
 		setSelected(getSelectedNavigationDrawerKey());
 		setShowBackArrow(!isEntry());
-	});
+	}, []);
 
 	return (
 		<Box className={classes.root}>
@@ -91,7 +91,7 @@ function App() {
 			/>
 			<Switch>
 				<Route exact path="/"><Home /></Route>
-				<RidesRoutes onHistoryPushed={() => setShowBackArrow(true)} />
+				<RidesRoutes />
 				<Route path="/locations"><p>Locations</p></Route>
 				<Route path="/statistics"><p>Statistics</p></Route>
 			</Switch>

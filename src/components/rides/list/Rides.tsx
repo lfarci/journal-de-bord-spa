@@ -5,8 +5,7 @@ import { TrafficCondition } from "../form/fields";
 
 import AddIcon from '@material-ui/icons/Add';
 import RideList from "./RideList";
-import { Route, Switch, useHistory, useRouteMatch } from "react-router-dom";
-import RideForm from "../form/RideForm";
+import { useHistory, useRouteMatch } from "react-router-dom";
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
@@ -55,49 +54,30 @@ const rides: Ride[] = [0, 1, 2, 3, 4, 5, 6].map(e => {
 
 export type RideScreenContentKey = "form" | "list" | "details";
 
-interface IRidesProps {
-	onAddActionClicked: () => void;
-}
-
 /**
- * The component acts as the entry point of the rides entry. It allows a user
- * to visualize rides, add a new ride, edit and consult a specific ride.
+ * Shows all the ride for the current user. The page action opens the ride
+ * form.
  */
-function Rides(props: IRidesProps) {
+function Rides(props: {}) {
 
 	const classes = useStyles();
 	const history = useHistory();
 	const { path } = useRouteMatch();
 
-	const showDetails = (rideId: number) => {
-		history.push(`${path}/${rideId}`)
-	}
-
 	return (
 		<Container>
-			<RideList rides={rides} onShowDetails={(rideId: number) => showDetails(rideId)} />
+			<RideList
+				rides={rides}
+				onShowDetails={(rideId: number) => history.push(`${path}/${rideId}`)}
+			/>
 			<Fab
 				color="primary"
 				aria-label="add"
 				className={classes.fab}
-				onClick={() => {
-					history.push(`${path}/form`);
-					props.onAddActionClicked();
-				}}
+				onClick={() => history.push(`${path}/form`)}
 			>
 				<AddIcon />
 			</Fab>
-			<Switch>
-				<Route path={`${path}/:rideId`} children={<p>details</p>} />
-				<Route path={`${path}/form`}>
-					<RideForm
-						ride={model}
-						isDriving={false}
-						onChange={() => { }}
-						onSubmit={() => { }}
-					/>
-				</Route>
-			</Switch>
 		</Container>
 	);
 }

@@ -83,41 +83,39 @@ function RideForm(props: IRideFormProps) {
 					handleChange(newRide);
 				}}
 			/>
-			{props.isDriving && <div>
-				<StopForm
-					title="Arrival"
-					value={ride.arrival!!}
-					onChange={(data: Stop) => {
-						const newRide = { ...ride };
-						newRide.arrival = { ...data };
-						handleChange(newRide);
-					}}
-				/>
-				<Typography variant="h6">Retrospective</Typography>
-				<Divider />
-				<TrafficConditionField
-					id="traffic-condition"
-					label="Traffic condition"
-					hint="Select the option that represent the best the traffic condition of your last ride."
-					value={ride.trafficCondition}
-					onChange={(data: TrafficCondition) => {
-						const newRide = { ...ride };
-						newRide.trafficCondition = data;
-						handleChange(newRide);
-					}}
-				/>
-				<CommentField
-					id="comment"
-					label="Comment"
-					hint="Let us know if you encountered any difficulties during your ride."
-					value={ride.comment}
-					onChange={(data: string) => {
-						const newRide = { ...ride };
-						newRide.comment = data;
-						handleChange(newRide);
-					}}
-				/>
-			</div>}
+			<StopForm
+				title="Arrival"
+				value={ride.arrival!!}
+				onChange={(data: Stop) => {
+					const newRide = { ...ride };
+					newRide.arrival = { ...data };
+					handleChange(newRide);
+				}}
+			/>
+			<Typography variant="h6">Retrospective</Typography>
+			<Divider />
+			<TrafficConditionField
+				id="traffic-condition"
+				label="Traffic condition"
+				hint="Select the option that represent the best the traffic condition of your last ride."
+				value={ride.trafficCondition}
+				onChange={(data: TrafficCondition) => {
+					const newRide = { ...ride };
+					newRide.trafficCondition = data;
+					handleChange(newRide);
+				}}
+			/>
+			<CommentField
+				id="comment"
+				label="Comment"
+				hint="Let us know if you encountered any difficulties during your ride."
+				value={ride.comment}
+				onChange={(data: string) => {
+					const newRide = { ...ride };
+					newRide.comment = data;
+					handleChange(newRide);
+				}}
+			/>
 			<div className="ride-form-messages">
 				{messages.map(message => <Typography
 					className="ride-form-message"
