@@ -30,7 +30,7 @@ function getTitle(): string {
 	else if (pathname.includes("/rides")) title = "Rides";
 	else if (pathname === "/statistics") title = "Statistics";
 	else if (pathname === "/locations") title = "Locations";
-	else throw new RangeError();
+	else title = "Default";
 	return title;
 }
 
