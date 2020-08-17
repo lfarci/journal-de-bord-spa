@@ -25,20 +25,29 @@ const useStyles = makeStyles((theme: Theme) =>
 function getTitle(): string {
 	const pathname: string = window.location.pathname;
 	let title: string;
-	if (pathname === "/") {
-		title = "Home";
-	} else if (pathname === "/rides/form") {
-		title = "Ride form";
-	} else if (pathname.includes("/rides")) {
-		title = "Rides";
-	} else if (pathname === "/statistics") {
-		title = "Statistics";
-	} else if (pathname === "/locations") {
-		title = "Locations";
-	} else {
-		throw new RangeError();
-	}
+	if (pathname === "/") title = "Home";
+	else if (pathname === "/rides/form") title = "Ride form";
+	else if (pathname.includes("/rides")) title = "Rides";
+	else if (pathname === "/statistics") title = "Statistics";
+	else if (pathname === "/locations") title = "Locations";
+	else throw new RangeError();
 	return title;
+}
+
+function getSelectedNavigationDrawerKey(): NavigationDrawerKey {
+	let navigationKey: NavigationDrawerKey = "home";
+	if (window.location.pathname === "/") navigationKey = "home";
+	if (window.location.pathname.includes("rides")) navigationKey = "rides";
+	if (window.location.pathname.includes("locations")) navigationKey = "locations";
+	if (window.location.pathname.includes("statistics")) navigationKey = "statistics";
+	return navigationKey;
+}
+
+function isEntry(): boolean {
+	return window.location.pathname === "/"
+		|| window.location.pathname === "/rides"
+		|| window.location.pathname === "/statistics"
+		|| window.location.pathname === "/locations";
 }
 
 function App() {
@@ -53,10 +62,8 @@ function App() {
 
 	useEffect(() => {
 		setTitle(getTitle());
-		if (window.location.pathname === "/") setSelected("home");
-		if (window.location.pathname.includes("rides")) setSelected("rides");
-		if (window.location.pathname.includes("locations")) setSelected("locations");
-		if (window.location.pathname.includes("statistics")) setSelected("statistics");
+		setSelected(getSelectedNavigationDrawerKey());
+		setShowBackArrow(!isEntry());
 	});
 
 	return (
@@ -85,8 +92,8 @@ function App() {
 			<Switch>
 				<Route exact path="/"><Home /></Route>
 				<RidesRoutes onHistoryPushed={() => setShowBackArrow(true)} />
-				<Route exact path="/locations"><p>Locations</p></Route>
-				<Route exact path="/statistics"><p>Statistics</p></Route>
+				<Route path="/locations"><p>Locations</p></Route>
+				<Route path="/statistics"><p>Statistics</p></Route>
 			</Switch>
 		</Box>
 	);
