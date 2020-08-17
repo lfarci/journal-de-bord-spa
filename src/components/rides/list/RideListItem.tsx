@@ -7,6 +7,7 @@ import SpeedRoundedIcon from '@material-ui/icons/SpeedRounded';
 import AccessTimeRoundedIcon from '@material-ui/icons/AccessTimeRounded';
 import DriveEtaRoundedIcon from '@material-ui/icons/DriveEtaRounded';
 import { Ride } from "../../../types";
+import { keys } from "@material-ui/core/styles/createBreakpoints";
 
 const humanizeDuration = require("humanize-duration");
 const moment = require("moment");
@@ -24,6 +25,11 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface IRideListItem {
+	/**
+	 * Unique key of the list item. The value is set for the key prop of the
+	 * component root element.
+	 */
+	key: number | string;
 	/**
 	 * Is the list item class name. They are set on the root element.
 	 */
@@ -69,7 +75,7 @@ function RideListItem(props: IRideListItem) {
 	}
 
 	return (
-		<Card className={props.className} elevation={12}>
+		<Card key={props.key} className={props.className} elevation={12}>
 			<CardContent>
 				<Grid
 					container

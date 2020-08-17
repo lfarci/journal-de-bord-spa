@@ -21,7 +21,8 @@ function RideList(props: IRideList) {
 	return (
 		<div>
 			{
-				props.rides.map((ride: Ride) => <RideListItem
+				props.rides.map((ride: Ride, index: number) => <RideListItem
+					key={index}
 					className={classes.root}
 					ride={ride}
 					onDelete={() => {
