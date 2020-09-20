@@ -6,6 +6,10 @@ import Home from './components/home/Home';
 import ApplicationBar from './components/navigation/ApplicationBar';
 import NavigationDrawer, { INavigationDrawerEntry, NavigationDrawerKey } from './components/navigation/NavigationDrawer';
 import RidesRoutes from './components/rides/RidesRoutes';
+import { Application } from './services/Application';
+import { Cookie } from './services/Cookie';
+import { WebService } from './services/WebService';
+import { TokenRequestResponse } from './types/TokenRequestResponse';
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
@@ -64,6 +68,21 @@ function App() {
 		setTitle(getTitle());
 		setSelected(getSelectedNavigationDrawerKey());
 		setShowBackArrow(!isEntry());
+
+		let i = window.location.href.indexOf('code');
+		if (!Application.isAuthenticated() && i !== -1) {
+			console.log("Trying to retrieve the token...");
+			const code: string = window.location.href.substring(i + 5);
+			Application.retrieveToken(code)
+				.then((data: TokenRequestResponse) => {
+					Application.saveToken(data);
+				})
+				.catch(error => console.error(error));
+		} else {
+			console.log(`isAuthenticated: ${Application.isAuthenticated()}`);
+			console.log(`accessTokenExist: ${Cookie.exist("access_token")}`);
+		}
+
 	}, []);
 
 	return (
