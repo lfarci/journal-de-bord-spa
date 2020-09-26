@@ -8,7 +8,6 @@ import NavigationDrawer, { INavigationDrawerEntry, NavigationDrawerKey } from '.
 import RidesRoutes from './components/rides/RidesRoutes';
 import { Application } from './services/Application';
 import { Cookie } from './services/Cookie';
-import { WebService } from './services/WebService';
 import { TokenRequestResponse } from './types/TokenRequestResponse';
 
 const useStyles = makeStyles((theme: Theme) =>

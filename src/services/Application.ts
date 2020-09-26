@@ -72,7 +72,6 @@ export class Application {
         const clientId = "client_id=newClient";
         const redirectUri = "redirect_uri=http://localhost:3000";
         const authUri = `${baseUri}?${responseType}&${scope}&${clientId}&${redirectUri}`;
-        console.log(`redirecting to: ${authUri}`);
         window.location.href = authUri;
     }
 

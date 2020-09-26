@@ -24,7 +24,6 @@ export class Http {
 
     static async get(uri = ''): Promise<Response> {
         const accessToken: string | undefined = Cookie.read("access_token");
-        console.log("making a get req with token: \'" + accessToken + "\'");
         return await fetch(uri, {
             method: "GET",
             mode: 'cors',
