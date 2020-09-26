@@ -1,4 +1,6 @@
+import { JsonWebToken } from "../types/JsonWebToken";
 import { TokenRequestResponse } from "../types/TokenRequestResponse";
+import { User } from "../types/User";
 import { Cookie } from "./Cookie";
 import { Http } from "./Http";
 
@@ -32,6 +34,35 @@ export class Application {
                 reject(error);
             }
         });
+    }
+
+    private static decodeSavedToken(): JsonWebToken {
+        const token: string | undefined = Cookie.read("access_token");
+        if (token) {
+            const base64Url = token.split('.')[1];
+            const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+            var jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
+                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            }).join(''));
+            return JSON.parse(jsonPayload);
+        } else {
+            throw new Error("Could not decode the token because it was not saved");
+        }
+    }
+
+    static getCurrentUser(): User {
+        try {
+            const decodedToken = Application.decodeSavedToken();
+            return {
+                id: decodedToken.sub,
+                name: decodedToken.name,
+                username: decodedToken.preferred_username,
+                givenName: decodedToken.given_name,
+                familyName: decodedToken.family_name
+            };
+        } catch (error) {
+            throw new Error(`Could not read current user because: ${error.message}`);
+        }
     }
 
     static login(): void {
