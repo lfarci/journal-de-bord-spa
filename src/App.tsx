@@ -67,6 +67,8 @@ function App() {
 	const [selected, setSelected] = useState<NavigationDrawerKey>("home");
 
 	useEffect(() => {
+
+		// TODO: the navigation bar title should change on route update: https://stackoverflow.com/questions/45373742/detect-route-change-with-react-router
 		setTitle(getTitle());
 		setSelected(getSelectedNavigationDrawerKey());
 		setShowBackArrow(!isEntry());
