@@ -1,10 +1,10 @@
 import React from "react";
-import { Route } from "react-router-dom";
 import RideDetails from "./details/RideDetails";
 import { TrafficCondition } from "./form/fields";
 import RideForm from "./form/RideForm";
 import { Ride } from "../../types";
 import Rides from "./list/Rides";
+import PrivateRoute from "../navigation/PrivateRoute";
 
 const model: Ride = {
 	departure: {
@@ -32,17 +32,34 @@ const model: Ride = {
 	comment: "Je suis un brave."
 };
 
-export default function RidesRoutes(props: {}) {
+function TestRideForm() {
+	return <RideForm
+		ride={model}
+		isDriving={false}
+		onChange={() => { }}
+		onSubmit={() => { }}
+	/>;
+}
+
+export default function RidesRoutes(props: { isAuthenticated: boolean, redirectTo: string }) {
 	return <>
-		<Route exact strict path="/rides"><Rides /></Route>
-		<Route exact strict path="/rides/form">
-			<RideForm
-				ride={model}
-				isDriving={false}
-				onChange={() => { }}
-				onSubmit={() => { }}
-			/>
-		</Route>
-		<Route path="/rides/:rideId(\d+)"><RideDetails /></Route>
+		<PrivateRoute exact strict
+			path="/rides"
+			element={Rides}
+			isAuthenticated={props.isAuthenticated}
+			redirectTo={props.redirectTo}
+		/>
+		<PrivateRoute exact strict
+			path="/rides/form"
+			element={TestRideForm}
+			isAuthenticated={props.isAuthenticated}
+			redirectTo={props.redirectTo}
+		/>
+		<PrivateRoute
+			path="/rides/:rideId(\d+)"
+			element={RideDetails}
+			isAuthenticated={props.isAuthenticated}
+			redirectTo={props.redirectTo}
+		/>
 	</>;
 }

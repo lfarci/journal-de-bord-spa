@@ -3,9 +3,12 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import React, { useState, useEffect } from 'react';
 import { Route, Switch, useHistory, withRouter } from "react-router-dom";
 import Home from './components/home/Home';
+import Locations from './components/locations/Locations';
 import ApplicationBar from './components/navigation/ApplicationBar';
 import NavigationDrawer, { INavigationDrawerEntry, NavigationDrawerKey } from './components/navigation/NavigationDrawer';
+import PrivateRoute from './components/navigation/PrivateRoute';
 import RidesRoutes from './components/rides/RidesRoutes';
+import Statistics from './components/statistics/Statistics';
 import { Application } from './services/Application';
 import { Cookie } from './services/Cookie';
 import { TokenRequestResponse } from './types/TokenRequestResponse';
@@ -70,12 +73,9 @@ function App() {
 
 		let i = window.location.href.indexOf('code');
 		if (!Application.isAuthenticated() && i !== -1) {
-			console.log("Trying to retrieve the token...");
 			const code: string = window.location.href.substring(i + 5);
 			Application.retrieveToken(code)
-				.then((data: TokenRequestResponse) => {
-					Application.saveToken(data);
-				})
+				.then((data: TokenRequestResponse) => Application.saveToken(data))
 				.catch(error => console.error(error));
 		} else {
 			console.log(`isAuthenticated: ${Application.isAuthenticated()}`);
@@ -109,9 +109,19 @@ function App() {
 			/>
 			<Switch>
 				<Route exact path="/"><Home /></Route>
-				<RidesRoutes />
-				<Route path="/locations"><p>Locations</p></Route>
-				<Route path="/statistics"><p>Statistics</p></Route>
+				<RidesRoutes isAuthenticated={Application.isAuthenticated()} redirectTo="/"/>
+				<PrivateRoute
+					path="/locations"
+					element={Locations}
+					isAuthenticated={Application.isAuthenticated()}
+					redirectTo="/"
+				/>
+				<PrivateRoute
+					path="/statistics"
+					element={Statistics}
+					isAuthenticated={Application.isAuthenticated()}
+					redirectTo="/"
+				/>
 			</Switch>
 		</Box>
 	);
