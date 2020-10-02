@@ -3,6 +3,8 @@ This project is a single page application inteded to provide a web client for th
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+[![Netlify Status](https://api.netlify.com/api/v1/badges/e2de1a87-bf55-4b41-8bec-a2249ba5cf1f/deploy-status)](https://app.netlify.com/sites/journal-de-bord/deploys)
+
 ## Installation
 ### Configuration
 This web client is published on Netlify. This section focuses on this platform. The configuration is easy. Netlify documentation explains how it is done right [here](https://docs.netlify.com/configure-builds/environment-variables/#declare-variables).
