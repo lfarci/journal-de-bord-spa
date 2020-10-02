@@ -109,6 +109,11 @@ function App() {
 				}}
 			/>
 			<Switch>
+			{
+			/* The statistics and locations routes get ignored if they are
+				after the RidesRoute component
+			*/
+			}
 				<Route exact path="/"><Home /></Route>
 				<PrivateRoute
 					path="/locations"
