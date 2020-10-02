@@ -68,7 +68,6 @@ function App() {
 
 	useEffect(() => {
 
-		// TODO: the navigation bar title should change on route update: https://stackoverflow.com/questions/45373742/detect-route-change-with-react-router
 		setTitle(getTitle());
 		setSelected(getSelectedNavigationDrawerKey());
 		setShowBackArrow(!isEntry());
@@ -111,7 +110,6 @@ function App() {
 			/>
 			<Switch>
 				<Route exact path="/"><Home /></Route>
-				<RidesRoutes isAuthenticated={Application.isAuthenticated()} redirectTo="/"/>
 				<PrivateRoute
 					path="/locations"
 					element={Locations}
@@ -124,6 +122,7 @@ function App() {
 					isAuthenticated={Application.isAuthenticated()}
 					redirectTo="/"
 				/>
+				<RidesRoutes isAuthenticated={Application.isAuthenticated()} redirectTo="/"/>
 			</Switch>
 		</Box>
 	);
