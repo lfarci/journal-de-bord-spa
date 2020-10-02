@@ -20,6 +20,7 @@ export interface IPrivateRouteProps extends RouteProps {
 }
 
 function PrivateRoute(props: IPrivateRouteProps) {
+    console.log(JSON.stringify(props, null, 2));
     return <Route
         {...props}
         render={(childrenProps) => props.isAuthenticated === true
