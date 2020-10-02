@@ -6,11 +6,11 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
 		root: {
-			marginTop: 10,
-			padding: 10,
+			height: "100%",
+			padding: 10
 		},
 		button: {
-			margin: 10
+			marginTop: 30
 		}
 	}),
 );
@@ -20,32 +20,36 @@ function Landing() {
 	const classes = useStyles();
 
 	return <Box
-			className={classes.root}
-			display="flex"
-			flexDirection="column"
-			justifyContent="center"
-			alignItems="center"
-			height="100%"
-		>
-		<Typography variant="h4" align="center">
-			Welcome to the <i>Journal de Bord</i> project.
-		</Typography>
-		<Typography variant="subtitle1" align="center">
-			Create your learner driver journal and keep track of your first rides. Register now and start tracking!
-		</Typography>
-		<Box
-			display="flex"
-			flexDirection="row"
-			justifyContent="center"
-		>
-			<Button
-				className={classes.button}
-				variant="contained"
-				color="primary"
-				onClick={() => { Application.register() }}>
-				Register now
+		className={classes.root}
+		display="flex"
+		flexDirection="column"
+		justifyContent="center"
+		alignItems="center"
+		height="100%"
+	>
+		<Box>
+			<Typography variant="h4" align="center">
+				Welcome to the Journal de bord project.
+			</Typography>
+			<Typography variant="subtitle1" align="center">
+				Create your learner driver journal and keep track of your first rides. Register now and start tracking!
+			</Typography>
+			<Box
+				display="flex"
+				flexDirection="row"
+				justifyContent="center"
+			>
+				<Button
+					className={classes.button}
+					variant="contained"
+					color="primary"
+					size="large"
+					onClick={() => { Application.register() }}>
+					Register now
 			</Button>
+			</Box>
 		</Box>
+
 	</Box>;
 }
 

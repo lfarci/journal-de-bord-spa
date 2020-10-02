@@ -8,8 +8,6 @@ function Home() {
 
 	const [lastRide] = useState<Ride | null>(null);
 
-	console.log("Rendering home:  " + window.location.pathname);
-
 	const isDriving = () => lastRide != null && lastRide.arrival == null;
 
 	return <>

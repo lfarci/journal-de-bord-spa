@@ -1,6 +1,6 @@
 import { Box } from '@material-ui/core';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Route, Switch, useHistory, withRouter } from "react-router-dom";
 import Home from './components/home/Home';
 import Landing from './components/landing/Landing';
@@ -15,6 +15,7 @@ import { Application } from './services/Application';
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
 		root: {
+			height: "75vh",
 			flexGrow: 1,
 			margin: -10,
 		},
@@ -55,44 +56,45 @@ function isEntry(): boolean {
 		|| window.location.pathname === "/locations";
 }
 
+interface IAppState {
+	title: string;
+	isBackArrowShown: boolean;
+	showDrawer: boolean;
+	selected: NavigationDrawerKey;
+}
+
 function App() {
 
 	const classes = useStyles();
 	const history = useHistory();
 
-	const [title, setTitle] = useState<string>(getTitle());
-	const [isBackArrowShown, setShowBackArrow] = useState<boolean>(false);
-	const [showDrawer, setShowDrawer] = useState<boolean>(false);
-	const [selected, setSelected] = useState<NavigationDrawerKey>("home");
-
-	useEffect(() => {
-		setTitle(getTitle());
-		setSelected(getSelectedNavigationDrawerKey());
-		setShowBackArrow(!isEntry());
-		console.log("App.ts has rendered");
-	}, []);
+	const [state, setState] = useState<IAppState>({
+		title: getTitle(),
+		isBackArrowShown: !isEntry(),
+		showDrawer: false,
+		selected: getSelectedNavigationDrawerKey()
+	});
 
 	return (
 		<Box className={classes.root}>
 			<ApplicationBar
-				title={title}
-				showBackArrow={isBackArrowShown}
+				title={state.title}
+				showBackArrow={state.isBackArrowShown}
 				onMenuClicked={() => {
-					if (isBackArrowShown) {
+					if (state.isBackArrowShown) {
 						history.goBack();
-						setShowBackArrow(false)
+						setState((prev) => ({...prev, isBackArrowShown: false}));
 					} else {
-						setShowDrawer(true);
+						setState((prev) => ({...prev, showDrawer: true}));
 					}
 				}}
 			/>
 			<NavigationDrawer
-				open={showDrawer}
-				selected={selected}
-				onClose={() => setShowDrawer(false)}
+				open={state.showDrawer}
+				selected={state.selected}
+				onClose={() => setState((prev) => ({...prev, showDrawer: false}))}
 				onClick={(entry: INavigationDrawerEntry) => {
-					setTitle(entry.label)
-					setSelected(entry.key);
+					setState((prev) => ({...prev, title: entry.label, selected: entry.key}));
 				}}
 			/>
 			<Switch>

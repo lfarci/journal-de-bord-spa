@@ -42,6 +42,7 @@ function PrivateRoute(props: IPrivateRouteProps) {
 				.then((data: TokenRequestResponse) => {
 					Application.saveToken(data);
 					setState({ isAuthenticated: true, isLoading: false, error: null });
+					window.location.reload();
 				})
 				.catch(error => {
 					setState({ isAuthenticated: false, isLoading: false, error: error });
