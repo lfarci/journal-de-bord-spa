@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Ride } from "../../types/Ride";
 import { Container } from "@material-ui/core";
 import StartShortcutCard from "./cards/StartShortcutCard";

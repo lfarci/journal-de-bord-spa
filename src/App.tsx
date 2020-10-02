@@ -1,7 +1,7 @@
 import { Box } from '@material-ui/core';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import React, { useState, useEffect } from 'react';
-import { Redirect, Route, Switch, useHistory, withRouter } from "react-router-dom";
+import { Route, Switch, useHistory, withRouter } from "react-router-dom";
 import Home from './components/home/Home';
 import Landing from './components/landing/Landing';
 import Locations from './components/locations/Locations';
@@ -11,8 +11,6 @@ import PrivateRoute from './components/navigation/PrivateRoute';
 import RidesRoutes from './components/rides/RidesRoutes';
 import Statistics from './components/statistics/Statistics';
 import { Application } from './services/Application';
-import { Cookie } from './services/Cookie';
-import { TokenRequestResponse } from './types/TokenRequestResponse';
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
@@ -71,6 +69,7 @@ function App() {
 		setTitle(getTitle());
 		setSelected(getSelectedNavigationDrawerKey());
 		setShowBackArrow(!isEntry());
+		console.log("App.ts has rendered");
 	}, []);
 
 	return (

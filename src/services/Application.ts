@@ -48,9 +48,7 @@ export class Application {
         }
     }
 
-    static login(): void {
-        console.log("TRYING TO LOGIN");
-        const baseUri = this.authServerLoginUri;
+    private static identify(baseUri: string): void {
         const responseType = `response_type=code`;
         const scope = `scope=openid write read`;
         const clientId = `client_id=${this.clientId}`;
@@ -59,14 +57,12 @@ export class Application {
         window.location.href = authUri;
     }
 
+    static login(): void {
+        Application.identify(this.authServerLoginUri);
+    }
+
     static register(): void {
-        const baseUri = this.authServerRegisterUri;
-        const responseType = `response_type=code`;
-        const scope = `scope=openid write read`;
-        const clientId = `client_id=${this.clientId}`;
-        const redirectUri = `redirect_uri=${window.location.origin}`;
-        const authUri = `${baseUri}?${responseType}&${scope}&${clientId}&${redirectUri}`;
-        window.location.href = authUri;
+        Application.identify(this.authServerRegisterUri);
     }
 
     static logout(): void {

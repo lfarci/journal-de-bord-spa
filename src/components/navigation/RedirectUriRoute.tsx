@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Redirect, Route, RouteComponentProps, RouteProps } from "react-router-dom";
 import { Application } from "../../services/Application";
+import { Cookie } from "../../services/Cookie";
 import { TokenRequestResponse } from "../../types/TokenRequestResponse";
 
 declare type Component = React.ComponentType<RouteComponentProps<any>> | React.ComponentType<any>;
@@ -27,7 +28,12 @@ interface IPrivateRouteState {
 	error: Error | null;
 }
 
-function PrivateRoute(props: IPrivateRouteProps) {
+/**
+ * This component extends the Route component. When executed it checks wheiter
+ * the current user is authenticated and an authorization code available in the
+ * URI.
+ */
+function RedirectUriRoute(props: IPrivateRouteProps) {
 
 	const [state, setState] = useState<IPrivateRouteState>({
 		isAuthenticated: false,
@@ -50,7 +56,7 @@ function PrivateRoute(props: IPrivateRouteProps) {
 		} else {
 			setState({ isAuthenticated: Application.isAuthenticated(), isLoading: false, error: null });
 		}
-	}, []);
+	}, [Application]);
 
 	return <>
 		{!state.isLoading && state.error != null && <p>Error: {state.error.message}</p>}
@@ -64,4 +70,4 @@ function PrivateRoute(props: IPrivateRouteProps) {
 	</>;
 }
 
-export default PrivateRoute;
+export default RedirectUriRoute;
