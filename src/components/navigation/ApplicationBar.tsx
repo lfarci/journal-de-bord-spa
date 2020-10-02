@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
 		root: {
 			top: -1,
-			letf: 0,
+			left: 0,
 			right: 0
 		},
 		menuButton: {
@@ -35,32 +35,33 @@ function ApplicationBar(props: IApplicationBarProps) {
 
 	return <AppBar position="sticky" className={classes.root}>
 		<Toolbar>
-			<IconButton
-				edge="start"
-				className={classes.menuButton}
-				color="inherit"
-				aria-label={props.showBackArrow ? "back" : "menu"}
-				onClick={props.onMenuClicked}
-			>
-				{props.showBackArrow ? <ArrowBackIcon /> : <MenuIcon />}
-			</IconButton>
+			{Application.isAuthenticated() &&
+				<IconButton
+					edge="start"
+					className={classes.menuButton}
+					color="inherit"
+					aria-label={props.showBackArrow ? "back" : "menu"}
+					onClick={props.onMenuClicked}
+				>
+					{props.showBackArrow ? <ArrowBackIcon /> : <MenuIcon />}
+				</IconButton>
+			}
 			<Typography variant="h6" className={classes.title}>
 				{props.title}
 			</Typography>
 
-			{Application.isAuthenticated() ?
-				<Button
+			{Application.isAuthenticated()
+				? <Button
 					variant="contained"
 					color="primary"
 					onClick={() => { Application.logout() }}>
-					Logout
+					Log Out
 				</Button>
-				:
-				<Button
+				: <Button
 					variant="contained"
 					color="primary"
 					onClick={() => { Application.login() }}>
-					Login
+					Log In
 				</Button>
 			}
 		</Toolbar>

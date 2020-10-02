@@ -7,16 +7,30 @@ import { JsonWebTokenUtils } from "./JsonWebTokenUtils";
 
 export class Application {
 
+    static authorizationCodeParameterName: string = "code";
     static accessTokenCookieKey: string = "access_token";
 
     static clientId: string = Application.getEnvironmentVariable("REACT_APP_CLIENT_ID");
     static clientSecret: string = Application.getEnvironmentVariable("REACT_APP_CLIENT_SECRET");
     static authServerTokenUri: string = Application.getEnvironmentVariable("REACT_APP_AUTH_SERVER_TOKEN_URI");
     static authServerLoginUri: string = Application.getEnvironmentVariable("REACT_APP_AUTH_SERVER_LOGIN_URI");
+    static authServerRegisterUri: string = Application.getEnvironmentVariable("REACT_APP_AUTH_SERVER_REGISTER_URI");
     static redirectUri: string = Application.getEnvironmentVariable("REACT_APP_REDIRECT_URI");
 
     static isAuthenticated() {
         return Cookie.exist(this.accessTokenCookieKey);
+    }
+
+    static isAuthorizationCodeInURI(): boolean {
+        return window.location.href.indexOf(this.authorizationCodeParameterName) !== -1;
+    }
+
+    static getAuthorizationCode(): string {
+        if (!Application.isAuthorizationCodeInURI()) {
+            throw new Error("Cannot read the authorization code in the URI.");
+        }
+        let i: number = window.location.href.indexOf('code');
+        return window.location.href.substring(i + 5);
     }
 
     static getCurrentUser(): User {
@@ -35,18 +49,29 @@ export class Application {
     }
 
     static login(): void {
+        console.log("TRYING TO LOGIN");
         const baseUri = this.authServerLoginUri;
         const responseType = `response_type=code`;
         const scope = `scope=openid write read`;
         const clientId = `client_id=${this.clientId}`;
-        const redirectUri = `redirect_uri=${this.redirectUri}`;
+        const redirectUri = `redirect_uri=${window.location.origin}/home`;
+        const authUri = `${baseUri}?${responseType}&${scope}&${clientId}&${redirectUri}`;
+        window.location.href = authUri;
+    }
+
+    static register(): void {
+        const baseUri = this.authServerRegisterUri;
+        const responseType = `response_type=code`;
+        const scope = `scope=openid write read`;
+        const clientId = `client_id=${this.clientId}`;
+        const redirectUri = `redirect_uri=${window.location.origin}`;
         const authUri = `${baseUri}?${responseType}&${scope}&${clientId}&${redirectUri}`;
         window.location.href = authUri;
     }
 
     static logout(): void {
         Cookie.remove(this.accessTokenCookieKey);
-        window.location.reload();
+        window.location.href = window.location.origin;
     }
 
     static saveToken(token: TokenRequestResponse): void {
@@ -54,19 +79,17 @@ export class Application {
             throw new Error("Cannot save token because the redirect URI variable is not defined");
         }
         if (!JsonWebTokenUtils.isValid(token.access_token)) {
-            throw new Error(`Cannot save the token because it isn't valid: ${token}`);
+            throw new Error(`Cannot save the token because it isn't valid: ${JSON.stringify(token)}`);
         }
         const expirationTime: number = new Date().getTime() + (1000 * token.expires_in);
         Cookie.write(this.accessTokenCookieKey, token.access_token, new Date(expirationTime));
-        window.location.href = this.redirectUri;
-
     }
 
     static async retrieveToken(code: string): Promise<TokenRequestResponse> {
         let params = new URLSearchParams();
         params.append('grant_type', 'authorization_code');
         params.append('code', code);
-        params.append('redirect_uri', this.redirectUri);
+        params.append('redirect_uri', `${window.location.origin}/home`);
         params.append('client_id', this.clientId);
         params.append('client_secret', this.clientSecret);
         return new Promise(async (resolve, reject) => {

@@ -56,7 +56,7 @@ const entries: INavigationDrawerEntry[] = [
 	{
 		key: "home",
 		label: "Home",
-		url: "/",
+		url: "/home",
 		icon: <HomeIcon />
 	},
 	{
