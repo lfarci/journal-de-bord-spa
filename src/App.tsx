@@ -105,6 +105,7 @@ function App() {
 					isAuthenticated={Application.isAuthenticated()}
 					redirectTo="/"
 				/>
+
 				<PrivateRoute
 					path="/locations"
 					element={Locations}

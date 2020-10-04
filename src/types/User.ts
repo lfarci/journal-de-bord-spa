@@ -4,4 +4,5 @@ export type User = {
     username: string;
     givenName: string;
     familyName: string;
+    pictureUri?: string;
 }

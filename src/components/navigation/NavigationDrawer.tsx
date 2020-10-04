@@ -1,14 +1,17 @@
 import React from "react";
 
-import { Drawer, List, ListItem, ListItemIcon, ListItemText } from "@material-ui/core";
+import { Divider, Drawer, List, ListItem, ListItemIcon, ListItemText } from "@material-ui/core";
 
 import HomeIcon from '@material-ui/icons/Home';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
 import DriveEtaIcon from '@material-ui/icons/DriveEta';
 import EqualizerIcon from '@material-ui/icons/Equalizer';
-import { useHistory } from "react-router-dom";
 
-export type NavigationDrawerKey = "home" | "rides" | "locations" | "statistics";
+import { useHistory } from "react-router-dom";
+import NavigationDrawerHeader from "./NavigationDrawerHeader";
+import { Application } from "../../services/Application";
+
+export type NavigationDrawerKey = "home" | "profile" | "rides" | "locations" | "statistics";
 
 interface INavigationDrawer {
 	/**
@@ -76,13 +79,17 @@ const entries: INavigationDrawerEntry[] = [
 		label: "Statistics",
 		url: "/statistics",
 		icon:  <EqualizerIcon />
-	}
+	},
 ];
 
 function NavigationDrawer(props: INavigationDrawer) {
 	const history = useHistory();
 	return (
 		<Drawer anchor="left" open={props.open} onClose={props.onClose}>
+			{Application.isAuthenticated() && (<div>
+				<NavigationDrawerHeader user={Application.getCurrentUser()}/>
+				<Divider />
+			</div>)}
 			<List>
 				{entries.map((item: INavigationDrawerEntry, index: number) => <ListItem button
 					key={item.key}
