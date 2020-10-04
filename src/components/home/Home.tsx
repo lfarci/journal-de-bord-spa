@@ -3,7 +3,8 @@ import { Ride } from "../../types/Ride";
 import { Container, createStyles, makeStyles, Theme } from "@material-ui/core";
 import StartShortcutCard from "./cards/StartShortcutCard";
 import FinishShortcutCard from "./cards/FinishShortcutCard";
-import ProgressOverviewCard from "./overview/ProgressOverviewCard";
+
+import { ProgressOverviewCard } from "./overview";
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
@@ -22,7 +23,7 @@ function Home() {
 	const isDriving = () => lastRide != null && lastRide.arrival == null;
 
 	return <Container className={classes.root}>
-		<ProgressOverviewCard value={60} />
+		<ProgressOverviewCard username="Logan" currentDistance={456} distanceObjective={1500} />
 		{!isDriving() && <StartShortcutCard />}
 		{isDriving() && <FinishShortcutCard />}
 	</Container>;
