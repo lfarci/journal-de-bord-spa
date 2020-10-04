@@ -1,56 +1,38 @@
 import React from "react";
 import { Application } from "../../services/Application";
 import { Box, Button, Typography } from "@material-ui/core";
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import { Page } from "../common";
 
-const useStyles = makeStyles((theme: Theme) =>
-	createStyles({
-		root: {
-			height: "100%",
-			padding: 10
-		},
-		button: {
-			marginTop: 30
-		}
-	}),
-);
+import "./Landing.scss";
 
 function Landing() {
+	return <Page title="Journal de bord" selected="home">
+		<div className="welcome-message-container">
+			<div className="welcome-message">
+				<Typography variant="h4" align="center">
+					Welcome to the Journal de bord project.
+				</Typography>
+				<Typography variant="subtitle1" align="center">
+					Create your learner driver journal and keep track of your first rides. Register now and start tracking!
+				</Typography>
+				<Box
+					display="flex"
+					flexDirection="row"
+					justifyContent="center"
+				>
+					<Button
+						id="landing-register-button"
+						variant="contained"
+						color="primary"
+						size="large"
+						onClick={() => { Application.register() }}>
+						Register now
+					</Button>
+				</Box>
+			</div>
+		</div>
 
-	const classes = useStyles();
-
-	return <Box
-		className={classes.root}
-		display="flex"
-		flexDirection="column"
-		justifyContent="center"
-		alignItems="center"
-		height="100%"
-	>
-		<Box>
-			<Typography variant="h4" align="center">
-				Welcome to the Journal de bord project.
-			</Typography>
-			<Typography variant="subtitle1" align="center">
-				Create your learner driver journal and keep track of your first rides. Register now and start tracking!
-			</Typography>
-			<Box
-				display="flex"
-				flexDirection="row"
-				justifyContent="center"
-			>
-				<Button
-					className={classes.button}
-					variant="contained"
-					color="primary"
-					size="large"
-					onClick={() => { Application.register() }}>
-					Register now
-			</Button>
-			</Box>
-		</Box>
-
-	</Box>;
+	</Page>;
 }
 
 export default Landing;

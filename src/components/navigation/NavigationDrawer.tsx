@@ -11,7 +11,7 @@ import { useHistory } from "react-router-dom";
 import NavigationDrawerHeader from "./NavigationDrawerHeader";
 import { Application } from "../../services/Application";
 
-export type NavigationDrawerKey = "home" | "profile" | "rides" | "locations" | "statistics";
+export type NavigationDrawerKey = "home" | "profile" | "rides" | "locations" | "statistics" | undefined;
 
 interface INavigationDrawer {
 	/**
@@ -21,7 +21,7 @@ interface INavigationDrawer {
 	/**
 	 * Is the key of the selected list item.
 	 */
-	selected: string;
+	selected: NavigationDrawerKey;
 	/**
 	 * Called when the navigation drawer is closed.
 	 */
@@ -29,7 +29,7 @@ interface INavigationDrawer {
 	/**
 	 * Called when the navigation drawer is clicked. item is the clicked entry.
 	 */
-	onClick: (item: INavigationDrawerEntry) => void;
+	onClick: (item: NavigationDrawerKey) => void;
 }
 
 /**
@@ -96,7 +96,7 @@ function NavigationDrawer(props: INavigationDrawer) {
 					selected={props.selected === item.key}
 					onClick={(e) => {
 						history.push(item.url);
-						props.onClick(item);
+						props.onClick(item.key);
 						props.onClose();
 					}}
 				>

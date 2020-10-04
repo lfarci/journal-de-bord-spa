@@ -9,17 +9,13 @@ import { Application } from '../../services/Application';
 
 interface IApplicationBarProps {
 	title: string;
+	className: string;
 	showBackArrow: boolean;
 	onMenuClicked: () => void;
 }
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
-		root: {
-			top: -1,
-			left: 0,
-			right: 0
-		},
 		menuButton: {
 			marginRight: theme.spacing(2),
 		},
@@ -33,7 +29,7 @@ function ApplicationBar(props: IApplicationBarProps) {
 
 	const classes = useStyles();
 
-	return <AppBar position="sticky" className={classes.root}>
+	return <AppBar position="static" className={props.className}>
 		<Toolbar>
 			{Application.isAuthenticated() &&
 				<IconButton
@@ -49,7 +45,6 @@ function ApplicationBar(props: IApplicationBarProps) {
 			<Typography variant="h6" className={classes.title}>
 				{props.title}
 			</Typography>
-
 			{Application.isAuthenticated()
 				? <Button
 					variant="contained"

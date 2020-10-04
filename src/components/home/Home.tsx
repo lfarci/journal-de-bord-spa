@@ -5,6 +5,7 @@ import StartShortcutCard from "./cards/StartShortcutCard";
 import FinishShortcutCard from "./cards/FinishShortcutCard";
 
 import { ProgressOverviewCard } from "./overview";
+import { Page } from "../common";
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
@@ -22,11 +23,14 @@ function Home() {
 
 	const isDriving = () => lastRide != null && lastRide.arrival == null;
 
-	return <Container className={classes.root}>
-		<ProgressOverviewCard username="Logan" currentDistance={456} distanceObjective={1500} />
-		{!isDriving() && <StartShortcutCard />}
-		{isDriving() && <FinishShortcutCard />}
-	</Container>;
+	return <Page title="Home" selected="home">
+		<Container className={classes.root}>
+			<ProgressOverviewCard username="Logan" currentDistance={456} distanceObjective={1500} />
+			{!isDriving() && <StartShortcutCard />}
+			{isDriving() && <FinishShortcutCard />}
+		</Container>
+	</Page>;
+
 }
 
 export default Home;
