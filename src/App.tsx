@@ -1,7 +1,6 @@
 import React from 'react';
 import { Route, Switch, withRouter } from "react-router-dom";
-import Home from './components/home/Home';
-import Landing from './components/landing/Landing';
+import { Home, Landing } from './components/pages';
 import Locations from './components/locations/Locations';
 import PrivateRoute from './components/navigation/PrivateRoute';
 import RidesRoutes from './components/rides/RidesRoutes';

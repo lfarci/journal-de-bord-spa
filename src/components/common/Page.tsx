@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import ApplicationBar from "../navigation/ApplicationBar";
-import NavigationDrawer, { INavigationDrawerEntry, NavigationDrawerKey } from "../navigation/NavigationDrawer";
+import NavigationDrawer, { NavigationDrawerKey } from "../navigation/NavigationDrawer";
 
 import "./Page.scss";
 

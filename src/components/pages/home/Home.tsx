@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { Ride } from "../../types/Ride";
+import { Ride } from "../../../types/Ride";
 import { Container, createStyles, makeStyles, Theme } from "@material-ui/core";
 import StartShortcutCard from "./cards/StartShortcutCard";
 import FinishShortcutCard from "./cards/FinishShortcutCard";
 
 import { ProgressOverviewCard } from "./overview";
-import { Page } from "../common";
+import { Page } from "../../common";
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({

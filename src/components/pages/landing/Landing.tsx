@@ -1,7 +1,7 @@
 import React from "react";
-import { Application } from "../../services/Application";
+import { Application } from "../../../services/Application";
 import { Box, Button, Typography } from "@material-ui/core";
-import { Page } from "../common";
+import { Page } from "../../common";
 
 import "./Landing.scss";
 
