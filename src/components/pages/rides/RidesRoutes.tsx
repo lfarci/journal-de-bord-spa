@@ -2,9 +2,9 @@ import React from "react";
 import RideDetails from "./details/RideDetails";
 import { TrafficCondition } from "./form/fields";
 import RideForm from "./form/RideForm";
-import { Ride } from "../../types";
+import { Ride } from "../../../types";
 import Rides from "./list/Rides";
-import PrivateRoute from "../navigation/PrivateRoute";
+import PrivateRoute from "../../navigation/PrivateRoute";
 
 const model: Ride = {
 	departure: {

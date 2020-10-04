@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 import { LocationField, OdometerField } from './fields';
-import { Stop, Location } from '../../../types';
+import { Stop, Location } from '../../../../types';
 import DatetimeField from './fields/DatetimeField';
 import { Typography, Divider } from '@material-ui/core';
 

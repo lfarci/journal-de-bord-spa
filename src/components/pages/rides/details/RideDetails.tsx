@@ -1,6 +1,6 @@
 import React from "react";
 import { RouteComponentProps, withRouter } from "react-router-dom";
-import { Page } from "../../common";
+import { Page } from "../../../common";
 
 type RideDetailsParams = { rideId: string };
 

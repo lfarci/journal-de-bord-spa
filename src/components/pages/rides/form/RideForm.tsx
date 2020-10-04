@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 
 import "./RideForm.scss";
 
-import { Button, Container, Typography, Divider } from '@material-ui/core';
+import { Button, Typography, Divider } from '@material-ui/core';
 
 import { CommentField, TrafficConditionField, TrafficCondition } from './fields';
-import { Ride, Stop } from '../../../types';
+import { Ride, Stop } from '../../../../types';
 import StopForm from './StopForm';
-import { Page } from '../../common';
+import { Page } from '../../../common';
 
 interface IRideFormProps {
 	/**

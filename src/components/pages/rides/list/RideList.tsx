@@ -1,7 +1,7 @@
 import React from "react";
-import { Ride } from "../../../types";
+import { Ride } from "../../../../types";
 import RideListItem from "./RideListItem";
-import { Page } from "../../common";
+import { Page } from "../../../common";
 
 interface IRideList {
 	rides: Ride[];

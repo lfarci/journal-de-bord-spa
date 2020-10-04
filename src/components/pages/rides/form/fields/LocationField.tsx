@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import { Location } from '../../../../types';
+import { Location } from '../../../../../types';
 
 interface ILocationFieldProps {
 	id: string;

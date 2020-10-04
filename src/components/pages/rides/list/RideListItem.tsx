@@ -6,7 +6,7 @@ import { Card, Typography, CardContent, Grid, Chip, createStyles, makeStyles, Th
 import SpeedRoundedIcon from '@material-ui/icons/SpeedRounded';
 import AccessTimeRoundedIcon from '@material-ui/icons/AccessTimeRounded';
 import DriveEtaRoundedIcon from '@material-ui/icons/DriveEtaRounded';
-import { Ride } from "../../../types";
+import { Ride } from "../../../../types";
 
 const humanizeDuration = require("humanize-duration");
 const moment = require("moment");

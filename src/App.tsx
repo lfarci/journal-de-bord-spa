@@ -1,9 +1,8 @@
 import React from 'react';
 import { Route, Switch, withRouter } from "react-router-dom";
-import { Home, Landing } from './components/pages';
+import { Home, Landing, RidesRoutes } from './components/pages';
 import Locations from './components/locations/Locations';
 import PrivateRoute from './components/navigation/PrivateRoute';
-import RidesRoutes from './components/rides/RidesRoutes';
 import Statistics from './components/statistics/Statistics';
 import { Application } from './services/Application';
 
