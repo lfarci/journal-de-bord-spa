@@ -17,12 +17,25 @@ export class Application {
     static authServerRegisterUri: string = Application.getEnvironmentVariable("REACT_APP_AUTH_SERVER_REGISTER_URI");
     static redirectUri: string = Application.getEnvironmentVariable("REACT_APP_REDIRECT_URI");
 
-    static isAuthenticated() {
+    public static isAuthenticated() {
         return Cookie.exist(this.accessTokenCookieKey);
     }
 
-    static isAuthorizationCodeInURI(): boolean {
+    private static isAuthorizationCodeInURI(): boolean {
         return window.location.href.indexOf(this.authorizationCodeParameterName) !== -1;
+    }
+
+    /**
+     * Tells if the application is ready to request an access token to the
+     * authorization server.
+     *
+     * It is ready when the authorization server has redirected the user to
+     * this application after login or registration. After redirection the
+     * window location href contains the authorization code required for the
+     * access token request.
+     */
+    public static isReadyToRequestAccessToken(): boolean {
+        return !Application.isAuthenticated() && Application.isAuthorizationCodeInURI();
     }
 
     static getAuthorizationCode(): string {
@@ -71,9 +84,6 @@ export class Application {
     }
 
     static saveToken(token: TokenRequestResponse): void {
-        if (this.redirectUri === undefined) {
-            throw new Error("Cannot save token because the redirect URI variable is not defined");
-        }
         if (!JsonWebTokenUtils.isValid(token.access_token)) {
             throw new Error(`Cannot save the token because it isn't valid: ${JSON.stringify(token)}`);
         }
@@ -81,7 +91,7 @@ export class Application {
         Cookie.write(this.accessTokenCookieKey, token.access_token, new Date(expirationTime));
     }
 
-    static async retrieveToken(code: string): Promise<TokenRequestResponse> {
+    static async requestAccessToken(code: string): Promise<TokenRequestResponse> {
         let params = new URLSearchParams();
         params.append('grant_type', 'authorization_code');
         params.append('code', code);
@@ -95,8 +105,8 @@ export class Application {
                     'application/x-www-form-urlencoded;charset=utf-8',
                     params.toString()
                 );
-                const data: TokenRequestResponse = await response.json();
-                resolve(data);
+                const data = await response.json();
+                response.ok ? resolve(data) : reject(new Error(JSON.stringify(data)));
             } catch (error) {
                 reject(error);
             }

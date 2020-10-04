@@ -35,10 +35,14 @@ function PrivateRoute(props: IPrivateRouteProps) {
 		error: null
 	});
 
+	const showLoading = (): boolean => state.isLoading && state.error == null;
+	const showError = (): boolean => !state.isLoading && state.error != null;
+	const showRoute = (): boolean => !state.isLoading && state.error == null;
+
 	useEffect(() => {
-		if (!Application.isAuthenticated() && Application.isAuthorizationCodeInURI()) {
+		if (Application.isReadyToRequestAccessToken()) {
 			const authorizationCode: string = Application.getAuthorizationCode();
-			Application.retrieveToken(authorizationCode)
+			Application.requestAccessToken(authorizationCode)
 				.then((data: TokenRequestResponse) => {
 					Application.saveToken(data);
 					setState({ isAuthenticated: true, isLoading: false, error: null });
@@ -54,9 +58,9 @@ function PrivateRoute(props: IPrivateRouteProps) {
 	}, []);
 
 	return <>
-		{!state.isLoading && state.error != null && <p>Error: {state.error.message}</p>}
-		{state.isLoading && state.error == null && <p>Loading..., please be patient.</p>}
-		{!state.isLoading && state.error == null && <Route
+		{showError() && <p>Error: {state.error?.message}</p>}
+		{showLoading() && <p>Loading..., please be patient.</p>}
+		{showRoute() && <Route
 			{...props}
 			render={(childrenProps) => state.isAuthenticated === true
 				? <props.element {...childrenProps} />
