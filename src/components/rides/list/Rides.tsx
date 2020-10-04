@@ -1,5 +1,5 @@
 import React, { } from "react";
-import { Container, createStyles, makeStyles, Theme, Fab } from "@material-ui/core";
+import { Fab } from "@material-ui/core";
 import { Ride } from "../../../types";
 import { TrafficCondition } from "../form/fields";
 
@@ -7,19 +7,7 @@ import AddIcon from '@material-ui/icons/Add';
 import RideList from "./RideList";
 import { useHistory, useRouteMatch } from "react-router-dom";
 
-const useStyles = makeStyles((theme: Theme) =>
-	createStyles({
-		root: {
-			marginTop: 10,
-			overflow: "auto"
-		},
-		fab: {
-			position: 'fixed',
-			bottom: theme.spacing(2),
-			right: theme.spacing(2),
-		},
-	})
-);
+import "./Rides.scss";
 
 const model: Ride = {
 	departure: {
@@ -60,12 +48,10 @@ export type RideScreenContentKey = "form" | "list" | "details";
  */
 function Rides(props: {}) {
 
-	const classes = useStyles();
 	const history = useHistory();
 	const { path } = useRouteMatch();
 
-	return (
-		<Container>
+	return <div className="rides">
 			<RideList
 				rides={rides}
 				onShowDetails={(rideId: number) => history.push(`${path}/${rideId}`)}
@@ -73,13 +59,12 @@ function Rides(props: {}) {
 			<Fab
 				color="primary"
 				aria-label="add"
-				className={classes.fab}
+				className="action-button"
 				onClick={() => history.push(`${path}/form`)}
 			>
 				<AddIcon />
 			</Fab>
-		</Container>
-	);
+		</div>;
 }
 
 export default Rides;

@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 
-import "./RideForm.css";
+import "./RideForm.scss";
 
 import { Button, Container, Typography, Divider } from '@material-ui/core';
 
 import { CommentField, TrafficConditionField, TrafficCondition } from './fields';
 import { Ride, Stop } from '../../../types';
 import StopForm from './StopForm';
+import { Page } from '../../common';
 
 interface IRideFormProps {
 	/**
@@ -72,8 +73,8 @@ function RideForm(props: IRideFormProps) {
 		setMessages(getErrorMessages(ride));
 	}
 
-	return (
-		<Container id="ride-form-container">
+	return <Page title="Create a new ride">
+		<div id="ride-form-container">
 			<StopForm
 				title="Departure"
 				value={ride.departure}
@@ -133,8 +134,8 @@ function RideForm(props: IRideFormProps) {
 			>
 				{getSubmitButtonText(props.isDriving)}
 			</Button>
-		</Container >
-	);
+		</div >
+	</Page>;
 }
 
 export default RideForm;
