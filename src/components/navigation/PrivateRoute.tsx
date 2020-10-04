@@ -46,7 +46,8 @@ function PrivateRoute(props: IPrivateRouteProps) {
 				.then((data: TokenRequestResponse) => {
 					Application.saveToken(data);
 					setState({ isAuthenticated: true, isLoading: false, error: null });
-					window.location.reload();
+					console.log(JSON.stringify(props, null, 2));
+					window.location.href = `${window.location.origin}${props.path as string}`;
 				})
 				.catch(error => {
 					setState({ isAuthenticated: false, isLoading: false, error: error });
