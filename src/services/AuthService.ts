@@ -1,13 +1,20 @@
 import { Log, User, UserManager, WebStorageStateStore } from 'oidc-client';
 import { Environment } from "./Environment";
 
+/**
+ * This class acts as a wrapper around this UserManager class of the
+ * oicd-client-js package. The package objective is to add support for the
+ * OpenID Connect protocol in this client.
+ *
+ * You can read about this class in the package wiki here:
+ * https://github.com/IdentityModel/oidc-client-js/wiki
+ */
 export class AuthService {
 
 	public _userManager: UserManager;
-	private _user: User | null;
 
 	constructor() {
-		const settings = {
+		this._userManager = new UserManager({
 			authority: Environment.authority,
 			client_id: Environment.clientId,
 			redirect_uri: `${window.location.origin}/login/callback`,
@@ -18,19 +25,14 @@ export class AuthService {
 			response_mode: 'query',
 			userStore: new WebStorageStateStore({ store: window.sessionStorage }),
 			automaticSilentRenew: true
-		};
-
-		this._userManager = new UserManager(settings);
-		this._user = null;
-
-		this._userManager.getUser().then(user =>{
-			if(user && !user.expired){
-			  this._user = user;
-			}
 		});
 
 		Log.logger = console;
 		Log.level = Log.INFO;
+	}
+
+	private set authorizationEndpoint(uri: string) {
+		this._userManager.settings.metadata = { authorization_endpoint: uri };
 	}
 
 	public isLoggedIn(): boolean {
@@ -46,6 +48,12 @@ export class AuthService {
 	}
 
 	public login(): Promise<void> {
+		this.authorizationEndpoint = Environment.authServerLoginUri;
+		return this._userManager.signinRedirect();
+	}
+
+	public register(): Promise<void> {
+		this.authorizationEndpoint = Environment.authServerRegisterUri;
 		return this._userManager.signinRedirect();
 	}
 

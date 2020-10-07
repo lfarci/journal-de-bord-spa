@@ -1,11 +1,14 @@
 import React from "react";
-import { Application } from "../../../services/Application";
 import { Box, Button, Typography } from "@material-ui/core";
 import { Page } from "../../common";
 
 import "./Landing.scss";
+import { AuthService } from "../../../services/AuthService";
 
 function Landing() {
+
+	const authService = new AuthService();
+
 	return <Page title="Journal de bord" selected="home">
 		<div className="welcome-message-container">
 			<div className="welcome-message">
@@ -25,7 +28,7 @@ function Landing() {
 						variant="contained"
 						color="primary"
 						size="large"
-						onClick={() => { Application.register() }}>
+						onClick={() => { authService.register() }}>
 						Register now
 					</Button>
 				</Box>

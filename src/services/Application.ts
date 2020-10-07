@@ -62,12 +62,12 @@ export class Application {
     }
 
     private static identify(baseUri: string): void {
-        const responseType = `response_type=code`;
-        const scope = `scope=openid write read`;
-        const clientId = `client_id=${this.clientId}`;
-        const redirectUri = `redirect_uri=${window.location.origin}/home`;
-        const authUri = `${baseUri}?${responseType}&${scope}&${clientId}&${redirectUri}`;
-        window.location.href = authUri;
+        let params = new URLSearchParams();
+        params.append('response_type', 'code');
+        params.append('scope', 'openid write read');
+        params.append('redirect_uri', `${window.location.origin}/login/callback`);
+        params.append('client_id', this.clientId);
+        window.location.href = `${baseUri}?${params.toString()}`;
     }
 
     static login(): void {
