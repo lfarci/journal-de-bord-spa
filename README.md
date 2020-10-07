@@ -72,3 +72,5 @@ The single page application needs to access a custom resource server on behalf o
 
 - [**Keycloak JavaScript adapter**](https://www.keycloak.org/docs/latest/securing_apps/#javascript-adapter-reference)
 - [**oidc-client**](https://github.com/IdentityModel/oidc-client-js)
+
+This project used the second one. It is the most practical one.

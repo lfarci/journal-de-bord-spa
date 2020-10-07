@@ -35,7 +35,9 @@ function Page(props: IPageProps) {
 			title={props.title}
 			showBackArrow={false}
 			onMenuClicked={openDrawer}
-			onLogin={async () => {await authService.login(); }}
+			showLogInButton={!authService.isLoggedIn()}
+			onLogIn={async () => {await authService.login(); }}
+			onLogOut={async () => {await authService.logout(); }}
 		/>
 		<NavigationDrawer
 			open={state.isDrawerOpen}

@@ -12,11 +12,12 @@ export class AuthService {
 			client_id: Environment.clientId,
 			redirect_uri: `${window.location.origin}/login/callback`,
 			silent_redirect_uri: `${window.location.origin}/silent-renew.html`,
-			post_logout_redirect_uri: `${window.location.origin}`,
+			post_logout_redirect_uri: `${window.location.origin}/`,
 			response_type: 'code',
 			scope: 'openid write read',
 			response_mode: 'query',
-			userStore: new WebStorageStateStore({ store: window.sessionStorage })
+			userStore: new WebStorageStateStore({ store: window.sessionStorage }),
+			automaticSilentRenew: true
 		};
 
 		this._userManager = new UserManager(settings);
