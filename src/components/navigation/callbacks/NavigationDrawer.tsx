@@ -8,8 +8,8 @@ import DriveEtaIcon from '@material-ui/icons/DriveEta';
 import EqualizerIcon from '@material-ui/icons/Equalizer';
 
 import { useHistory } from "react-router-dom";
-import NavigationDrawerHeader from "./NavigationDrawerHeader";
-import { Application } from "../../services/Application";
+import NavigationDrawerHeader from "../NavigationDrawerHeader";
+import { AuthService } from "../../../services/AuthService";
 
 export type NavigationDrawerKey = "home" | "profile" | "rides" | "locations" | "statistics" | undefined;
 
@@ -84,10 +84,18 @@ const entries: INavigationDrawerEntry[] = [
 
 function NavigationDrawer(props: INavigationDrawer) {
 	const history = useHistory();
+	const authService = new AuthService();
 	return (
 		<Drawer anchor="left" open={props.open} onClose={props.onClose}>
-			{Application.isAuthenticated() && (<div>
-				<NavigationDrawerHeader user={Application.getCurrentUser()}/>
+			{authService.isLoggedIn() && (<div>
+				<NavigationDrawerHeader user={{
+					familyName: "Default",
+					givenName: "Default",
+					id: "identified",
+					name: "default",
+					username: "default",
+					pictureUri: "no"
+				}}/>
 				<Divider />
 			</div>)}
 			<List>

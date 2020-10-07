@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { AuthService } from "../../services/AuthService";
 import ApplicationBar from "../navigation/ApplicationBar";
-import NavigationDrawer, { NavigationDrawerKey } from "../navigation/NavigationDrawer";
+import NavigationDrawer, { NavigationDrawerKey } from "../navigation/callbacks/NavigationDrawer";
 
 import "./Page.scss";
 

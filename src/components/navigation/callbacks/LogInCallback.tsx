@@ -1,8 +1,6 @@
-import { CircularProgress, Typography } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
-import { AuthService } from "../../services/AuthService";
-
-import "./LogInCallback.scss";
+import { AuthService } from "../../../services/AuthService";
+import Callback from "./Callback";
 
 interface ILogInCallbackState {
     isLoading: boolean;
@@ -26,13 +24,12 @@ function LogInCallback() {
         });
     }, []);
 
-    return <div className="login-callback-root">
-        {state.isLoading && state.error == null && <CircularProgress color="primary" />}
-        {!state.isLoading && state.error != null && <div className="login-callback-error">
-            <Typography variant="h6">Sorry about that!</Typography>
-        <Typography variant="subtitle1">An error occured while we were trying to log you in. (Error message: {state.error.message})</Typography>
-        </div>}
-    </div>;
+    return <Callback
+        isLoading={state.isLoading}
+        errorTitle="An error occured while we were trying to log you in."
+        error={state.error}
+    />
+
 }
 
 export default LogInCallback;

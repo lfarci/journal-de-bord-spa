@@ -6,8 +6,9 @@ import PrivateRoute from './components/navigation/PrivateRoute';
 import Statistics from './components/statistics/Statistics';
 
 import "./styles/App.scss";
-import LogInCallback from './components/navigation/LogInCallback';
+import LogInCallback from './components/navigation/callbacks/LogInCallback';
 import { AuthService } from './services/AuthService';
+import SilentRenewCallback from './components/navigation/SilentRenewCallback';
 
 function App() {
 
@@ -18,6 +19,8 @@ function App() {
 		<Route exact path="/"><Landing /></Route>
 
 		<Route exact path="/login/callback"><LogInCallback /></Route>
+
+		<Route exact path="/silent/callback"><SilentRenewCallback /></Route>
 
 		<PrivateRoute
 			path="/home"
