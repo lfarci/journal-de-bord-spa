@@ -1,27 +1,28 @@
 # Journal de bord web client
 This project is a single page application inteded to provide a web client for the Journal de bord project. It is developed using React and TypeScript.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Getting started
+This section explains how to run the project locally.
 
-## Installation
-### Configuration
-This web client is published on Netlify. This section focuses on this platform. The configuration is easy. Netlify documentation explains how it is done right [here](https://docs.netlify.com/configure-builds/environment-variables/#declare-variables).
-
-## Development
-### Configuration
-#### How to configure
 ```
-# Be sure to set your working directory to the project root
-cd <project directory>
+# Clone or download the project
+git clone https://github.com/Lofaloa/journal-de-bord-spa.git
 
-# .env.example is a template for the .env file
+# Be sure to set your working directory to the project root
+cd journal-de-bord-spa
+
+# .env.example is an existing template for the .env file. The variables are
+# required for the project to run
 cp .env.example .env
 
 # Edit the .env file and set the variables values
 vi .env
+
+# And run it!
+npm start
 ```
 
-#### Variables
+### Environment Variables
 - ```REACT_APP_AUTH_SERVER__URI```: is the root URI of the authorization server.
 - ```REACT_APP_CLIENT_ID```: is the identifier of this web client registered in your authorization server.
 - ```REACT_APP_AUTH_SERVER_TOKEN_URI```: is the authorization server endpoint that provide this client with an access token.
@@ -29,42 +30,22 @@ vi .env
 
 The custom environment variables are set following the [React documentation](https://create-react-app.dev/docs/adding-custom-environment-variables/). Their value can be accessed as follows `process.env["VARIABLE_NAME"]`.
 
-### Available Scripts
+## Deployment
+This web client is published on Netlify. This section focuses on this platform. The configuration is easy. Netlify documentation explains how it is done right [here](https://docs.netlify.com/configure-builds/environment-variables/#declare-variables).
 
-In the project directory, you can run:
+### How to
+Netlify explains how to publish on this [tutorial](https://www.netlify.com/blog/2016/09/29/a-step-by-step-guide-deploying-on-netlify/). Currently the project is automatically deployed on Netlify when a branch is merged to the master. I still need to configure the environment variables manually.
 
-#### `npm start`
+To set the variables (as described in the previous section), go to:
+1. Go to [app.netlify.com](https://app.netlify.com)
+2. Open the site to set the variables for
+3. Go to Site *Settings*
+4. Go to the *Build & Deploy* section
+5. Go to *Environment*
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+You should find this following screen. There you go 😁! Go ahead and set the required environment variables.
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
-
-#### `npm test`
-
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-#### `npm run build`
-
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-#### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+![Environment](./screenshots/netlify_env_screenshot.png)
 
 ## Security
 The single page application needs to access a custom resource server on behalf of its users. The authorization server is using Keycloak. Different options exist as to how to implement a OpenID Connect client.
@@ -72,4 +53,4 @@ The single page application needs to access a custom resource server on behalf o
 - [**Keycloak JavaScript adapter**](https://www.keycloak.org/docs/latest/securing_apps/#javascript-adapter-reference)
 - [**oidc-client**](https://github.com/IdentityModel/oidc-client-js)
 
-This project used the second one. It is the most practical one.
+This project used the second. It is the most practical one.
