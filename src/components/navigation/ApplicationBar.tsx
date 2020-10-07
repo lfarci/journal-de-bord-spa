@@ -5,7 +5,6 @@ import { AppBar, Toolbar, IconButton, Typography, Button } from '@material-ui/co
 
 import MenuIcon from '@material-ui/icons/Menu';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-import { Application } from '../../services/Application';
 
 interface IApplicationBarProps {
 	title: string;
@@ -40,7 +39,7 @@ function ApplicationBar(props: IApplicationBarProps) {
 
 	return <AppBar position="static" className={props.className}>
 		<Toolbar>
-			{Application.isAuthenticated() &&
+			{!props.showLogInButton &&
 				<IconButton
 					edge="start"
 					className={classes.menuButton}

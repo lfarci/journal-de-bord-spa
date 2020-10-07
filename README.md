@@ -22,11 +22,10 @@ vi .env
 ```
 
 #### Variables
+- ```REACT_APP_AUTH_SERVER__URI```: is the root URI of the authorization server.
 - ```REACT_APP_CLIENT_ID```: is the identifier of this web client registered in your authorization server.
-- ```REACT_APP_CLIENT_SECRET```: is the credentials of this web cliend registered in your authorization server.
 - ```REACT_APP_AUTH_SERVER_TOKEN_URI```: is the authorization server endpoint that provide this client with an access token.
 - ```REACT_APP_AUTH_SERVER_LOGIN_URI```: is the authorization server endpoint that provide this client with a login page.
-- ```REACT_APP_REDIRECT_URI```: is the location URI where this client user will be redirected after login.
 
 The custom environment variables are set following the [React documentation](https://create-react-app.dev/docs/adding-custom-environment-variables/). Their value can be accessed as follows `process.env["VARIABLE_NAME"]`.
 
