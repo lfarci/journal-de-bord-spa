@@ -1,5 +1,3 @@
-import { Cookie } from "./Cookie";
-
 type HttpRequest = {
     uri: string;
     method: "GET" | "POST";
@@ -22,8 +20,7 @@ export class Http {
         });
     }
 
-    static async get(uri = ''): Promise<Response> {
-        const accessToken: string | undefined = Cookie.read("access_token");
+    static async get(uri = '', accessToken: string): Promise<Response> {
         return await fetch(uri, {
             method: "GET",
             mode: 'cors',
@@ -38,14 +35,14 @@ export class Http {
         });
     }
 
-    static async post(uri = '', contentType: string, data: string): Promise<Response> {
+    static async post(uri = '', contentType: string, accessToken: string, data: string): Promise<Response> {
         return Http.makeRequest(
             {
                 uri: uri,
                 method: "POST",
                 headers: {
                     'Content-Type': contentType,
-                    'Authorization': `Bearer ${Cookie.read("access_token")}`
+                    'Authorization': `Bearer ${accessToken}`
                 },
                 body: data
             },
