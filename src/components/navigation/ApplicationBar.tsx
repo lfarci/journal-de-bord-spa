@@ -12,6 +12,10 @@ interface IApplicationBarProps {
 	className: string;
 	showBackArrow: boolean;
 	onMenuClicked: () => void;
+	/**
+	 * Action called when the login button is clicked.
+	 */
+	onLogin: () => void;
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -45,7 +49,7 @@ function ApplicationBar(props: IApplicationBarProps) {
 			<Typography variant="h6" className={classes.title}>
 				{props.title}
 			</Typography>
-			{Application.isAuthenticated()
+			{/* {Application.isAuthenticated()
 				? <Button
 					variant="contained"
 					color="primary"
@@ -58,7 +62,8 @@ function ApplicationBar(props: IApplicationBarProps) {
 					onClick={() => { Application.login() }}>
 					Log In
 				</Button>
-			}
+			} */}
+			<Button variant="contained" color="primary" onClick={props.onLogin}>Log In</Button>
 		</Toolbar>
 	</AppBar>;
 }

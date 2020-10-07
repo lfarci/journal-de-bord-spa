@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { AuthService } from "../../services/AuthService";
 import ApplicationBar from "../navigation/ApplicationBar";
 import NavigationDrawer, { NavigationDrawerKey } from "../navigation/NavigationDrawer";
 
@@ -17,6 +18,8 @@ interface IPageState {
 
 function Page(props: IPageProps) {
 
+	const authService = new AuthService();
+
 	const [state, setState] = useState<IPageState>({
 		isDrawerOpen: false,
 		selected: props.selected ? props.selected : undefined
@@ -32,6 +35,7 @@ function Page(props: IPageProps) {
 			title={props.title}
 			showBackArrow={false}
 			onMenuClicked={openDrawer}
+			onLogin={async () => {await authService.login(); }}
 		/>
 		<NavigationDrawer
 			open={state.isDrawerOpen}

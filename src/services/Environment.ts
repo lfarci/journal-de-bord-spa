@@ -15,7 +15,7 @@ export class Environment {
         if (process.env[variableName] === undefined) {
             throw new Error(`Cannot read environment variable ${variableName} because it isn't defined.`);
         }
-        return process.env[key]!!;
+        return process.env[variableName]!!;
     }
 
 }
