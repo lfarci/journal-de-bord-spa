@@ -9,7 +9,6 @@ import { useHistory, useRouteMatch } from "react-router-dom";
 
 import "./Rides.scss";
 import { ResourcesService } from "../../../../services/ResourcesService";
-import ErrorMessage from "../../../common/ErrorMessage";
 
 export type RideScreenContentKey = "form" | "list" | "details";
 
@@ -41,7 +40,6 @@ function Rides(props: {}) {
 			const resourceServer = new ResourcesService();
 			try {
 				const rides: Ride[] = await resourceServer.getRides('userid');
-				throw new Error();
 				setState({ rides: rides, isLoading: false, error: undefined });
 			} catch (error) {
 				error.name = errorTitle;
