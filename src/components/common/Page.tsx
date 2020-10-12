@@ -8,18 +8,33 @@ import NavigationDrawer, { NavigationDrawerKey } from "../navigation/callbacks/N
 import "./Page.scss";
 
 interface IPageProps {
+	/**
+	 * It the title shown in the application bar. It should describe the
+	 * current page content. The title is also used in the document title.
+	 */
 	title: string;
+	/**
+	 * Is the entry that is currently selected in the navigation drawer.
+	 */
 	selected?: NavigationDrawerKey;
+	/**
+	 * Are the page children elements. They are rendered only if the page has
+	 * no specified error or isn't loading.
+	 */
 	children: React.ReactNode;
+	/**
+	 * When specified the given error is shown in the pageg content.
+	 */
 	error?: Error;
+	/**
+	 * When specified and set to true the page shows a progress indicator.
+	 */
 	isLoading?: boolean;
 }
 
 interface IPageState {
 	isDrawerOpen: boolean;
 	selected: NavigationDrawerKey;
-	isLoading: boolean;
-	error: Error | undefined;
 }
 
 function Page(props: IPageProps) {
@@ -29,21 +44,18 @@ function Page(props: IPageProps) {
 	const [state, setState] = useState<IPageState>({
 		isDrawerOpen: false,
 		selected: props.selected ? props.selected : undefined,
-		isLoading: true,
-		error: undefined
 	});
 
 	const openDrawer = (): void => setState((prev) => ({ ...prev, isDrawerOpen: true }));
-
 	const closeDrawer = (): void => setState((prev) => ({ ...prev, isDrawerOpen: false }));
-
 	const select = (key: NavigationDrawerKey): void => setState((prev) => ({ ...prev, selected: key }));
-
 	const isLoading = (): boolean => props.isLoading === undefined ? false : props.isLoading;
-
 	const hasError = (): boolean => props.error !== undefined;
-
 	const isReady = (): boolean => !hasError() && !isLoading();
+
+	useEffect(() => {
+		document.title = `Journal de bord - ${props.title.toLowerCase()}`;
+	});
 
 	return <div className="page-root">
 		<ApplicationBar
