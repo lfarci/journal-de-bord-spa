@@ -3,12 +3,14 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
 
     height: 100%;
     width: 100%;
 
     .rides-list {
+
+        width: 100%;
 
         .rides-list-item {
             margin-top: 16px;
@@ -19,6 +21,14 @@
         .rides-list-item:last-child {
             margin-bottom: 16px;
         }
+    }
+
+    .zero-content-message {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        -webkit-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
     }
 
     .action-button {

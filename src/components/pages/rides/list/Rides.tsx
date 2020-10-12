@@ -41,8 +41,8 @@ function Rides(props: {}) {
 			const resourceServer = new ResourcesService();
 			try {
 				const rides: Ride[] = await resourceServer.getRides('userid');
-				setState({ rides: rides, isLoading: false, error: undefined });
 				throw new Error();
+				setState({ rides: rides, isLoading: false, error: undefined });
 			} catch (error) {
 				error.name = errorTitle;
 				error.message = errorMessage;
@@ -56,7 +56,7 @@ function Rides(props: {}) {
 	return <Page title="My rides" selected="rides" isLoading={state.isLoading} error={state.error}>
 		<div className="rides-content">
 			<RideList
-				rides={state.rides}
+				rides={[]}
 				onShowDetails={(rideId: number) => history.push(`${path}/${rideId}`)}
 			/>
 			<Fab
