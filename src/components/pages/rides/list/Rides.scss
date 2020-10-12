@@ -1,13 +1,24 @@
-.rides {
+.rides-content {
 
-    .rides-list-item {
-        margin-top: 16px;
-        margin-left: 16px;
-        margin-right: 16px;
-    }
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 
-    .rides-list-item:last-child {
-        margin-bottom: 16px;
+    height: 100%;
+    width: 100%;
+
+    .rides-list {
+
+        .rides-list-item {
+            margin-top: 16px;
+            margin-left: 16px;
+            margin-right: 16px;
+        }
+
+        .rides-list-item:last-child {
+            margin-bottom: 16px;
+        }
     }
 
     .action-button {
@@ -17,3 +28,4 @@
     }
 
 }
+
