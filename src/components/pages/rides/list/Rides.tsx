@@ -9,6 +9,7 @@ import { useHistory, useRouteMatch } from "react-router-dom";
 
 import "./Rides.scss";
 import { ResourcesService } from "../../../../services/ResourcesService";
+import ErrorMessage from "../../../common/ErrorMessage";
 
 export type RideScreenContentKey = "form" | "list" | "details";
 
@@ -26,6 +27,8 @@ function Rides(props: {}) {
 
 	const history = useHistory();
 	const { path } = useRouteMatch();
+	const errorTitle = "Error while loading your rides";
+	const errorMessage = "The application wasn't able to load your rides. This is an internal error. Try again.";
 
 	const [state, setState] = useState<IRidesState>({
 		rides: [],
@@ -38,9 +41,12 @@ function Rides(props: {}) {
 			const resourceServer = new ResourcesService();
 			try {
 				const rides: Ride[] = await resourceServer.getRides('userid');
-				throw "BOUM";
 				setState({ rides: rides, isLoading: false, error: undefined });
+				throw new Error();
 			} catch (error) {
+				error.name = errorTitle;
+				error.message = errorMessage;
+				console.error(error);
 				setState({ rides: [], isLoading: false, error: error });
 			}
 		};

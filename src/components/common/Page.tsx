@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { AuthService } from "../../services/AuthService";
 import ApplicationBar from "../navigation/ApplicationBar";
 import NavigationDrawer, { NavigationDrawerKey } from "../navigation/callbacks/NavigationDrawer";
+import ErrorMessage from "./ErrorMessage";
 
 import "./Page.scss";
 
@@ -75,8 +76,11 @@ function Page(props: IPageProps) {
 		/>
 		<div className="page-content">
 			{ isLoading() && <LinearProgress /> }
-			{ hasError() && <p>Error</p> }
 			{ isReady() && props.children }
+			{ hasError() && <ErrorMessage
+				title={props.error!!.name}
+				message={props.error!!.message}/>
+			}
 		</div>
 	</div>
 }

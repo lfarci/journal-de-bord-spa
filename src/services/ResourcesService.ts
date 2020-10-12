@@ -22,7 +22,7 @@ export class ResourcesService {
     public async getRides(userId: string): Promise<Ride[]> {
         return new Promise(async (resolve, reject) => {
             try {
-                await this.sleep(5000);
+                await this.sleep(1000);
                 resolve(ResourcesService.readRidesFromSample());
             } catch (error) {
                reject(error);
