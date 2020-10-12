@@ -1,10 +1,10 @@
 # Journal de bord web client
+[![Netlify Status](https://api.netlify.com/api/v1/badges/e2de1a87-bf55-4b41-8bec-a2249ba5cf1f/deploy-status)](https://app.netlify.com/sites/journal-de-bord/deploys)
+
 This project is a single page application inteded to provide a web client for the Journal de bord project. It is developed using React and TypeScript.
 
 ## Getting started
-This section explains how to run the project locally.
-
-[![Netlify Status](https://api.netlify.com/api/v1/badges/e2de1a87-bf55-4b41-8bec-a2249ba5cf1f/deploy-status)](https://app.netlify.com/sites/journal-de-bord/deploys)
+The project documentation can be found [here](https://farci-logan.gitbook.io/journal-de-bord/). Note that you can find the documentation concerning this partical repository in the frontend section.
 
 ## Installation
 ### Configuration
