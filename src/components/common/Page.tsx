@@ -62,8 +62,6 @@ function Page(props: IPageProps) {
 		<ApplicationBar
 			className="page-app-bar"
 			title={props.title}
-			showBackArrow={false}
-			onMenuClicked={openDrawer}
 			showLogInButton={!authService.isLoggedIn()}
 			onLogIn={async () => {await authService.login(); }}
 			onLogOut={async () => {await authService.logout(); }}

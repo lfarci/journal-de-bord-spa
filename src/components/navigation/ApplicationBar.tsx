@@ -1,16 +1,20 @@
 import React from 'react';
 
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import { AppBar, Toolbar, IconButton, Typography, Button } from '@material-ui/core';
-
-import MenuIcon from '@material-ui/icons/Menu';
-import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import { AppBar, Toolbar, Typography, Button } from '@material-ui/core';
 
 interface IApplicationBarProps {
+	/**
+	 * Is the title describing the content shown in the current page.
+	 */
 	title: string;
+	/**
+	 * Is the class name applied to the component root element.
+	 */
 	className: string;
-	showBackArrow: boolean;
-	onMenuClicked: () => void;
+	/**
+	 * Tells the application bar to show the log in or log out button.
+	 */
 	showLogInButton: boolean;
 	/**
 	 * Action called when the login button is clicked.
@@ -39,17 +43,6 @@ function ApplicationBar(props: IApplicationBarProps) {
 
 	return <AppBar position="static" className={props.className}>
 		<Toolbar>
-			{!props.showLogInButton &&
-				<IconButton
-					edge="start"
-					className={classes.menuButton}
-					color="inherit"
-					aria-label={props.showBackArrow ? "back" : "menu"}
-					onClick={props.onMenuClicked}
-				>
-					{props.showBackArrow ? <ArrowBackIcon /> : <MenuIcon />}
-				</IconButton>
-			}
 			<Typography variant="h6" className={classes.title}>
 				{props.title}
 			</Typography>
