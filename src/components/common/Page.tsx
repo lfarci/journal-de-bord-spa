@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { useEffect } from "react";
 import { AuthService } from "../../services/AuthService";
 import ApplicationBar from "../navigation/ApplicationBar";
-import NavigationDrawer, { NavigationDrawerKey } from "../navigation/callbacks/NavigationDrawer";
+import ApplicationBottomNavigation, { ContentKey } from "../navigation/ApplicationBottomNavigation";
 import ErrorMessage from "./ErrorMessage";
 
 import "./Page.scss";
@@ -17,7 +17,7 @@ interface IPageProps {
 	/**
 	 * Is the entry that is currently selected in the navigation drawer.
 	 */
-	selected?: NavigationDrawerKey;
+	selected?: ContentKey;
 	/**
 	 * Are the page children elements. They are rendered only if the page has
 	 * no specified error or isn't loading.
@@ -35,7 +35,7 @@ interface IPageProps {
 
 interface IPageState {
 	isDrawerOpen: boolean;
-	selected: NavigationDrawerKey;
+	content: ContentKey;
 }
 
 function Page(props: IPageProps) {
@@ -44,15 +44,15 @@ function Page(props: IPageProps) {
 
 	const [state, setState] = useState<IPageState>({
 		isDrawerOpen: false,
-		selected: props.selected ? props.selected : undefined,
+		content: props.selected ? props.selected : undefined
 	});
 
 	const openDrawer = (): void => setState((prev) => ({ ...prev, isDrawerOpen: true }));
-	const closeDrawer = (): void => setState((prev) => ({ ...prev, isDrawerOpen: false }));
-	const select = (key: NavigationDrawerKey): void => setState((prev) => ({ ...prev, selected: key }));
 	const isLoading = (): boolean => props.isLoading === undefined ? false : props.isLoading;
 	const hasError = (): boolean => props.error !== undefined;
 	const isReady = (): boolean => !hasError() && !isLoading();
+
+	const setContent = (key: ContentKey): void => setState((prev) => ({ ...prev, content: key }));
 
 	useEffect(() => {
 		document.title = `Journal de bord - ${props.title.toLowerCase()}`;
@@ -62,17 +62,9 @@ function Page(props: IPageProps) {
 		<ApplicationBar
 			className="page-app-bar"
 			title={props.title}
-			showBackArrow={false}
-			onMenuClicked={openDrawer}
 			showLogInButton={!authService.isLoggedIn()}
 			onLogIn={async () => {await authService.login(); }}
 			onLogOut={async () => {await authService.logout(); }}
-		/>
-		<NavigationDrawer
-			open={state.isDrawerOpen}
-			selected={state.selected}
-			onClose={closeDrawer}
-			onClick={select}
 		/>
 		<div className="page-content">
 			{ isLoading() && <LinearProgress /> }
@@ -82,6 +74,7 @@ function Page(props: IPageProps) {
 				message={props.error!!.message}/>
 			}
 		</div>
+		{authService.isLoggedIn() && <ApplicationBottomNavigation contentKey={state.content} onClick={setContent} />}
 	</div>
 }
 
