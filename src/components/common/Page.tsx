@@ -19,9 +19,15 @@ interface IPageProps {
 	 */
 	selected?: ContentKey;
 	/**
-	 * When specified the page shows a back button in the application bar.
+	 * When specified and set to true the page shows a back button in the
+	 * application bar.
 	 */
 	showBackButton?: boolean;
+	/**
+	 * When specified and set to true a bottom navigation bar is shown at the
+	 * bottom of the page.
+	 */
+	showBottomNavigation?: boolean;
 	/**
 	 * Are the page children elements. They are rendered only if the page has
 	 * no specified error or isn't loading.
@@ -52,6 +58,8 @@ function Page(props: IPageProps) {
 	const isLoading = (): boolean => props.isLoading === undefined ? false : props.isLoading;
 	const hasError = (): boolean => props.error !== undefined;
 	const isReady = (): boolean => !hasError() && !isLoading();
+	const showBackButton = () => props.showBackButton === undefined ? false : props.showBackButton;
+	const showBottomNavigation = () => props.showBottomNavigation === undefined ? false : props.showBottomNavigation;
 
 	const setContent = (key: ContentKey): void => setState((prev) => ({ ...prev, content: key }));
 
@@ -65,7 +73,7 @@ function Page(props: IPageProps) {
 			title={props.title}
 			onLogIn={async () => {await authService.login(); }}
 			onLogOut={async () => {await authService.logout(); }}
-			showBackButton={props.showBackButton}
+			showBackButton={showBackButton()}
 		/>
 		<div className="page-content">
 			{ isLoading() && <LinearProgress /> }
@@ -75,7 +83,7 @@ function Page(props: IPageProps) {
 				message={props.error!!.message}/>
 			}
 		</div>
-		{authService.isLoggedIn() && <ApplicationBottomNavigation contentKey={state.content} onClick={setContent} />}
+		{showBottomNavigation() && <ApplicationBottomNavigation contentKey={state.content} onClick={setContent} />}
 	</div>
 }
 
