@@ -6,6 +6,7 @@ import Avatar from '@material-ui/core/Avatar/Avatar';
 import { User } from 'oidc-client';
 import { AuthService } from '../../services/AuthService';
 import { Skeleton } from '@material-ui/lab';
+import { useHistory } from 'react-router-dom';
 
 interface IApplicationBarProps {
 	/**
@@ -35,6 +36,9 @@ const useStyles = makeStyles((theme: Theme) =>
 			flexGrow: 1,
 			marginLeft: "1em"
 		},
+		avatar: {
+			cursor: "pointer"
+		}
 	}),
 );
 
@@ -46,10 +50,13 @@ function ApplicationBar(props: IApplicationBarProps) {
 
 	const authService = new AuthService();
 	const classes = useStyles();
+	const history = useHistory();
+
 
 	const [user, setUser] = useState<User | null>(null);
 
 	const isReady = (): boolean => user !== null;
+	const goToProfile = (): void => history.push('/profile');
 
 	useEffect(() => {
 		const getUser = async () => {
@@ -63,7 +70,12 @@ function ApplicationBar(props: IApplicationBarProps) {
 
 	return <AppBar position="static" className={props.className}>
 		<Toolbar>
-			{ authService.isLoggedIn() && isReady() && <Avatar alt={user!!.profile.name} src={user!!.profile.picture} />}
+			{ authService.isLoggedIn() && isReady() && <Avatar
+				alt={user!!.profile.name}
+				src={user!!.profile.picture}
+				onClick={goToProfile}
+				className={classes.avatar}
+			/> }
 			{ authService.isLoggedIn() && !isReady() && <Skeleton variant="circle"><Avatar /></Skeleton>}
 			<Typography variant="h6" className={classes.title}>
 				{props.title}
