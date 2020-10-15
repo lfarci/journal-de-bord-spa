@@ -69,11 +69,12 @@ function ApplicationBar(props: IApplicationBarProps) {
 	const goToProfile = (): void => history.push('/profile');
 
 	useEffect(() => {
+		const service = new AuthService();
 		const getUser = async () => {
-			const user: User | null = await authService.getUser();
+			const user: User | null = await service.getUser();
 			setUser(user);
 		};
-		if (authService.isLoggedIn()) {
+		if (service.isLoggedIn()) {
 			getUser();
 		}
 	}, []);
