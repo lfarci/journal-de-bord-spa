@@ -47,7 +47,6 @@ function Page(props: IPageProps) {
 		content: props.selected ? props.selected : undefined
 	});
 
-	const openDrawer = (): void => setState((prev) => ({ ...prev, isDrawerOpen: true }));
 	const isLoading = (): boolean => props.isLoading === undefined ? false : props.isLoading;
 	const hasError = (): boolean => props.error !== undefined;
 	const isReady = (): boolean => !hasError() && !isLoading();
@@ -62,7 +61,6 @@ function Page(props: IPageProps) {
 		<ApplicationBar
 			className="page-app-bar"
 			title={props.title}
-			showLogInButton={!authService.isLoggedIn()}
 			onLogIn={async () => {await authService.login(); }}
 			onLogOut={async () => {await authService.logout(); }}
 		/>
