@@ -19,6 +19,16 @@ interface IPageProps {
 	 */
 	selected?: ContentKey;
 	/**
+	 * When specified and set to true the page shows a back button in the
+	 * application bar.
+	 */
+	showBackButton?: boolean;
+	/**
+	 * When specified and set to true a bottom navigation bar is shown at the
+	 * bottom of the page.
+	 */
+	showBottomNavigation?: boolean;
+	/**
 	 * Are the page children elements. They are rendered only if the page has
 	 * no specified error or isn't loading.
 	 */
@@ -34,7 +44,6 @@ interface IPageProps {
 }
 
 interface IPageState {
-	isDrawerOpen: boolean;
 	content: ContentKey;
 }
 
@@ -43,14 +52,14 @@ function Page(props: IPageProps) {
 	const authService = new AuthService();
 
 	const [state, setState] = useState<IPageState>({
-		isDrawerOpen: false,
 		content: props.selected ? props.selected : undefined
 	});
 
-	const openDrawer = (): void => setState((prev) => ({ ...prev, isDrawerOpen: true }));
 	const isLoading = (): boolean => props.isLoading === undefined ? false : props.isLoading;
 	const hasError = (): boolean => props.error !== undefined;
 	const isReady = (): boolean => !hasError() && !isLoading();
+	const showBackButton = () => props.showBackButton === undefined ? false : props.showBackButton;
+	const showBottomNavigation = () => props.showBottomNavigation === undefined ? false : props.showBottomNavigation;
 
 	const setContent = (key: ContentKey): void => setState((prev) => ({ ...prev, content: key }));
 
@@ -62,9 +71,9 @@ function Page(props: IPageProps) {
 		<ApplicationBar
 			className="page-app-bar"
 			title={props.title}
-			showLogInButton={!authService.isLoggedIn()}
 			onLogIn={async () => {await authService.login(); }}
 			onLogOut={async () => {await authService.logout(); }}
+			showBackButton={showBackButton()}
 		/>
 		<div className="page-content">
 			{ isLoading() && <LinearProgress /> }
@@ -74,7 +83,7 @@ function Page(props: IPageProps) {
 				message={props.error!!.message}/>
 			}
 		</div>
-		{authService.isLoggedIn() && <ApplicationBottomNavigation contentKey={state.content} onClick={setContent} />}
+		{showBottomNavigation() && <ApplicationBottomNavigation contentKey={state.content} onClick={setContent} />}
 	</div>
 }
 

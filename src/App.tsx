@@ -9,6 +9,7 @@ import "./styles/App.scss";
 import LogInCallback from './components/navigation/callbacks/LogInCallback';
 import { AuthService } from './services/AuthService';
 import SilentRenewCallback from './components/navigation/SilentRenewCallback';
+import Profile from './components/pages/profile/Profile';
 
 function App() {
 
@@ -25,6 +26,13 @@ function App() {
 		<PrivateRoute
 			path="/home"
 			element={Home}
+			isAuthenticated={authService.isLoggedIn()}
+			redirectTo="/"
+		/>
+
+		<PrivateRoute
+			path="/profile"
+			element={Profile}
 			isAuthenticated={authService.isLoggedIn()}
 			redirectTo="/"
 		/>

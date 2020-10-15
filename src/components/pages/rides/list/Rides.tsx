@@ -51,7 +51,7 @@ function Rides(props: {}) {
 		getRides();
 	}, []);
 
-	return <Page title="My rides" selected="history" isLoading={state.isLoading} error={state.error}>
+	return <Page title="My rides" selected="history" isLoading={state.isLoading} error={state.error} showBottomNavigation>
 		<div className="rides-content">
 			<RideList
 				rides={[]}
