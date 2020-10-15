@@ -19,6 +19,10 @@ interface IPageProps {
 	 */
 	selected?: ContentKey;
 	/**
+	 * When specified the page shows a back button in the application bar.
+	 */
+	showBackButton?: boolean;
+	/**
 	 * Are the page children elements. They are rendered only if the page has
 	 * no specified error or isn't loading.
 	 */
@@ -34,7 +38,6 @@ interface IPageProps {
 }
 
 interface IPageState {
-	isDrawerOpen: boolean;
 	content: ContentKey;
 }
 
@@ -43,7 +46,6 @@ function Page(props: IPageProps) {
 	const authService = new AuthService();
 
 	const [state, setState] = useState<IPageState>({
-		isDrawerOpen: false,
 		content: props.selected ? props.selected : undefined
 	});
 
@@ -63,6 +65,7 @@ function Page(props: IPageProps) {
 			title={props.title}
 			onLogIn={async () => {await authService.login(); }}
 			onLogOut={async () => {await authService.logout(); }}
+			showBackButton={props.showBackButton}
 		/>
 		<div className="page-content">
 			{ isLoading() && <LinearProgress /> }
