@@ -149,7 +149,10 @@ function Profile() {
 		<ExportFormDialog
 			open={state.showFormatDialog}
 			onCancel={() => setState((prev) => ({ ...prev, showFormatDialog: false }))}
-			onSubmit={(format: string) => console.log(format)}
+			onSubmit={(format: string) => {
+				console.log(`Export to ${format} selected.`);
+				setState((prev) => ({ ...prev, showFormatDialog: false }));
+			}}
 		/>
 	</Page>
 }
