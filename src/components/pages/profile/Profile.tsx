@@ -15,7 +15,18 @@ import { User } from "oidc-client";
 import { ResourcesService } from "../../../services/ResourcesService";
 
 interface IProfileState {
-	user: User | null;
+	/**
+	 * Is the name of the current user. For instance, "John Doe".
+	 */
+	username: string | null | undefined,
+	/**
+	 * Is the email of the current user. This value can be found in the user
+	 * provided by the oidc library (user.profile.preffered_username)
+	 */
+	email: string | null | undefined;
+	/**
+	 * Is the number of kilometers that the user wants to reach in its journal.
+	 */
 	objective: number | null;
 	isLoading: boolean;
 	error: Error | undefined;
@@ -23,20 +34,32 @@ interface IProfileState {
 
 function Profile() {
 
+	const authService = new AuthService();
+	const resources = new ResourcesService();
+	const defaultValue = "Unknown"
+
 	const [state, setState] = useState<IProfileState>({
-		user: null,
+		username: null,
+		email: null,
 		objective: null,
 		isLoading: true,
 		error: undefined
 	});
 
+	const getUsername = () => state.username == null ? defaultValue : state.username;
+	const getEmail = () => state.email == null ? defaultValue : state.email;
+
 	useEffect(() => {
-		const authService = new AuthService();
-		const resources = new ResourcesService();
 		const getUser = async () => {
 			const user: User | null = await authService.getUser();
 			const objective: number = await resources.getObjective("userId")
-			setState((prev) => ({ ...prev, isLoading: false, user: user, objective: objective }));
+			setState((prev) => ({
+				...prev,
+				isLoading: false,
+				username: user?.profile.name,
+				email: user?.profile.preferred_username,
+				objective: objective
+			}));
 		};
 		try {
 			if (authService.isLoggedIn()) {
@@ -45,12 +68,15 @@ function Profile() {
 		} catch (error) {
 			setState((prev) => ({ ...prev, isLoading: false, error: error }));
 		}
-	}, []);
+	}, [authService, resources]);
 
 	return <Page title="Profile" isLoading={state.isLoading} error={state.error} showBackButton>
-		<ProfileHeader name={state.user?.profile.name!!} picture="https://scontent.fbru2-1.fna.fbcdn.net/v/t31.0-8/18209356_1613491082024964_6359923658550097249_o.jpg?_nc_cat=107&_nc_sid=09cbfe&_nc_ohc=HBdEpwICukIAX8u77kv&_nc_ht=scontent.fbru2-1.fna&oh=9c556f735209987b473a1aa44f1226a1&oe=5FAF9C2F" />
+		<ProfileHeader name={getUsername()} picture="https://shorturl.at/kmyFS" />
 		<ProfileSection title="General" divider>
-			<ProfileProperty label="Email" value={state.user?.profile.email!!} />
+			<ProfileProperty
+				label="Email"
+				value={getEmail()}
+			/>
 			<ProfileProperty
 				label="Distance objective"
 				value={`${state.objective} kilometers`}
