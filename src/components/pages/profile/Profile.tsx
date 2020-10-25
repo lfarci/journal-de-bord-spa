@@ -100,8 +100,13 @@ function Profile() {
 		</ProfileSection>
 		<ObjectiveFormDialog
 			open={state.showObjectiveFormDialog}
+			value={state.objective!!}
 			onCancel={() => showObjectiveFormDialog(false)}
-			onSubmit={(value: number) => console.log("Submit clicked")}
+			onSubmit={(value: number) => {
+				console.log(`Submitted objective: ${value}`)
+				// TODO: the objective value should be sent to the backend
+				showObjectiveFormDialog(false)
+			}}
 		/>
 	</Page>
 }
