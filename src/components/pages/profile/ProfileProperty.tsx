@@ -16,6 +16,10 @@ interface IProfilePropertyProps {
      * related to the label.
      */
     renderIcon?: () => any;
+    /**
+     * Action called when this property is clicked.
+     */
+    onClick?: () => void;
 }
 
 /**
@@ -26,10 +30,13 @@ function ProfileProperty(props: IProfilePropertyProps) {
 
     const Icon = props.renderIcon!!;
 
+    const hasClickAction = () => props.onClick !== undefined;
+    const getClickAction = () => hasClickAction() ? props.onClick : () => {};
     const showValue = (): boolean => props.value !== undefined;
     const showIcon = (): boolean => props.renderIcon !== undefined;
+    const getClassName = (): string => hasClickAction() ? "profile-property clickable" : "profile-property";
 
-    return <div className="profile-property">
+    return <div className={getClassName()} onClick={getClickAction()}>
         <div className="profile-property-header">
             <p className="primary-text">{props.label}</p>
             {showValue() && <p className="secondary-text">{props.value}</p>}

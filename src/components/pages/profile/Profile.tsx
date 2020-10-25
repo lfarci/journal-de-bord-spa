@@ -13,6 +13,7 @@ import ProfileHeader from "./ProfileHeader";
 import { AuthService } from "../../../services/AuthService";
 import { User } from "oidc-client";
 import { ResourcesService } from "../../../services/ResourcesService";
+import ObjectiveFormDialog from "./ObjectiveFormDialog";
 
 interface IProfileState {
 	/**
@@ -30,6 +31,7 @@ interface IProfileState {
 	objective: number | null;
 	isLoading: boolean;
 	error: Error | undefined;
+	showObjectiveFormDialog: boolean;
 }
 
 function Profile() {
@@ -41,11 +43,16 @@ function Profile() {
 		email: null,
 		objective: null,
 		isLoading: true,
-		error: undefined
+		error: undefined,
+		showObjectiveFormDialog: false
 	});
 
 	const getUsername = () => state.username == null ? defaultValue : state.username;
 	const getEmail = () => state.email == null ? defaultValue : state.email;
+
+	const showObjectiveFormDialog = (value: boolean) => {
+		setState((prev) => ({ ...prev, showObjectiveFormDialog: value }));
+	};
 
 	useEffect(() => {
 		const authService = new AuthService();
@@ -80,6 +87,7 @@ function Profile() {
 			<ProfileProperty
 				label="Distance objective"
 				value={`${state.objective} kilometers`}
+				onClick={() => showObjectiveFormDialog(true)}
 				renderIcon={() => <EditRoundedIcon style={{ color: "c4c4c4" }}/>}
 			/>
 		</ProfileSection>
@@ -90,6 +98,11 @@ function Profile() {
 		<ProfileSection>
 			<ProfileProperty label="Log out" />
 		</ProfileSection>
+		<ObjectiveFormDialog
+			open={state.showObjectiveFormDialog}
+			onCancel={() => showObjectiveFormDialog(false)}
+			onSubmit={(value: number) => console.log("Submit clicked")}
+		/>
 	</Page>
 }
 
