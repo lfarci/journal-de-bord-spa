@@ -1,17 +1,31 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
+
+import { User } from 'oidc-client';
 
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import { AppBar, Toolbar, IconButton, Typography, Button } from '@material-ui/core';
+import { AppBar, Toolbar, Typography, Button, IconButton } from '@material-ui/core';
+import Avatar from '@material-ui/core/Avatar/Avatar';
 
-import MenuIcon from '@material-ui/icons/Menu';
-import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import { AuthService } from '../../services/AuthService';
+import { Skeleton } from '@material-ui/lab';
+
+import ArrowBackRoundedIcon from '@material-ui/icons/ArrowBackRounded';
 
 interface IApplicationBarProps {
-	title: string;
+	/**
+	 * Is the class name applied to the component root element.
+	 */
 	className: string;
-	showBackArrow: boolean;
-	onMenuClicked: () => void;
-	showLogInButton: boolean;
+	/**
+	 * Is the title describing the content shown in the current page.
+	 */
+	title: string;
+	/**
+	 * When true the application abr doesn't show the avatar button a back
+	 * button instead.
+	 */
+	showBackButton?: boolean;
 	/**
 	 * Action called when the login button is clicked.
 	 */
@@ -29,33 +43,67 @@ const useStyles = makeStyles((theme: Theme) =>
 		},
 		title: {
 			flexGrow: 1,
+			marginLeft: "1em"
 		},
+		avatar: {
+			cursor: "pointer"
+		}
 	}),
 );
 
 function ApplicationBar(props: IApplicationBarProps) {
 
+	const authService = new AuthService();
 	const classes = useStyles();
+	const history = useHistory();
+
+
+	const [user, setUser] = useState<User | null>(null);
+
+	const isReady = () => user !== null;
+	const showBackButton = () => props.showBackButton === undefined ? false : props.showBackButton;
+	const showAvatar = () => authService.isLoggedIn() && isReady() && !showBackButton();
+	const showAvatarSkeleton = () => authService.isLoggedIn() && !isReady() && !showBackButton();
+
+	const goBack = (): void => history.goBack();
+	const goToProfile = (): void => history.push('/profile');
+
+	useEffect(() => {
+		const service = new AuthService();
+		const getUser = async () => {
+			const user: User | null = await service.getUser();
+			setUser(user);
+		};
+		if (service.isLoggedIn()) {
+			getUser();
+		}
+	}, []);
 
 	return <AppBar position="static" className={props.className}>
 		<Toolbar>
-			{!props.showLogInButton &&
-				<IconButton
+			{ showBackButton() && <IconButton
 					edge="start"
 					className={classes.menuButton}
 					color="inherit"
-					aria-label={props.showBackArrow ? "back" : "menu"}
-					onClick={props.onMenuClicked}
+					aria-label="back"
+					onClick={goBack}
 				>
-					{props.showBackArrow ? <ArrowBackIcon /> : <MenuIcon />}
+					<ArrowBackRoundedIcon  />
 				</IconButton>
 			}
+			{ showAvatar() && <Avatar
+				alt={user!!.profile.name}
+				src={user!!.profile.picture}
+				onClick={goToProfile}
+				className={classes.avatar}
+			/> }
+			{ showAvatarSkeleton() && <Skeleton variant="circle"><Avatar /></Skeleton>}
 			<Typography variant="h6" className={classes.title}>
 				{props.title}
 			</Typography>
-			{ props.showLogInButton
-				? <Button variant="contained" color="primary" onClick={props.onLogIn}>Log In</Button>
-				: <Button variant="contained" color="primary" onClick={props.onLogOut}>Log Out</Button>
+			{ authService.isLoggedIn()
+				? <Button variant="contained" color="primary" onClick={props.onLogOut}>Log Out</Button>
+				: <Button variant="contained" color="primary" onClick={props.onLogIn}>Log In</Button>
 			}
 		</Toolbar>
 	</AppBar>;

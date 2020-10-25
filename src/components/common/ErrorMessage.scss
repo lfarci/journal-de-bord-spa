@@ -1,0 +1,19 @@
+.error-message {
+
+    margin: 1em;
+
+    .error-message-actions {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        align-items: right;
+        padding: 1em;
+    }
+
+
+    .error-message-actions button:first-of-type {
+        margin-right: 1em;
+    }
+
+}

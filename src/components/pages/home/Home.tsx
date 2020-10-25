@@ -14,7 +14,7 @@ function Home() {
 
 	const isDriving = () => lastRide != null && lastRide.arrival == null;
 
-	return <Page title="Home" selected="home">
+	return <Page title="Home" selected="home" showBottomNavigation>
 		<div className="home-cards">
 			<ProgressOverviewCard username="Logan" currentDistance={456} distanceObjective={1500} />
 			{!isDriving() && <StartShortcutCard />}

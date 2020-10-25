@@ -1,0 +1,305 @@
+{
+    "objective": 1550,
+    "rides": [
+        {
+            "driverPseudonym": "Sample User",
+            "departure": {
+                "moment": "2020-10-01T12:00:00.000Z",
+                "location": {
+                    "id": 1,
+                    "name": "Home",
+                    "latitude": 23.45,
+                    "longitude": 23.45
+                },
+                "odometerValue": 10000
+            },
+            "arrival": {
+                "moment": "2020-10-01T12:00:20.000Z",
+                "location": {
+                    "id": 2,
+                    "name": "Store",
+                    "latitude": 23.45,
+                    "longitude": 23.45
+                },
+                "odometerValue": 10023
+            },
+            "trafficCondition": 1,
+            "comment": "A simple comment."
+        },
+        {
+            "driverPseudonym": "Sample User",
+            "departure": {
+                "moment": "2020-10-01T13:00:00.000Z",
+                "location": {
+                    "id": 3,
+                    "name": "Library",
+                    "latitude": 23.45,
+                    "longitude": 23.45
+                },
+                "odometerValue": 10056
+            },
+            "arrival": {
+                "moment": "2020-10-01T13:00:45.000Z",
+                "location": {
+                    "id": 1,
+                    "name": "Home",
+                    "latitude": 23.45,
+                    "longitude": 23.45
+                },
+                "odometerValue": 10117
+            },
+            "trafficCondition": 1,
+            "comment": "A simple comment."
+        },
+        {
+            "driverPseudonym": "Sample User",
+            "departure": {
+                "moment": "2020-10-01T14:00:00.000Z",
+                "location": {
+                    "id": 2,
+                    "name": "Store",
+                    "latitude": 23.45,
+                    "longitude": 23.45
+                },
+                "odometerValue": 10135
+            },
+            "arrival": {
+                "moment": "2020-10-01T14:00:15.000Z",
+                "location": {
+                    "id": 4,
+                    "name": "Gym",
+                    "latitude": 23.45,
+                    "longitude": 23.45
+                },
+                "odometerValue": 10150
+            },
+            "trafficCondition": 2,
+            "comment": "A simple comment."
+        },
+        {
+            "driverPseudonym": "Sample User",
+            "departure": {
+                "moment": "2020-10-01T12:00:00.000Z",
+                "location": {
+                    "id": 1,
+                    "name": "Home",
+                    "latitude": 23.45,
+                    "longitude": 23.45
+                },
+                "odometerValue": 10000
+            },
+            "arrival": {
+                "moment": "2020-10-01T12:00:20.000Z",
+                "location": {
+                    "id": 2,
+                    "name": "Store",
+                    "latitude": 23.45,
+                    "longitude": 23.45
+                },
+                "odometerValue": 10023
+            },
+            "trafficCondition": 1,
+            "comment": "A simple comment."
+        },
+        {
+            "driverPseudonym": "Sample User",
+            "departure": {
+                "moment": "2020-10-01T13:00:00.000Z",
+                "location": {
+                    "id": 3,
+                    "name": "Library",
+                    "latitude": 23.45,
+                    "longitude": 23.45
+                },
+                "odometerValue": 10056
+            },
+            "arrival": {
+                "moment": "2020-10-01T13:00:45.000Z",
+                "location": {
+                    "id": 1,
+                    "name": "Home",
+                    "latitude": 23.45,
+                    "longitude": 23.45
+                },
+                "odometerValue": 10117
+            },
+            "trafficCondition": 1,
+            "comment": "A simple comment."
+        },
+        {
+            "driverPseudonym": "Sample User",
+            "departure": {
+                "moment": "2020-10-01T14:00:00.000Z",
+                "location": {
+                    "id": 2,
+                    "name": "Store",
+                    "latitude": 23.45,
+                    "longitude": 23.45
+                },
+                "odometerValue": 10135
+            },
+            "arrival": {
+                "moment": "2020-10-01T14:00:15.000Z",
+                "location": {
+                    "id": 4,
+                    "name": "Gym",
+                    "latitude": 23.45,
+                    "longitude": 23.45
+                },
+                "odometerValue": 10150
+            },
+            "trafficCondition": 2,
+            "comment": "A simple comment."
+        },
+        {
+            "driverPseudonym": "Sample User",
+            "departure": {
+                "moment": "2020-10-01T12:00:00.000Z",
+                "location": {
+                    "id": 1,
+                    "name": "Home",
+                    "latitude": 23.45,
+                    "longitude": 23.45
+                },
+                "odometerValue": 10000
+            },
+            "arrival": {
+                "moment": "2020-10-01T12:00:20.000Z",
+                "location": {
+                    "id": 2,
+                    "name": "Store",
+                    "latitude": 23.45,
+                    "longitude": 23.45
+                },
+                "odometerValue": 10023
+            },
+            "trafficCondition": 1,
+            "comment": "A simple comment."
+        },
+        {
+            "driverPseudonym": "Sample User",
+            "departure": {
+                "moment": "2020-10-01T13:00:00.000Z",
+                "location": {
+                    "id": 3,
+                    "name": "Library",
+                    "latitude": 23.45,
+                    "longitude": 23.45
+                },
+                "odometerValue": 10056
+            },
+            "arrival": {
+                "moment": "2020-10-01T13:00:45.000Z",
+                "location": {
+                    "id": 1,
+                    "name": "Home",
+                    "latitude": 23.45,
+                    "longitude": 23.45
+                },
+                "odometerValue": 10117
+            },
+            "trafficCondition": 1,
+            "comment": "A simple comment."
+        },
+        {
+            "driverPseudonym": "Sample User",
+            "departure": {
+                "moment": "2020-10-01T14:00:00.000Z",
+                "location": {
+                    "id": 2,
+                    "name": "Store",
+                    "latitude": 23.45,
+                    "longitude": 23.45
+                },
+                "odometerValue": 10135
+            },
+            "arrival": {
+                "moment": "2020-10-01T14:00:15.000Z",
+                "location": {
+                    "id": 4,
+                    "name": "Gym",
+                    "latitude": 23.45,
+                    "longitude": 23.45
+                },
+                "odometerValue": 10150
+            },
+            "trafficCondition": 2,
+            "comment": "A simple comment."
+        },
+        {
+            "driverPseudonym": "Sample User",
+            "departure": {
+                "moment": "2020-10-01T12:00:00.000Z",
+                "location": {
+                    "id": 1,
+                    "name": "Home",
+                    "latitude": 23.45,
+                    "longitude": 23.45
+                },
+                "odometerValue": 10000
+            },
+            "arrival": {
+                "moment": "2020-10-01T12:00:20.000Z",
+                "location": {
+                    "id": 2,
+                    "name": "Store",
+                    "latitude": 23.45,
+                    "longitude": 23.45
+                },
+                "odometerValue": 10023
+            },
+            "trafficCondition": 1,
+            "comment": "A simple comment."
+        },
+        {
+            "driverPseudonym": "Sample User",
+            "departure": {
+                "moment": "2020-10-01T13:00:00.000Z",
+                "location": {
+                    "id": 3,
+                    "name": "Library",
+                    "latitude": 23.45,
+                    "longitude": 23.45
+                },
+                "odometerValue": 10056
+            },
+            "arrival": {
+                "moment": "2020-10-01T13:00:45.000Z",
+                "location": {
+                    "id": 1,
+                    "name": "Home",
+                    "latitude": 23.45,
+                    "longitude": 23.45
+                },
+                "odometerValue": 10117
+            },
+            "trafficCondition": 1,
+            "comment": "A simple comment."
+        },
+        {
+            "driverPseudonym": "Sample User",
+            "departure": {
+                "moment": "2020-10-01T14:00:00.000Z",
+                "location": {
+                    "id": 2,
+                    "name": "Store",
+                    "latitude": 23.45,
+                    "longitude": 23.45
+                },
+                "odometerValue": 10135
+            },
+            "arrival": {
+                "moment": "2020-10-01T14:00:15.000Z",
+                "location": {
+                    "id": 4,
+                    "name": "Gym",
+                    "latitude": 23.45,
+                    "longitude": 23.45
+                },
+                "odometerValue": 10150
+            },
+            "trafficCondition": 2,
+            "comment": "A simple comment."
+        }
+    ]
+}
