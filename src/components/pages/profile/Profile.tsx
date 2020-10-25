@@ -15,6 +15,7 @@ import { AuthService } from "../../../services/AuthService";
 import { User } from "oidc-client";
 import { ResourcesService } from "../../../services/ResourcesService";
 import ObjectiveFormDialog from "./ObjectiveFormDialog";
+import ConfirmationDialog from "./ConfirmationDialog";
 
 interface IProfileState {
 	/**
@@ -33,6 +34,7 @@ interface IProfileState {
 	isLoading: boolean;
 	error: Error | undefined;
 	showObjectiveFormDialog: boolean;
+	showDeleteDialog: boolean;
 }
 
 function Profile() {
@@ -45,7 +47,8 @@ function Profile() {
 		objective: null,
 		isLoading: true,
 		error: undefined,
-		showObjectiveFormDialog: false
+		showObjectiveFormDialog: false,
+		showDeleteDialog: false
 	});
 
 	const getUsername = () => state.username == null ? defaultValue : state.username;
@@ -93,8 +96,15 @@ function Profile() {
 			/>
 		</ProfileSection>
 		<ProfileSection title="Data" divider>
-			<ProfileProperty label="Export my journal" renderIcon={() => <GetAppRoundedIcon style={{ color: "c4c4c4" }} />} />
-			<ProfileProperty label="Delete my journal" renderIcon={() => <DeleteRoundedIcon style={{ color: "c4c4c4" }} />} />
+			<ProfileProperty
+				label="Export my journal"
+				renderIcon={() => <GetAppRoundedIcon style={{ color: "c4c4c4" }} />}
+			/>
+			<ProfileProperty
+				label="Delete my journal"
+				renderIcon={() => <DeleteRoundedIcon style={{ color: "c4c4c4" }} />}
+				onClick={() => setState((prev) => ({ ...prev, showDeleteDialog: true }))}
+			/>
 		</ProfileSection>
 		<ProfileSection>
 			<ProfileProperty
@@ -110,7 +120,25 @@ function Profile() {
 			onSubmit={(value: number) => {
 				console.log(`Submitted objective: ${value}`)
 				// TODO: the objective value should be sent to the backend
-				setState((prev) => ({ ...prev, objective: value, showObjectiveFormDialog: false }));
+				setState((prev) => ({
+					...prev,
+					objective:value,
+					showObjectiveFormDialog: false
+				}));
+			}}
+		/>
+		<ConfirmationDialog
+			open={state.showDeleteDialog}
+			onCancel={() => setState((prev) => ({ ...prev, showDeleteDialog: false }))}
+			onConfirm={async () => {
+				const resources = new ResourcesService();
+				setState((prev) => ({ ...prev, isLoading: true }))
+				try {
+					await resources.deleteJournal("userId");
+				} catch (error) {
+					setState((prev) => ({ ...prev, isLoading: false, error: error, showDeleteDialog: false}))
+				}
+				setState((prev) => ({ ...prev, isLoading: false, showDeleteDialog: false }))
 			}}
 		/>
 	</Page>

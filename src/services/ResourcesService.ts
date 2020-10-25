@@ -41,6 +41,17 @@ export class ResourcesService {
         });
     }
 
+    public async deleteJournal(userId: string): Promise<void> {
+        return new Promise(async (resolve, reject) => {
+            try {
+                await this.sleep(1000);
+                resolve();
+            } catch (error) {
+               reject(error);
+            }
+        });
+    }
+
     /**
      * This method only serve for demo purposes.
      */
