@@ -96,7 +96,10 @@ function Profile() {
 			<ProfileProperty label="Delete my journal" renderIcon={() => <DeleteRoundedIcon style={{ color: "c4c4c4" }} />} />
 		</ProfileSection>
 		<ProfileSection>
-			<ProfileProperty label="Log out" />
+			<ProfileProperty
+				label="Log out"
+				onClick={() => new AuthService().logout()}
+			/>
 		</ProfileSection>
 		<ObjectiveFormDialog
 			open={state.showObjectiveFormDialog}
@@ -105,7 +108,7 @@ function Profile() {
 			onSubmit={(value: number) => {
 				console.log(`Submitted objective: ${value}`)
 				// TODO: the objective value should be sent to the backend
-				showObjectiveFormDialog(false)
+				setState((prev) => ({ ...prev, objective: value, showObjectiveFormDialog: false }));
 			}}
 		/>
 	</Page>
