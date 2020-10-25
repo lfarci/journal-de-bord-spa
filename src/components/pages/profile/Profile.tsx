@@ -16,6 +16,7 @@ import { User } from "oidc-client";
 import { ResourcesService } from "../../../services/ResourcesService";
 import ObjectiveFormDialog from "./ObjectiveFormDialog";
 import ConfirmationDialog from "./ConfirmationDialog";
+import ExportFormDialog from "./ExportFormDialog";
 
 interface IProfileState {
 	/**
@@ -35,6 +36,7 @@ interface IProfileState {
 	error: Error | undefined;
 	showObjectiveFormDialog: boolean;
 	showDeleteDialog: boolean;
+	showFormatDialog: boolean;
 }
 
 function Profile() {
@@ -48,7 +50,8 @@ function Profile() {
 		isLoading: true,
 		error: undefined,
 		showObjectiveFormDialog: false,
-		showDeleteDialog: false
+		showDeleteDialog: false,
+		showFormatDialog: false
 	});
 
 	const getUsername = () => state.username == null ? defaultValue : state.username;
@@ -57,6 +60,7 @@ function Profile() {
 	const showObjectiveFormDialog = (value: boolean) => {
 		setState((prev) => ({ ...prev, showObjectiveFormDialog: value }));
 	};
+	const showFormatFormDialog  = () => setState((prev) => ({ ...prev, showFormatDialog: true }));
 
 	useEffect(() => {
 		const authService = new AuthService();
@@ -99,6 +103,7 @@ function Profile() {
 			<ProfileProperty
 				label="Export my journal"
 				renderIcon={() => <GetAppRoundedIcon style={{ color: "c4c4c4" }} />}
+				onClick={() => showFormatFormDialog() }
 			/>
 			<ProfileProperty
 				label="Delete my journal"
@@ -140,6 +145,11 @@ function Profile() {
 				}
 				setState((prev) => ({ ...prev, isLoading: false, showDeleteDialog: false }))
 			}}
+		/>
+		<ExportFormDialog
+			open={state.showFormatDialog}
+			onCancel={() => setState((prev) => ({ ...prev, showFormatDialog: false }))}
+			onSubmit={(format: string) => console.log(format)}
 		/>
 	</Page>
 }
