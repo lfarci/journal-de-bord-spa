@@ -4,6 +4,7 @@ import { Page } from "../../common";
 import EditRoundedIcon from '@material-ui/icons/EditRounded';
 import DeleteRoundedIcon from '@material-ui/icons/DeleteRounded';
 import GetAppRoundedIcon from '@material-ui/icons/GetAppRounded';
+import ExitToAppRoundedIcon from '@material-ui/icons/ExitToAppRounded';
 
 import "./Profile.scss";
 
@@ -99,6 +100,7 @@ function Profile() {
 			<ProfileProperty
 				label="Log out"
 				onClick={() => new AuthService().logout()}
+				renderIcon={() => <ExitToAppRoundedIcon style={{ color: "c4c4c4" }} />}
 			/>
 		</ProfileSection>
 		<ObjectiveFormDialog
