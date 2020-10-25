@@ -14,6 +14,17 @@ export class ResourcesService {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
 
+    public async getObjective(userId: string): Promise<number> {
+        return new Promise(async (resolve, reject) => {
+            try {
+                await this.sleep(1000);
+                resolve(data.objective);
+            } catch (error) {
+               reject(error);
+            }
+        });
+    }
+
     /**
      * Gets all the rides driven by the specified user.
      *
