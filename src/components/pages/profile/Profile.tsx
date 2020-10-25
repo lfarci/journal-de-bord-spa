@@ -34,8 +34,6 @@ interface IProfileState {
 
 function Profile() {
 
-	const authService = new AuthService();
-	const resources = new ResourcesService();
 	const defaultValue = "Unknown"
 
 	const [state, setState] = useState<IProfileState>({
@@ -50,6 +48,8 @@ function Profile() {
 	const getEmail = () => state.email == null ? defaultValue : state.email;
 
 	useEffect(() => {
+		const authService = new AuthService();
+		const resources = new ResourcesService();
 		const getUser = async () => {
 			const user: User | null = await authService.getUser();
 			const objective: number = await resources.getObjective("userId")
@@ -68,7 +68,7 @@ function Profile() {
 		} catch (error) {
 			setState((prev) => ({ ...prev, isLoading: false, error: error }));
 		}
-	}, [authService, resources]);
+	}, []);
 
 	return <Page title="Profile" isLoading={state.isLoading} error={state.error} showBackButton>
 		<ProfileHeader name={getUsername()} picture="https://shorturl.at/kmyFS" />
