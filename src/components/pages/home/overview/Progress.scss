@@ -3,11 +3,11 @@ $mobile-break-point: 600px;
 .progress {
 
 	height: auto;
-	width: 40%;
+	width: 100%;
 
 	@media screen and (min-width: $mobile-break-point) {
 		height: auto;
-		width: 20vw;
+		width: 10vw;
 	}
 
 	.progress-circle {
@@ -34,19 +34,13 @@ $mobile-break-point: 600px;
 
 		.progress-label-text {
 			@extend %progress-label;
-			width: fit-content;
-			height: fit-content;
-			font-size: 5vw;
+			font-size: 1.5em;
 			font-weight: 500;
-			line-height: 1.6;
 		}
 
 		.progress-label-subtext {
 			@extend %progress-label;
-			width: fit-content;
-			height: fit-content;
-			font-size: 2.5vw;
-			line-height: 1.6;
+			font-size: 1em;
 			color: grey;
 		}
 

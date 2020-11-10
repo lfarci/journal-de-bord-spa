@@ -1,24 +1,67 @@
-.card {
+.progress-overview-card {
 
-    margin-top: 16px;
-    margin-left: 16px;
-    margin-right: 16px;
+    margin: 16px;
 
-    .column-centered {
+    .progress-overview-card-content {
+
         display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-    }
+        flex-direction: row;
+        align-items: start;
+        justify-content: space-between;
+        height: 150px;
 
-    .overview {
-        padding: 0;
-    }
+        .progress-overview-card-start {
+            display: flex;
+            flex-direction: column;
+            align-items: left;
+            justify-content: center;
+            height: 100%;
+            width: 70%;
 
-    .legend {
-        max-width: fit-content;
-        padding: 0;
-        margin-top: 1em;
+            .progress-overview-card-icon-parent {
+
+                height: 25%;
+                width: fit-content;
+
+                .progress-overview-card-icon {
+                    height: 100%;
+                }
+            }
+
+            .progress-overview-card-texts {
+
+                display: flex;
+                flex-direction: column;
+                margin-top: 1em;
+                height: 75%;
+
+                %progress-overview-title {
+                    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+                    letter-spacing: 0.0075em;
+                    margin: 0;
+                    padding: 0;
+                }
+
+                .progress-overview-card-title {
+                    @extend %progress-overview-title;
+                    font-size: 1em;
+                    color: grey;
+                }
+
+                .progress-overview-card-status {
+                    @extend %progress-overview-title;
+                    font-size: 1.5em;
+                    font-weight: 500;
+                }
+            }
+
+        }
+
+        .progress-overview-card-progress-circle {
+            height: 100%;
+            width: 30%;
+        }
+
     }
 
 }
