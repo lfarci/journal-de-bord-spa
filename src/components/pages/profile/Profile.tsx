@@ -14,9 +14,7 @@ import ProfileHeader from "./ProfileHeader";
 import { AuthService } from "../../../services/AuthService";
 import { User } from "oidc-client";
 import { ResourcesService } from "../../../services/ResourcesService";
-import ObjectiveFormDialog from "./ObjectiveFormDialog";
-import ConfirmationDialog from "./ConfirmationDialog";
-import ExportFormDialog from "./ExportFormDialog";
+import { ObjectiveFormDialog, ConfirmationDialog, ExportFormDialog } from "./dialogs";
 
 interface IProfileState {
 	/**

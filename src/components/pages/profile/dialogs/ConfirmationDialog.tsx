@@ -12,7 +12,7 @@ interface IConfirmationDialogProps {
     onCancel: () => void;
 }
 
-export default function ConfirmationDialog(props: IConfirmationDialogProps) {
+function ConfirmationDialog(props: IConfirmationDialogProps) {
     return <Dialog open={props.open} onClose={props.onCancel} aria-labelledby="form-dialog-title">
         <DialogTitle id="form-dialog-title">Data Deletion</DialogTitle>
         <DialogContent>
@@ -29,3 +29,5 @@ export default function ConfirmationDialog(props: IConfirmationDialogProps) {
         </DialogActions>
     </Dialog>;
 }
+
+export default ConfirmationDialog;
