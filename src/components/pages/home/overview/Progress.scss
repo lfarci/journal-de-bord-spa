@@ -23,15 +23,31 @@ $mobile-break-point: 600px;
 		bottom: 0;
 		right: 0;
 		display: flex;
+		flex-direction: column;
 		align-items: center;
 		justify-content: center;
 
-		.progress-label-text {
-			font-size: 5vw;
+		%progress-label {
 			font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+			letter-spacing: 0.0075em;
+		}
+
+		.progress-label-text {
+			@extend %progress-label;
+			width: fit-content;
+			height: fit-content;
+			font-size: 5vw;
 			font-weight: 500;
 			line-height: 1.6;
-			letter-spacing: 0.0075em;
+		}
+
+		.progress-label-subtext {
+			@extend %progress-label;
+			width: fit-content;
+			height: fit-content;
+			font-size: 2.5vw;
+			line-height: 1.6;
+			color: grey;
 		}
 
 	}

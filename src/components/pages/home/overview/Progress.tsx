@@ -27,7 +27,8 @@ function Progress(props: CircularProgressProps & { value: number }) {
 			<Box
 				className="progress-label"
 			>
-				<p className="progress-label-text">{`${Math.round(props.value)}%`}</p>
+				<span className="progress-label-text">{`${Math.round(props.value)}%`}</span>
+				<span className="progress-label-subtext">of your goal</span>
 			</Box>
 		</Box>
 	);

@@ -33,11 +33,7 @@ function ProgressOverviewCard(props: IProgressOverviewCardProps) {
 			<Typography variant="h6" gutterBottom>Hi {props.username},</Typography>
 			<Container className="column-centered overview">
 				<Progress value={percentage}/>
-				<div className="column-centered legend">
-					<Typography variant="body1">You have reached</Typography>
-					<Typography variant="h6">{props.currentDistance} km</Typography>
-					<Typography variant="body1">of your {props.distanceObjective} km objective.</Typography>
-				</div>
+
 			</Container>
 		</CardContent>
 	</Card>;
