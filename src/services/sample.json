@@ -1,5 +1,8 @@
 {
     "objective": 1550,
+    "user": {
+        "image": "https://www.kirkham-legal.co.uk/wp-content/uploads/2017/02/profile-placeholder.png"
+    },
     "rides": [
         {
             "driverPseudonym": "Sample User",

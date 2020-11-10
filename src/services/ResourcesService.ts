@@ -14,11 +14,36 @@ export class ResourcesService {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
 
+    /**
+     * Gets the objective of the user with the specified id. The objective is
+     * expressed in number of kilometers.
+     *
+     * TODO: the objective should be fetch from the backend.
+     *
+     * @param userId is the id of the user to get the picture for.
+     */
     public async getObjective(userId: string): Promise<number> {
         return new Promise(async (resolve, reject) => {
             try {
                 await this.sleep(1000);
                 resolve(data.objective);
+            } catch (error) {
+               reject(error);
+            }
+        });
+    }
+
+    /**
+     * Gets the uri to the picture of the user with the specified id. If the
+     * user has no defined picture then a uri to a placeholder is returned.
+     *
+     * @param userId is the id of the user to get the picture for.
+     */
+    public async getImageUri(userId: string): Promise<string> {
+        return new Promise(async (resolve, reject) => {
+            try {
+                await this.sleep(1000);
+                resolve(data.user.image);
             } catch (error) {
                reject(error);
             }
