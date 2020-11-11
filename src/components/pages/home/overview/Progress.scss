@@ -2,15 +2,13 @@ $mobile-break-point: 600px;
 
 .circular-progress-bar {
 
-	height: 75%;
-	width: fit-content;
-	max-height: 100%;
+	width: 8em;
+	min-width: 8em;
 
 	svg {
 		display: block;
 		height: 100%;
-		width: auto;
-		max-height: 100%;
+		width: 100%;
 		margin: 0 auto;
 	}
 

@@ -2,15 +2,12 @@ import React from "react";
 
 import "./ProgressOverviewCard.scss";
 
-import { Card } from "@material-ui/core";
+import { Card, Typography } from "@material-ui/core";
 import CardContent from "@material-ui/core/CardContent/CardContent";
 import Progress from "./Progress";
 
 interface IProgressOverviewCardProps {
-	/**
-	 * Is the name of the current user.
-	 */
-	username: string;
+	className: string;
 	/**
 	 * Is the total distance that the learner driver has reached.
 	 */
@@ -28,18 +25,20 @@ function ProgressOverviewCard(props: IProgressOverviewCardProps) {
 
 	const percentage: number = (props.currentDistance / props.distanceObjective * 100);
 
-	return <Card elevation={12} className="progress-overview-card">
+	return <Card elevation={12} className={`progress-overview-card ${props.className}`}>
 		<CardContent className="progress-overview-card-content">
 			<div className="progress-overview-card-start">
 				<div className="progress-overview-card-icon-parent">
 					<img className="progress-overview-card-icon" src="car-icon.svg" />
 				</div>
-				<div  className="progress-overview-card-texts">
-					<p className="progress-overview-card-title">You have driven</p>
-					<p className="progress-overview-card-status">437 of 1500 km</p>
+				<div className="progress-overview-card-texts">
+					<div><Typography variant="subtitle1">You have driven</Typography></div>
+					<div><Typography variant="h6">437 of 1500 km</Typography></div>
+					{/* <p className="progress-overview-card-title">You have driven</p> */}
+					{/* <p className="progress-overview-card-status">437 of 1500 km</p> */}
 				</div>
 			</div>
-			<Progress value={percentage}/>
+			<Progress value={percentage} />
 		</CardContent>
 	</Card>;
 }

@@ -16,7 +16,11 @@ function Home() {
 
 	return <Page title="Home" selected="home" showBottomNavigation>
 		<div className="home-cards">
-			<ProgressOverviewCard username="Logan" currentDistance={456} distanceObjective={1500} />
+			<ProgressOverviewCard
+				className="home-progress-overview-card"
+				currentDistance={456}
+				distanceObjective={1500}
+			/>
 		</div>
 	</Page>;
 

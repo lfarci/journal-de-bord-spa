@@ -1,58 +1,35 @@
 .progress-overview-card {
 
-    margin: 16px;
-
     .progress-overview-card-content {
 
         display: flex;
         flex-direction: row;
         align-items: start;
         justify-content: space-between;
-        height: 150px;
+        height: fit-content;
 
         .progress-overview-card-start {
             display: flex;
             flex-direction: column;
             align-items: left;
             justify-content: center;
-            height: 100%;
-            width: 70%;
+            width: fit-content;
 
             .progress-overview-card-icon-parent {
-
                 height: 25%;
                 width: fit-content;
 
                 .progress-overview-card-icon {
+                    max-height: 3em;
                     height: 100%;
                 }
             }
 
             .progress-overview-card-texts {
-
                 display: flex;
                 flex-direction: column;
                 margin-top: 1em;
                 height: 75%;
-
-                %progress-overview-title {
-                    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
-                    letter-spacing: 0.0075em;
-                    margin: 0;
-                    padding: 0;
-                }
-
-                .progress-overview-card-title {
-                    @extend %progress-overview-title;
-                    font-size: 1em;
-                    color: grey;
-                }
-
-                .progress-overview-card-status {
-                    @extend %progress-overview-title;
-                    font-size: 1.5em;
-                    font-weight: 500;
-                }
             }
 
         }
