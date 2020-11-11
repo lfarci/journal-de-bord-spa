@@ -18,7 +18,7 @@ function Home() {
 		<div className="home-cards">
 			<ProgressOverviewCard
 				className="home-progress-overview-card"
-				currentDistance={456}
+				currentDistance={0}
 				distanceObjective={1500}
 			/>
 		</div>
