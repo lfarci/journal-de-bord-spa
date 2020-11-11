@@ -39,9 +39,7 @@ function ProgressOverviewCard(props: IProgressOverviewCardProps) {
 					<p className="progress-overview-card-status">437 of 1500 km</p>
 				</div>
 			</div>
-			<div  className="progress-overview-card-progress-circle">
-				<Progress value={percentage}/>
-			</div>
+			<Progress value={percentage}/>
 		</CardContent>
 	</Card>;
 }
