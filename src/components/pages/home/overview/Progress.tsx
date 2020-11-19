@@ -1,11 +1,10 @@
 import React from 'react';
 
 import "./Progress.scss";
-
-import CircularProgressWithChilren, { CircularProgressProps } from '@material-ui/core/CircularProgress';
-
-import { CircularProgressbar, CircularProgressbarWithChildren } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
+
+import { CircularProgressProps } from '@material-ui/core/CircularProgress';
+import { CircularProgressbarWithChildren } from 'react-circular-progressbar';
 import { Typography } from '@material-ui/core';
 
 function Progress(props: CircularProgressProps & { value: number }) {

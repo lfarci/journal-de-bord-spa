@@ -35,7 +35,7 @@ function ProgressOverviewCard(props: IProgressOverviewCardProps) {
 		<CardContent className="progress-overview-card-content">
 			<div className="progress-overview-card-start">
 				<div className="progress-overview-card-icon-parent">
-					<img className="progress-overview-card-icon" src="car-icon.svg" />
+					<img alt="Car Icon" className="progress-overview-card-icon" src="car-icon.svg" />
 				</div>
 				<div className="progress-overview-card-texts">
 					<div><Typography variant="subtitle1">{getSecondaryText()}</Typography></div>
