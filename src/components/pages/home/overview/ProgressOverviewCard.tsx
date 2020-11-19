@@ -41,7 +41,7 @@ function ProgressOverviewCard(props: IProgressOverviewCardProps) {
 	});
 
 	const getPercentage = (distance: number, total: number) => {
-			return distance / total * 100;
+		return distance / total * 100;
 	};
 	const hasDriven = (): boolean => !state.isLoading && state?.drivenDistance!! > 0;
 	const getClassName = () => props.className === undefined ? "" : props.className;
@@ -57,21 +57,21 @@ function ProgressOverviewCard(props: IProgressOverviewCardProps) {
 		const getProgress = async () => {
 			const user = await new AuthService().getUser();
 			if (user) {
-				const progress = await resources.getProgress(user?.profile.sub);
-				setState((prev) => ({
-					...prev,
-					isLoading: false,
-					drivenDistance: progress.drivenDistance,
-					distanceObjective: progress.distanceObjective
-				}));
+				try {
+					const progress = await resources.getProgress(user?.profile.sub);
+					setState((prev) => ({
+						...prev,
+						isLoading: false,
+						drivenDistance: progress.drivenDistance,
+						distanceObjective: progress.distanceObjective
+					}));
+				} catch (error) {
+					setState((prev) => ({ ...prev, isLoading: false, error: error }));
+				}
 			}
 		};
-		try {
-			if (new AuthService().isLoggedIn()) {
-				getProgress();
-			}
-		} catch (error) {
-			setState((prev) => ({ ...prev, isLoading: false, error: error }));
+		if (new AuthService().isLoggedIn()) {
+			getProgress();
 		}
 	}, []);
 
