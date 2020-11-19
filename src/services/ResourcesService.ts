@@ -76,7 +76,10 @@ export class ResourcesService {
         return new Promise(async (resolve, reject) => {
             try {
                 await this.sleep(1000);
-                resolve({drivenDistance: 543, distanceObjective: 1500});
+                resolve({
+                    drivenDistance: ResourcesService.readTotalDistanceFromSample(),
+                    distanceObjective: await this.getObjective(userId)
+                });
             } catch (error) {
                reject(error);
             }
@@ -124,6 +127,18 @@ export class ResourcesService {
             comment: element.comment,
             trafficCondition: element.trafficCondition
         }));
+    }
+
+    private static readTotalDistanceFromSample(): number {
+        const rides: Ride[] = this.readRidesFromSample();
+        let totalDistance = 0;
+        rides.forEach(ride => {
+            if (ride.departure && ride.arrival) {
+                let rideDistance = ride.arrival.odometerValue - ride.departure.odometerValue;
+                totalDistance += rideDistance;
+            }
+        });
+        return totalDistance;
     }
 
 }
