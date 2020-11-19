@@ -1,39 +1,27 @@
 $mobile-break-point: 600px;
 
-.progress {
+.circular-progress-bar {
 
-	height: auto;
-	width: 40%;
+	width: 8em;
+	min-width: 8em;
 
-	@media screen and (min-width: $mobile-break-point) {
-		height: auto;
-		width: 20vw;
+	svg {
+		display: block;
+		height: 100%;
+		width: 100%;
+		margin: 0 auto;
 	}
 
-	.progress-circle {
-		position: absolute;
-		left: 0;
+	// Selects the div element that contain the element children
+	svg + div {
+		margin-top: -0% !important;
+		top: 0px;
 	}
 
-	.progress-label {
+}
 
-		position: absolute;
-		top: 0;
-		left: 0;
-		bottom: 0;
-		right: 0;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-
-		.progress-label-text {
-			font-size: 5vw;
-			font-family: "Roboto", "Helvetica", "Arial", sans-serif;
-			font-weight: 500;
-			line-height: 1.6;
-			letter-spacing: 0.0075em;
-		}
-
-	}
-
+// Selects the dic the contain the progress bar (parent of the svg element)
+.circular-progress-bar > div {
+	height: 100%;
+	width: fit-content;
 }

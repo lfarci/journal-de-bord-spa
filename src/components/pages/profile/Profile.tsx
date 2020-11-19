@@ -14,9 +14,7 @@ import ProfileHeader from "./ProfileHeader";
 import { AuthService } from "../../../services/AuthService";
 import { User } from "oidc-client";
 import { ResourcesService } from "../../../services/ResourcesService";
-import ObjectiveFormDialog from "./ObjectiveFormDialog";
-import ConfirmationDialog from "./ConfirmationDialog";
-import ExportFormDialog from "./ExportFormDialog";
+import { ObjectiveFormDialog, ConfirmationDialog, ExportFormDialog } from "./dialogs";
 
 interface IProfileState {
 	/**
@@ -32,6 +30,10 @@ interface IProfileState {
 	 * Is the number of kilometers that the user wants to reach in its journal.
 	 */
 	objective: number | null;
+	/**
+	 * This is the URI to the picture of the current user.
+	 */
+	imageUri: string | null;
 	isLoading: boolean;
 	error: Error | undefined;
 	showObjectiveFormDialog: boolean;
@@ -47,6 +49,7 @@ function Profile() {
 		username: null,
 		email: null,
 		objective: null,
+		imageUri: null,
 		isLoading: true,
 		error: undefined,
 		showObjectiveFormDialog: false,
@@ -67,14 +70,18 @@ function Profile() {
 		const resources = new ResourcesService();
 		const getUser = async () => {
 			const user: User | null = await authService.getUser();
-			const objective: number = await resources.getObjective("userId")
-			setState((prev) => ({
-				...prev,
-				isLoading: false,
-				username: user?.profile.name,
-				email: user?.profile.preferred_username,
-				objective: objective
-			}));
+			if (user) {
+				const objective: number = await resources.getObjective(user?.profile.sub);
+				const imageUri: string = await resources.getImageUri(user?.profile.sub);
+				setState((prev) => ({
+					...prev,
+					isLoading: false,
+					username: user?.profile.name,
+					email: user?.profile.preferred_username,
+					objective: objective,
+					imageUri: imageUri
+				}));
+			}
 		};
 		try {
 			if (authService.isLoggedIn()) {
@@ -86,7 +93,7 @@ function Profile() {
 	}, []);
 
 	return <Page title="Profile" isLoading={state.isLoading} error={state.error} showBackButton>
-		<ProfileHeader name={getUsername()} picture="https://shorturl.at/kmyFS" />
+		<ProfileHeader name={getUsername()} picture={state.imageUri!!} />
 		<ProfileSection title="General" divider>
 			<ProfileProperty
 				label="Email"

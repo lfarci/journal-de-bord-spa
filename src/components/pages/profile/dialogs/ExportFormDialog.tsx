@@ -19,7 +19,7 @@ interface ObjectiveFormDialogState {
 	isValid: boolean;
 }
 
-export default function ExportFormDialog(props: IObjectiveFormDialogProps) {
+function ExportFormDialog(props: IObjectiveFormDialogProps) {
 
 	const [state, setState] = useState<ObjectiveFormDialogState>({
 		format: "json",
@@ -54,3 +54,5 @@ export default function ExportFormDialog(props: IObjectiveFormDialogProps) {
 		</DialogActions>
 	</Dialog>;
 }
+
+export default ExportFormDialog;
