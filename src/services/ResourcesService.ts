@@ -1,4 +1,5 @@
 import { Ride } from "../types";
+import { Progress } from "../types/Progress";
 import { Environment } from "./Environment";
 import * as data from "./sample.json";
 
@@ -66,6 +67,25 @@ export class ResourcesService {
         });
     }
 
+    /**
+     * Gets the progress for the specified user.
+     *
+     * @param userId is the identifier of the specified user.
+     */
+    public async getProgress(userId: string): Promise<Progress> {
+        return new Promise(async (resolve, reject) => {
+            try {
+                await this.sleep(1000);
+                resolve({
+                    drivenDistance: ResourcesService.readTotalDistanceFromSample(),
+                    distanceObjective: await this.getObjective(userId)
+                });
+            } catch (error) {
+               reject(error);
+            }
+        });
+    }
+
     public async deleteJournal(userId: string): Promise<void> {
         return new Promise(async (resolve, reject) => {
             try {
@@ -107,6 +127,18 @@ export class ResourcesService {
             comment: element.comment,
             trafficCondition: element.trafficCondition
         }));
+    }
+
+    private static readTotalDistanceFromSample(): number {
+        const rides: Ride[] = this.readRidesFromSample();
+        let totalDistance = 0;
+        rides.forEach(ride => {
+            if (ride.departure && ride.arrival) {
+                let rideDistance = ride.arrival.odometerValue - ride.departure.odometerValue;
+                totalDistance += rideDistance;
+            }
+        });
+        return totalDistance;
     }
 
 }
