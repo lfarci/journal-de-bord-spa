@@ -1,4 +1,5 @@
 import { Ride } from "../types";
+import { Progress } from "../types/Progress";
 import { Environment } from "./Environment";
 import * as data from "./sample.json";
 
@@ -60,6 +61,22 @@ export class ResourcesService {
             try {
                 await this.sleep(1000);
                 resolve(ResourcesService.readRidesFromSample());
+            } catch (error) {
+               reject(error);
+            }
+        });
+    }
+
+    /**
+     * Gets the progress for the specified user.
+     *
+     * @param userId is the identifier of the specified user.
+     */
+    public async getProgress(userId: string): Promise<Progress> {
+        return new Promise(async (resolve, reject) => {
+            try {
+                await this.sleep(1000);
+                resolve({drivenDistance: 543, distanceObjective: 1500});
             } catch (error) {
                reject(error);
             }
