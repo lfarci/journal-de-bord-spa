@@ -1,6 +1,6 @@
 import React from "react";
-import { Button, Card, CardActions, CardContent, Typography } from "@material-ui/core";
-import { StringLiteral } from "typescript";
+import { Card, CardActions, CardContent, Typography } from "@material-ui/core";
+import RideControlCardAction from "./RideControlCardAction";
 
 export interface IRideControlCardContentProps {
     /**
@@ -16,31 +16,12 @@ export interface IRideControlCardContentProps {
 
 }
 
-export interface IRideControlCardActionProps {
-    text: string;
-    color?: "primary" | "secondary";
-    onClick?: () => void;
-}
-
 function RideControlCardContent(props: IRideControlCardContentProps) {
     const hasDescription = (): boolean => props.description !== undefined;
     return <CardContent>
         <Typography variant="h6">{props.title}</Typography>
         {hasDescription() && <Typography variant="body1">{props.description}</Typography>}
     </CardContent>;
-}
-
-function RideControlCardAction(props: IRideControlCardActionProps) {
-    const getColor = () => props.color === undefined ? "primary" : props.color;
-    const getAction = () => props.onClick === undefined ? () => {} : props.onClick;
-    return <Button
-        size="medium"
-        variant="contained"
-        color={getColor()}
-        onClick={getAction()}
-    >
-        {props.text}
-    </Button>;
 }
 
 export default function RideControlCard() {
