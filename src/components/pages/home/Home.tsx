@@ -15,7 +15,14 @@ function Home() {
 				currentDistance={0}
 				distanceObjective={1500}
 			/>
-			<RideControlCard />
+			<RideControlCard
+				tracking={true}
+				departureLocationName="WORK"
+				trackingMilliseconds={ 3600000 * 24}
+				onStartRide={() => console.log("Start a new ride")}
+				onCancelRide={() => console.log("Cancel a new ride")}
+				onFinishRide={() => console.log("Finish a new ride")}
+			/>
 		</div>
 	</Page>;
 
