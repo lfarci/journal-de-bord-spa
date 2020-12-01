@@ -22,7 +22,7 @@
     "react-circular-progressbar": "^2.0.3",
     "react-dom": "^16.13.1",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "^3.4.3",
+    "react-scripts": "^4.0.1",
     "typescript": "^3.7.5"
   },
   "scripts": {
@@ -47,6 +47,8 @@
     ]
   },
   "devDependencies": {
-    "humanize-duration": "^3.23.1"
+    "@types/react-test-renderer": "^17.0.0",
+    "humanize-duration": "^3.23.1",
+    "react-test-renderer": "^17.0.1"
   }
 }

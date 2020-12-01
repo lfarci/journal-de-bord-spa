@@ -4,6 +4,7 @@ import { ProgressOverviewCard } from "./overview";
 import { Page } from "../../common";
 
 import "./Home.scss";
+import RideControlCard from "./control/RideControlCard";
 
 function Home() {
 
@@ -14,6 +15,7 @@ function Home() {
 				currentDistance={0}
 				distanceObjective={1500}
 			/>
+			<RideControlCard />
 		</div>
 	</Page>;
 
