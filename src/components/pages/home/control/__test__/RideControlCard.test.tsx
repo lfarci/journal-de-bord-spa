@@ -16,16 +16,34 @@ describe("<RideControlCard />", () => {
         />, div);
     });
 
-    it("renders the start title when tracking is set to false", () => {});
+    it("only renders the start tracking action when tracking is false", () => {
+        const wrapper = shallow(<RideControlCard
+            tracking={false}
+            departureLocationName="Brussels"
+            trackingMilliseconds={3600000}
+        />);
+        const start = wrapper.find('RideControlCardAction').at(0);
+        expect(start.prop("text")).toBe("Start tracking");
+    });
 
-    it("renders the start description when tracking is set to false", () => {});
+    it("renders the cancel action when tracking is true", () => {
+        const wrapper = shallow(<RideControlCard
+            tracking={true}
+            departureLocationName="Brussels"
+            trackingMilliseconds={3600000}
+        />);
+        const start = wrapper.find('RideControlCardAction').at(0);
+        expect(start.prop("text")).toBe("Cancel");
+    });
 
-    it("only renders the start tracking action when tracking is false", () => {});
-
-    it("It renders a generic title when the departure location is empty", () => {});
-
-    it("renders the tracking description when tracking is true", () => {});
-
-    it("renders cancel and finish actions when tracking is true", () => {});
+    it("renders the finish tracking action when tracking is true", () => {
+        const wrapper = shallow(<RideControlCard
+            tracking={true}
+            departureLocationName="Brussels"
+            trackingMilliseconds={3600000}
+        />);
+        const start = wrapper.find('RideControlCardAction').at(1);
+        expect(start.prop("text")).toBe("Finish tracking");
+    });
 
 });
