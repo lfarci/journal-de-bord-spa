@@ -3,6 +3,8 @@ import { Card, CardActions } from "@material-ui/core";
 import RideControlCardAction from "./RideControlCardAction";
 import RideControlCardContent from "./RideControlCardContent";
 
+import "./RideControlCard.scss";
+
 interface IRideControlCardProps {
     tracking: boolean;
     departureLocationName: string;
@@ -23,7 +25,7 @@ export default function RideControlCard(props: IRideControlCardProps) {
     const onCancel = () => props.onCancelRide === undefined ? () => {} : props.onCancelRide;
     const onFinish = () => props.onFinishRide === undefined ? () => {} : props.onFinishRide;
 
-    return <Card elevation={12}>
+    return <Card elevation={12} className="home-control-card">
         {props.tracking
             ? <RideControlCardContent
                 locationName={props.departureLocationName}
@@ -35,7 +37,7 @@ export default function RideControlCard(props: IRideControlCardProps) {
                 description={startDescription}
             />
         }
-        <CardActions>
+        <CardActions className="home-control-card-actions">
             {!props.tracking && <RideControlCardAction text="Start tracking" onClick={onStart} />}
             {props.tracking && <RideControlCardAction text="Cancel" onClick={onCancel} color="secondary" />}
             {props.tracking && <RideControlCardAction text="Finish tracking" onClick={onFinish} />}
