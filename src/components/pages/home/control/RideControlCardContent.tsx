@@ -12,11 +12,14 @@ export interface IRideControlCardContentProps {
      * available card actions.
      */
     description?: string;
-
 }
 
 export default function RideControlCardContent(props: IRideControlCardContentProps) {
-    const hasDescription = (): boolean => props.description !== undefined;
+
+    const specifiedDescription = () => props.description !== undefined;
+    const emptyDescription = () => props.description?.length == 0;
+    const hasDescription = (): boolean => specifiedDescription() && !emptyDescription();
+
     return <CardContent>
         <Typography variant="h6">{props.title}</Typography>
         {hasDescription() && <Typography variant="body1">{props.description}</Typography>}
