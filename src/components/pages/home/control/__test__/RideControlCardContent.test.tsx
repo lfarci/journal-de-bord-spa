@@ -4,7 +4,7 @@ import {shallow} from 'enzyme';
 import RideControlCardContent from "../RideControlCardContent";
 import { Typography } from "@material-ui/core";
 
-describe("<RideControlCardAction />", () => {
+describe("<RideControlCardContent />", () => {
 
     it('renders without crashing', () => {
         const div = document.createElement('div');

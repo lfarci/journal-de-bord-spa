@@ -14,7 +14,7 @@ interface IRideControlCardProps {
     onFinishRide: () => void;
 }
 
-function getTrackingTitle(locationName: string, trackingMilliseconds: number) {
+export function getTrackingTitle(locationName: string, trackingMilliseconds: number) {
     const name = locationName.toLowerCase();
     // Options description are available here: https://www.npmjs.com/package/humanize-duration
     const duration = humanizeDuration(trackingMilliseconds, {
