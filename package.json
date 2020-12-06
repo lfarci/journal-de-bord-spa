@@ -47,7 +47,11 @@
     ]
   },
   "devDependencies": {
+    "@types/enzyme": "^3.10.8",
+    "@types/enzyme-adapter-react-16": "^1.0.6",
     "@types/react-test-renderer": "^17.0.0",
+    "enzyme": "^3.11.0",
+    "enzyme-adapter-react-16": "^1.15.5",
     "humanize-duration": "^3.23.1",
     "react-test-renderer": "^17.0.1"
   }
