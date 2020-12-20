@@ -5,6 +5,7 @@ import { Page } from "../../common";
 
 import "./Home.scss";
 import RideControlCard from "./control/RideControlCard";
+import RecentRidesCard from "./rides/RecentRidesCard";
 
 function Home() {
 
@@ -22,6 +23,11 @@ function Home() {
 				onStartRide={() => console.log("Start a new ride")}
 				onCancelRide={() => console.log("Cancel a new ride")}
 				onFinishRide={() => console.log("Finish a new ride")}
+			/>
+			<RecentRidesCard
+				title="Recent rides"
+				top={5}
+				rides={[]}
 			/>
 		</div>
 	</Page>;
