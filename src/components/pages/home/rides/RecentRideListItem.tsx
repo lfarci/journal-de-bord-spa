@@ -23,8 +23,8 @@ function getAgoText(ride: IRecentRide) {
     return `${toHumanReadableDuration(duration)} ago`;
 }
 
-export default function RecentRideListItem(props: { key: number, ride: IRecentRide }) {
-    return <div key={props.key} className="recent-ride-list-item">
+export default function RecentRideListItem(props: { ride: IRecentRide }) {
+    return <div className="recent-ride-list-item">
         <div className="recent-ride-list-item-content">
             <div className="recent-ride-list-item-start">
                 <Typography variant="body1">

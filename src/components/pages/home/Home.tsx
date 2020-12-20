@@ -5,11 +5,11 @@ import { Page } from "../../common";
 
 import "./Home.scss";
 import RideControlCard from "./control/RideControlCard";
-import RecentRidesCard, { IRecentRide } from "./rides/RecentRidesCard";
+import RecentRidesCard from "./rides/RecentRidesCard";
 import { useEffect } from "react";
 import { ResourcesService } from "../../../services/ResourcesService";
 import { AuthService } from "../../../services/AuthService";
-import { RecentRide, Ride } from "../../../types";
+import { RecentRide } from "../../../types";
 import { User } from "oidc-client";
 
 interface IHomeState {
