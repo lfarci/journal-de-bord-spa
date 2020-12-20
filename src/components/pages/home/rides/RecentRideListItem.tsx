@@ -1,5 +1,6 @@
 import { Divider, Typography } from "@material-ui/core";
 import React from "react";
+import { useHistory } from "react-router-dom";
 import { IRecentRide } from "./RecentRidesCard";
 
 const humanizeDuration = require("humanize-duration");
@@ -24,7 +25,10 @@ function getAgoText(ride: IRecentRide) {
 }
 
 export default function RecentRideListItem(props: { ride: IRecentRide }) {
-    return <div className="recent-ride-list-item">
+
+	const history = useHistory();
+
+    return <div className="recent-ride-list-item" onClick={() => history.push(`rides/${props.ride.id}`)}>
         <div className="recent-ride-list-item-content">
             <div className="recent-ride-list-item-start">
                 <Typography variant="body1">
