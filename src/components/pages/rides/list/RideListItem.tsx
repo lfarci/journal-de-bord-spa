@@ -25,11 +25,6 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface IRideListItem {
 	/**
-	 * Unique key of the list item. The value is set for the key prop of the
-	 * component root element.
-	 */
-	key: number | string;
-	/**
 	 * Is the list item class name. They are set on the root element.
 	 */
 	className: string;
@@ -74,7 +69,7 @@ function RideListItem(props: IRideListItem) {
 	}
 
 	return (
-		<Card key={props.key} className={props.className} elevation={12}>
+		<Card className={props.className} elevation={12}>
 			<CardContent>
 				<Grid
 					container
