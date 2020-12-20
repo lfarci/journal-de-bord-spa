@@ -1,4 +1,4 @@
-import { Ride } from "../types";
+import { RecentRide, Ride } from "../types";
 import { Progress } from "../types/Progress";
 import { Environment } from "./Environment";
 import * as data from "./sample.json";
@@ -67,18 +67,34 @@ export class ResourcesService {
         });
     }
 
+    private getDistance(ride: Ride): number {
+        const departureOdometer = ride.departure.odometerValue!!;
+        const arrivalOdometer = ride.arrival?.odometerValue!!;
+        return arrivalOdometer - departureOdometer;
+    }
+
+    private adaptedRecentRides = (rides: Ride[]): RecentRide[] => {
+		return rides.map(ride => ({
+			id: ride.id!!,
+			departureLocationName: ride.departure.location.name!!,
+			arrivalLocationName: ride.arrival?.location.name!!,
+			date: ride.arrival?.moment!!,
+			distance: this.getDistance(ride)
+		}));
+	}
+
     /**
      * Gets the top most recent rides driven by the specified user.
      *
      * @param userId is the identifier of the specified user.
      * @param top is the number of the most recent rides to select.
      */
-    public async getRecentRides(userId: string, top = 5): Promise<Ride[]> {
+    public async getRecentRides(userId: string, top = 5): Promise<RecentRide[]> {
         return new Promise(async (resolve, reject) => {
             try {
                 await this.sleep(1000);
                 const rides = ResourcesService.readRidesFromSample();
-                resolve(rides.slice(0, top));
+                resolve(this.adaptedRecentRides(rides).slice(0, top));
             } catch (error) {
                reject(error);
             }

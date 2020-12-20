@@ -9,11 +9,11 @@ import RecentRidesCard, { IRecentRide } from "./rides/RecentRidesCard";
 import { useEffect } from "react";
 import { ResourcesService } from "../../../services/ResourcesService";
 import { AuthService } from "../../../services/AuthService";
-import { Ride } from "../../../types";
+import { RecentRide, Ride } from "../../../types";
 import { User } from "oidc-client";
 
 interface IHomeState {
-	recentRides: Ride[];
+	recentRides: RecentRide[];
 	isLoading: boolean;
 	error: Error | undefined;
 }
@@ -25,16 +25,6 @@ function Home() {
 		isLoading: true,
 		error: undefined
 	});
-
-	const adaptedRecentRides = (): IRecentRide[] => {
-		return state.recentRides.map(ride => ({
-			id: ride.id!!,
-			departureLocationName: ride.departure.location.name!!,
-			arrivalLocationName: ride.arrival?.location.name!!,
-			date: ride.arrival?.moment!!,
-			distance: 23
-		}));
-	}
 
 	useEffect(() => {
 		const authService = new AuthService();
@@ -76,7 +66,7 @@ function Home() {
 					: <RecentRidesCard
 						title="Recent rides"
 						top={5}
-						rides={adaptedRecentRides()}
+						rides={state.recentRides}
 					/>
 			}
 		</div>
