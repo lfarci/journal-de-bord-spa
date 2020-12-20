@@ -54,8 +54,7 @@ function Rides(props: {}) {
 	return <Page title="My rides" selected="history" isLoading={state.isLoading} error={state.error} showBottomNavigation>
 		<div className="rides-content">
 			<RideList
-				rides={[]}
-				// rides={state.rides}
+				rides={state.rides}
 				onShowDetails={(rideId: number) => history.push(`${path}/${rideId}`)}
 			/>
 			<Fab
