@@ -31,6 +31,6 @@ export default function RideControlCardContent(props: IRideControlCardContentPro
             trackingMilliseconds={(props as ITrackingContentProps).trackingMilliseconds}
         />
         }
-        { hasDescription() && <Typography variant="body1">{props.description}</Typography> }
+        {hasDescription() && <Typography variant="body1">{props.description}</Typography>}
     </CardContent>;
 }

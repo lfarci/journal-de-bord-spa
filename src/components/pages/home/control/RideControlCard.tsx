@@ -21,9 +21,9 @@ export default function RideControlCard(props: IRideControlCardProps) {
     const startDescription = "Start tracking your ride. The tracked ride will be logged into your journal when you finish tracking.";
     const trackingDescription = "When you reach your destination you can finish tracking the ride. A new record will be created in your journal.";
 
-    const onStart = () => props.onStartRide === undefined ? () => {} : props.onStartRide;
-    const onCancel = () => props.onCancelRide === undefined ? () => {} : props.onCancelRide;
-    const onFinish = () => props.onFinishRide === undefined ? () => {} : props.onFinishRide;
+    const onStart = () => { if (props.onStartRide !== undefined) props.onStartRide() };
+    const onCancel = () => { if (props.onCancelRide !== undefined) props.onCancelRide() };
+    const onFinish = () => { if (props.onFinishRide !== undefined) props.onFinishRide() };
 
     return <Card elevation={12} className="home-control-card">
         {props.tracking

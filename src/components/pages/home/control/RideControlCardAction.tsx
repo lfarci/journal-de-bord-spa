@@ -13,12 +13,12 @@ export default function RideControlCardAction(props: IRideControlCardActionProps
 
     const getText = () => props.text === "" ? defaultText : props.text;
     const getColor = () => props.color === undefined ? "primary" : props.color;
-    const getAction = () => props.onClick === undefined ? () => {} : props.onClick;
+    const handleClick = () => { if (props.onClick !== undefined) props.onClick() };
 
     return <Button size="medium"
         variant="contained"
         color={getColor()}
-        onClick={getAction()}
+        onClick={handleClick}
     >
         {getText()}
     </Button>;
