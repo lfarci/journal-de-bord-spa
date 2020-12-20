@@ -1,6 +1,8 @@
 import React from "react";
-import { Card, CardContent } from "@material-ui/core";
+import { Card, CardContent, Divider, Typography } from "@material-ui/core";
 import RecentRideListItem from "./RecentRideListItem";
+
+import "./RecentRidesCard.scss";
 
 export interface IRecentRide {
     id: number;
@@ -12,7 +14,6 @@ export interface IRecentRide {
 
 interface IRecentRidesCardProps {
     title: string;
-    top?: number;
     rides: IRecentRide[];
 }
 
@@ -22,10 +23,11 @@ export default function RecentRidesCard(props: IRecentRidesCardProps) {
 
     return <Card elevation={12} className="home-rides-card">
         <CardContent>
+            <Typography variant="h6">Recent rides</Typography>
             {
                 isEmpty()
                     ? <p>No recent rides, start tracking!</p>
-                    :  props.rides.map(ride => <RecentRideListItem ride={ride} />)
+                    :  props.rides.map((ride, index) => <RecentRideListItem key={index} ride={ride} />)
             }
         </CardContent>
     </Card >;

@@ -32,7 +32,7 @@ function Home() {
 		const getRides = async () => {
 			const user: User | null = await authService.getUser();
 			if (user) {
-				const rides = await resources.getRecentRides("uid", 5);
+				const rides = await resources.getRecentRides("uid", 3);
 				setState((prev) => ({ ...prev, isLoading: false, recentRides: rides }));
 			}
 		}
@@ -65,7 +65,6 @@ function Home() {
 					? <p>We are loading the recent rides</p>
 					: <RecentRidesCard
 						title="Recent rides"
-						top={5}
 						rides={state.recentRides}
 					/>
 			}

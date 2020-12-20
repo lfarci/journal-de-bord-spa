@@ -1,0 +1,18 @@
+.home-rides-card {
+
+    width: 100%;
+    margin-top: 1em;
+
+    .recent-ride-list-item {
+
+        .recent-ride-list-item-content {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: .5em;
+        }
+
+    }
+
+}

@@ -1,4 +1,4 @@
-import { Typography } from "@material-ui/core";
+import { Divider, Typography } from "@material-ui/core";
 import React from "react";
 import { IRecentRide } from "./RecentRidesCard";
 
@@ -23,16 +23,19 @@ function getAgoText(ride: IRecentRide) {
     return `${toHumanReadableDuration(duration)} ago`;
 }
 
-export default function RecentRideListItem(props: {ride: IRecentRide}) {
-    return <div>
-        <div className="recent-ride-list-item-start">
-            <Typography variant="body1">
-                {props.ride.departureLocationName} to {props.ride.arrivalLocationName}
-            </Typography>
-            <Typography variant="body2">{getAgoText(props.ride)}</Typography>
+export default function RecentRideListItem(props: { key: number, ride: IRecentRide }) {
+    return <div key={props.key} className="recent-ride-list-item">
+        <div className="recent-ride-list-item-content">
+            <div className="recent-ride-list-item-start">
+                <Typography variant="body1">
+                    {props.ride.departureLocationName} to {props.ride.arrivalLocationName}
+                </Typography>
+                <Typography variant="body2">{getAgoText(props.ride)}</Typography>
+            </div>
+            <div className="recent-ride-list-item-end">
+                <Typography variant="h6">{props.ride.distance} km</Typography>
+            </div>
         </div>
-        <div className="recent-ride-list-item-end">
-            <Typography variant="h6">{props.ride.distance} km</Typography>
-        </div>
+        <Divider />
     </div>;
 }
