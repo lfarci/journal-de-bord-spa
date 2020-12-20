@@ -16,6 +16,7 @@ export default function RideControlCardAction(props: IRideControlCardActionProps
     const handleClick = () => { if (props.onClick !== undefined) props.onClick() };
 
     return <Button size="medium"
+        className="home-control-card-button"
         variant="contained"
         color={getColor()}
         onClick={handleClick}

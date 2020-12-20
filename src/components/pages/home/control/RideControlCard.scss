@@ -1,11 +1,23 @@
 .home-control-card {
+
     width: 100%;
     margin-top: 1em;
 
     .home-control-card-actions {
-        display: flex;
+
         flex-direction: row;
         justify-content: flex-end;
+        width: 100%;
+
+        .home-control-card-buttons {
+            margin-right: 16px;
+
+            .home-control-card-button {
+                margin-left: .5em;
+            }
+
+        }
+
     }
 
 }
