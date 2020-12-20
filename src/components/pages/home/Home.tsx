@@ -56,18 +56,16 @@ function Home() {
 				tracking={true}
 				departureLocationName="WORK"
 				trackingMilliseconds={3600000 * 24}
+				isLoading={state.isLoading}
 				onStartRide={() => console.log("Start a new ride")}
 				onCancelRide={() => console.log("Cancel a new ride")}
 				onFinishRide={() => console.log("Finish a new ride")}
 			/>
-			{
-				state.isLoading
-					? <p>We are loading the recent rides</p>
-					: <RecentRidesCard
-						title="Recent rides"
-						rides={state.recentRides}
-					/>
-			}
+			<RecentRidesCard
+				title="Recent rides"
+				rides={state.recentRides}
+				isLoading={state.isLoading}
+			/>
 		</div>
 	</Page>;
 
