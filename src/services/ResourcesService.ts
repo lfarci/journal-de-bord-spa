@@ -68,6 +68,24 @@ export class ResourcesService {
     }
 
     /**
+     * Gets the top most recent rides driven by the specified user.
+     *
+     * @param userId is the identifier of the specified user.
+     * @param top is the number of the most recent rides to select.
+     */
+    public async getRecentRides(userId: string, top = 5): Promise<Ride[]> {
+        return new Promise(async (resolve, reject) => {
+            try {
+                await this.sleep(1000);
+                const rides = ResourcesService.readRidesFromSample();
+                resolve(rides.slice(0, top));
+            } catch (error) {
+               reject(error);
+            }
+        });
+    }
+
+    /**
      * Gets the progress for the specified user.
      *
      * @param userId is the identifier of the specified user.
