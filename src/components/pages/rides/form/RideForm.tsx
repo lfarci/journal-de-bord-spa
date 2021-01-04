@@ -57,10 +57,6 @@ function getErrorMessages(ride: Ride): string[] {
 	return errorMessages;
 }
 
-function getSubmitButtonText(isDriving: boolean): string {
-	return isDriving ? "Finish" : "Start";
-}
-
 function RideForm(props: IRideFormProps) {
 
 	const [ride, setRide] = useState<Ride>(props.ride);
@@ -73,7 +69,7 @@ function RideForm(props: IRideFormProps) {
 		setMessages(getErrorMessages(ride));
 	}
 
-	return <Page title="Create a new ride">
+	return <Page title="New ride">
 		<div id="ride-form-container">
 			<StopForm
 				title="Departure"
@@ -132,7 +128,7 @@ function RideForm(props: IRideFormProps) {
 				disabled={!isValid(ride)}
 				onClick={() => props.onSubmit(ride)}
 			>
-				{getSubmitButtonText(props.isDriving)}
+				Save
 			</Button>
 		</div >
 	</Page>;
