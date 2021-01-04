@@ -131,6 +131,18 @@ export class ResourcesService {
         });
     }
 
+    public async postRide(ride: Ride): Promise<void> {
+        return new Promise(async (resolve, reject) => {
+            try {
+                await this.sleep(1000);
+                console.log(JSON.stringify(ride, null, 2));
+                resolve();
+            } catch (error) {
+               reject(error);
+            }
+        });
+    }
+
     /**
      * This method only serve for demo purposes.
      */

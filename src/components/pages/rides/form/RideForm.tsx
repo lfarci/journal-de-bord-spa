@@ -18,6 +18,8 @@ interface IRideFormProps {
 	 * if set to true then the form shows arrival and retrospective ones.
 	 */
 	isDriving: boolean;
+	isLoading: boolean;
+	error: Error | undefined;
 	/**
 	 * Called when the form values are changed.
 	 *
@@ -69,7 +71,7 @@ function RideForm(props: IRideFormProps) {
 		setMessages(getErrorMessages(ride));
 	}
 
-	return <Page title="New ride">
+	return <Page title="New ride" isLoading={props.isLoading} error={props.error}>
 		<div id="ride-form-container">
 			<StopForm
 				title="Departure"

@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+import { ResourcesService } from "../../../../services/ResourcesService";
 import { Ride } from "../../../../types";
 import { TrafficCondition } from "./fields";
 import RideForm from "./RideForm";
@@ -29,12 +30,36 @@ const defaultRide: Ride = {
 	comment: "Je suis un brave."
 };
 
+interface IRideFormPageState {
+    isLoading: boolean;
+    error: Error | undefined;
+}
+
 function RideFormPage() {
+
+    const [state, setState] = useState<IRideFormPageState>({
+        isLoading: false,
+        error: undefined
+    });
+
+    const setLoading = (value: boolean) => setState((prev) => ({...prev, isLoading: value }));
+
 	return <RideForm
 		ride={defaultRide}
-		isDriving={false}
+        isDriving={false}
+        isLoading={state.isLoading}
+        error={state.error}
 		onChange={() => { }}
-		onSubmit={(data: any) => { console.log(JSON.stringify(data, null, 2)) }}
+		onSubmit={async (data: Ride) => {
+            const resources = new ResourcesService();
+            try {
+                setLoading(true);
+                await resources.postRide(data);
+                setLoading(false);
+            } catch (error) {
+                setState((prev) => ({...prev, isLoading: false, error: error }))
+            }
+        }}
 	/>;
 }
 
