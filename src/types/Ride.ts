@@ -1,5 +1,8 @@
+import moment from "moment";
 import { TrafficCondition } from "../components/pages/rides/form/fields/TrafficConditionField";
 import { Stop } from "./Stop";
+
+const humanizeDuration = require("humanize-duration");
 
 export type Ride = {
     id?: number;
@@ -10,7 +13,7 @@ export type Ride = {
     comment: string | undefined;
 }
 
-export function getRideDistance(ride: Ride) {
+export const getRideDistance = (ride: Ride) => {
     if (ride.arrival === undefined) {
         throw Error("Cannot read distance without an arrival");
     }
@@ -30,4 +33,26 @@ export const getRideDistanceString = (ride: Ride): string => {
         distance = 0;
     }
     return `${distance.toString()} km`;
+}
+
+export const getRideDuration = (ride: Ride): number => {
+    if (ride.arrival === undefined) {
+        throw Error("Cannot read duration without an arrival");
+    }
+    const departure = moment(ride.departure.moment);
+    const arrival = moment(ride.arrival?.moment);
+    return moment.duration(arrival.diff(departure)).asMilliseconds();
+}
+
+export const getRideDurationString = (ride: Ride): string => {
+    try {
+        const milliseconds = getRideDuration(ride);
+        return humanizeDuration(milliseconds, {
+            round: true,
+            units: ['y', 'mo', 'd', 'h', 'm'],
+            largest: 1,
+        })
+    } catch (error) {
+        return "Error";
+    }
 }

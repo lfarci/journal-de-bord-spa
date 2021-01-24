@@ -1,6 +1,7 @@
 import React from "react";
 import { RouteComponentProps, withRouter } from "react-router-dom";
 import { getRideDistanceString, Stop } from "../../../../types";
+import { getRideDurationString } from "../../../../types/Ride";
 import { makeRide } from "../../../../types/__test__/helpers";
 import { Page, Property, Section } from "../../../common";
 
@@ -28,7 +29,7 @@ function StopSection(props: IStopSectionProps) {
 
 const RideDetails: React.FC<RideDetailsProps> = ({ match }: RideDetailsProps) => {
 
-	const ride = makeRide({arrival: undefined});
+	const ride = makeRide();
 
 	const showArrival = (): boolean => ride.arrival !== undefined;
 
@@ -36,7 +37,7 @@ const RideDetails: React.FC<RideDetailsProps> = ({ match }: RideDetailsProps) =>
 		{/* <p>Showing details for the ride with id of {match.params.rideId!!}</p> */}
 		<Section title="Overview" divider>
 			<Property label="Distance" value={getRideDistanceString(ride)}/>
-			<Property label="Duration" />
+			<Property label="Duration" value={getRideDurationString(ride)}/>
 			<Property label="Traffic" />
 			<Property label="Comment" />
 		</Section>
