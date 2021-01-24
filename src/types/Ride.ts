@@ -47,6 +47,7 @@ export const getRideDuration = (ride: Ride): number => {
 export const getRideDurationString = (ride: Ride): string => {
     try {
         const milliseconds = getRideDuration(ride);
+        console.log("Milliseconds: " + milliseconds);
         return humanizeDuration(milliseconds, {
             round: true,
             units: ['y', 'mo', 'd', 'h', 'm'],

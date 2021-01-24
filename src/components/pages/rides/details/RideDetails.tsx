@@ -1,13 +1,23 @@
+import { User } from "oidc-client";
 import React from "react";
+import { useState } from "react";
+import { useEffect } from "react";
 import { RouteComponentProps, withRouter } from "react-router-dom";
-import { getRideDistanceString, Stop } from "../../../../types";
+import { AuthService } from "../../../../services/AuthService";
+import { ResourcesService } from "../../../../services/ResourcesService";
+import { getRideDistanceString, Ride, Stop } from "../../../../types";
 import { getRideDurationString, getTrafficConditionString } from "../../../../types/Ride";
-import { makeRide } from "../../../../types/__test__/helpers";
 import { Page, Property, Section } from "../../../common";
 
 type RideDetailsParams = { rideId: string };
 
 type RideDetailsProps = RouteComponentProps<RideDetailsParams>;
+
+interface IRideDetailsState {
+	ride: Ride | undefined;
+	isLoading: boolean;
+	error: Error | undefined;
+}
 
 interface IStopSectionProps {
 	title: string;
@@ -29,32 +39,54 @@ function StopSection(props: IStopSectionProps) {
 
 const RideDetails: React.FC<RideDetailsProps> = ({ match }: RideDetailsProps) => {
 
-	const ride = makeRide();
+	const [state, setState] = useState<IRideDetailsState>({
+		ride: undefined,
+		isLoading: true,
+		error: undefined
+	});
 
-	const showArrival = (): boolean => ride.arrival !== undefined;
+	const showArrival = (): boolean => state.ride?.arrival !== undefined;
 
-	return <Page title={"Ride details"}>
-		{/* <p>Showing details for the ride with id of {match.params.rideId!!}</p> */}
+	useEffect(() => {
+		const authService = new AuthService();
+		const resources = new ResourcesService();
+		const getRide = async () => {
+			const user: User | null = await authService.getUser();
+			if (user) {
+				const userId = user?.profile.sub;
+				const rideId = match.params.rideId!!;
+				const ride = await resources.getRide(userId, rideId);
+				setState({ ride: ride, isLoading: false, error: undefined });
+			}
+		};
+		try {
+			if (authService.isLoggedIn()) getRide();
+		} catch (error) {
+			setState({ ride: undefined, isLoading: true, error: error });
+		}
+	}, [match.params.rideId]);
+
+	return <Page title={"Ride details"} isLoading={state.isLoading} error={state.error}>
 		<Section title="Overview" divider>
 			<Property 
 				label="Distance"
-				value={getRideDistanceString(ride)}
+				value={getRideDistanceString(state.ride!!)}
 			/>
 			<Property
 				label="Duration"
-				value={getRideDurationString(ride)}
+				value={getRideDurationString(state.ride!!)}
 			/>
 			<Property
 				label="Traffic"
-				value={getTrafficConditionString(ride.trafficCondition)}
+				value={getTrafficConditionString(state.ride?.trafficCondition!!)}
 			/>
 			<Property
 				label="Comment"
-				value={ride.comment}
+				value={state.ride?.comment!!}
 			/>
 		</Section>
-		<StopSection title="Departure" divider stop={ride.departure}/>
-		{ showArrival() && <StopSection title="Arrival" stop={ride.arrival!!}/>}
+		<StopSection title="Departure" divider stop={state.ride?.departure!!}/>
+		{ showArrival() && <StopSection title="Arrival" stop={state.ride?.arrival!!}/>}
 		
 	</Page>
 };

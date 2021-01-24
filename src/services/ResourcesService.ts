@@ -1,4 +1,4 @@
-import { RecentRide, Ride } from "../types";
+import { getRideDistance, RecentRide, Ride } from "../types";
 import { Progress } from "../types/Progress";
 import { Environment } from "./Environment";
 import * as data from "./sample.json";
@@ -67,10 +67,24 @@ export class ResourcesService {
         });
     }
 
-    private getDistance(ride: Ride): number {
-        const departureOdometer = ride.departure.odometerValue!!;
-        const arrivalOdometer = ride.arrival?.odometerValue!!;
-        return arrivalOdometer - departureOdometer;
+    public async getRide(userId: string, rideId: string): Promise<Ride> {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const rides: Ride[] = await this.getRides(userId);
+                let id: number;
+                try {
+                    id = parseInt(rideId)
+                } catch (error) {
+                    id = 0; 
+                }
+                await this.sleep(1000);
+                console.log("GET ride of id", id);
+                console.log(JSON.stringify(rides[id], null, 2));
+                resolve(rides[id]);
+            } catch (error) {
+               reject(error);
+            }
+        });
     }
 
     private adaptedRecentRides = (rides: Ride[]): RecentRide[] => {
@@ -79,7 +93,7 @@ export class ResourcesService {
 			departureLocationName: ride.departure.location.name!!,
 			arrivalLocationName: ride.arrival?.location.name!!,
 			date: ride.arrival?.moment!!,
-			distance: this.getDistance(ride)
+			distance: getRideDistance(ride)
 		}));
 	}
 
