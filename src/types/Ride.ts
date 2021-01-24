@@ -56,3 +56,25 @@ export const getRideDurationString = (ride: Ride): string => {
         return "Error";
     }
 }
+
+export const getTrafficConditionString = (condition: TrafficCondition): string => {
+    let trafficConditionString: string;
+    switch (condition) {
+    case TrafficCondition.VERY_CALM:
+            trafficConditionString = "Very calm";
+            break;
+    case TrafficCondition.CALM:
+        trafficConditionString = "Calm";
+        break;
+    case TrafficCondition.NORMAL:
+        trafficConditionString = "Normal";
+        break;
+    case TrafficCondition.SLOW:
+        trafficConditionString = "Slow";
+        break;
+    case TrafficCondition.VERY_SLOW:
+        trafficConditionString = "Very slow";
+        break;
+    }
+    return trafficConditionString;
+}

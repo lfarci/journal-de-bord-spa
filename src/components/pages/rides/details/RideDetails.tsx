@@ -1,7 +1,7 @@
 import React from "react";
 import { RouteComponentProps, withRouter } from "react-router-dom";
 import { getRideDistanceString, Stop } from "../../../../types";
-import { getRideDurationString } from "../../../../types/Ride";
+import { getRideDurationString, getTrafficConditionString } from "../../../../types/Ride";
 import { makeRide } from "../../../../types/__test__/helpers";
 import { Page, Property, Section } from "../../../common";
 
@@ -36,10 +36,22 @@ const RideDetails: React.FC<RideDetailsProps> = ({ match }: RideDetailsProps) =>
 	return <Page title={`Ride ${match.params.rideId!!}`}>
 		{/* <p>Showing details for the ride with id of {match.params.rideId!!}</p> */}
 		<Section title="Overview" divider>
-			<Property label="Distance" value={getRideDistanceString(ride)}/>
-			<Property label="Duration" value={getRideDurationString(ride)}/>
-			<Property label="Traffic" />
-			<Property label="Comment" />
+			<Property 
+				label="Distance"
+				value={getRideDistanceString(ride)}
+			/>
+			<Property
+				label="Duration"
+				value={getRideDurationString(ride)}
+			/>
+			<Property
+				label="Traffic"
+				value={getTrafficConditionString(ride.trafficCondition)}
+			/>
+			<Property
+				label="Comment"
+				value={ride.comment}
+			/>
 		</Section>
 		<StopSection title="Departure" divider stop={ride.departure}/>
 		{ showArrival() && <StopSection title="Arrival" stop={ride.arrival!!}/>}
