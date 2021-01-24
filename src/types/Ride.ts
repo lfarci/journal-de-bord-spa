@@ -21,3 +21,13 @@ export function getRideDistance(ride: Ride) {
     }
     return arrivalOdometer - departureOdometer;
 }
+
+export const getRideDistanceString = (ride: Ride): string => {
+    let distance: number;
+    try {
+        distance = getRideDistance(ride);
+    } catch (error) {
+        distance = 0;
+    }
+    return `${distance.toString()} km`;
+}

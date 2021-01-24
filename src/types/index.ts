@@ -13,3 +13,4 @@ export type User = _User;
 export type Progress = _Progress;
 
 export { getRideDistance } from './Ride';
+export { getRideDistanceString } from './Ride';

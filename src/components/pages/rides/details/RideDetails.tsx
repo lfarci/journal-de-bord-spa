@@ -1,6 +1,6 @@
 import React from "react";
 import { RouteComponentProps, withRouter } from "react-router-dom";
-import { getRideDistance, Ride, Stop } from "../../../../types";
+import { getRideDistanceString, Stop } from "../../../../types";
 import { makeRide } from "../../../../types/__test__/helpers";
 import { Page, Property, Section } from "../../../common";
 
@@ -32,20 +32,10 @@ const RideDetails: React.FC<RideDetailsProps> = ({ match }: RideDetailsProps) =>
 
 	const showArrival = (): boolean => ride.arrival !== undefined;
 
-	const getDistanceString = (ride: Ride): string => {
-		let distance: number;
-		try {
-			distance = getRideDistance(ride);
-		} catch (error) {
-			distance = 0;
-		}
-		return distance.toString();
-	}
-
 	return <Page title={`Ride ${match.params.rideId!!}`}>
 		{/* <p>Showing details for the ride with id of {match.params.rideId!!}</p> */}
 		<Section title="Overview" divider>
-			<Property label="Distance" value={getDistanceString(ride)}/>
+			<Property label="Distance" value={getRideDistanceString(ride)}/>
 			<Property label="Duration" />
 			<Property label="Traffic" />
 			<Property label="Comment" />
