@@ -23,10 +23,10 @@ interface IProfilePropertyProps {
 }
 
 /**
- * This component is used to display one of the properties in a profile
- * section.
+ * This component is used to display one of the properties in a details page.
+ * It is currently used by the ride details page and the profile page.
  */
-function ProfileProperty(props: IProfilePropertyProps) {
+function Property(props: IProfilePropertyProps) {
 
     const Icon = props.renderIcon!!;
 
@@ -45,4 +45,4 @@ function ProfileProperty(props: IProfilePropertyProps) {
     </div>;
 }
 
-export default ProfileProperty;
+export default Property;

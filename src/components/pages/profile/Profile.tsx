@@ -8,8 +8,7 @@ import ExitToAppRoundedIcon from '@material-ui/icons/ExitToAppRounded';
 
 import "./Profile.scss";
 
-import ProfileProperty from "./ProfileProperty";
-import ProfileSection from "./ProfileSection";
+import { Property, Section } from "../../common";
 import ProfileHeader from "./ProfileHeader";
 import { AuthService } from "../../../services/AuthService";
 import { User } from "oidc-client";
@@ -94,37 +93,37 @@ function Profile() {
 
 	return <Page title="Profile" isLoading={state.isLoading} error={state.error} showBackButton>
 		<ProfileHeader name={getUsername()} picture={state.imageUri!!} />
-		<ProfileSection title="General" divider>
-			<ProfileProperty
+		<Section title="General" divider>
+			<Property
 				label="Email"
 				value={getEmail()}
 			/>
-			<ProfileProperty
+			<Property
 				label="Distance objective"
 				value={`${state.objective} kilometers`}
 				onClick={() => showObjectiveFormDialog(true)}
 				renderIcon={() => <EditRoundedIcon style={{ color: "c4c4c4" }}/>}
 			/>
-		</ProfileSection>
-		<ProfileSection title="Data" divider>
-			<ProfileProperty
+		</Section>
+		<Section title="Data" divider>
+			<Property
 				label="Export my journal"
 				renderIcon={() => <GetAppRoundedIcon style={{ color: "c4c4c4" }} />}
 				onClick={() => showFormatFormDialog() }
 			/>
-			<ProfileProperty
+			<Property
 				label="Delete my journal"
 				renderIcon={() => <DeleteRoundedIcon style={{ color: "c4c4c4" }} />}
 				onClick={() => setState((prev) => ({ ...prev, showDeleteDialog: true }))}
 			/>
-		</ProfileSection>
-		<ProfileSection>
-			<ProfileProperty
+		</Section>
+		<Section>
+			<Property
 				label="Log out"
 				onClick={() => new AuthService().logout()}
 				renderIcon={() => <ExitToAppRoundedIcon style={{ color: "c4c4c4" }} />}
 			/>
-		</ProfileSection>
+		</Section>
 		<ObjectiveFormDialog
 			open={state.showObjectiveFormDialog}
 			value={state.objective!!}
