@@ -33,7 +33,7 @@ const RideDetails: React.FC<RideDetailsProps> = ({ match }: RideDetailsProps) =>
 
 	const showArrival = (): boolean => ride.arrival !== undefined;
 
-	return <Page title={`Ride ${match.params.rideId!!}`}>
+	return <Page title={"Ride details"}>
 		{/* <p>Showing details for the ride with id of {match.params.rideId!!}</p> */}
 		<Section title="Overview" divider>
 			<Property 

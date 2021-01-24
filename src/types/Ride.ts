@@ -61,8 +61,8 @@ export const getTrafficConditionString = (condition: TrafficCondition): string =
     let trafficConditionString: string;
     switch (condition) {
     case TrafficCondition.VERY_CALM:
-            trafficConditionString = "Very calm";
-            break;
+        trafficConditionString = "Very calm";
+        break;
     case TrafficCondition.CALM:
         trafficConditionString = "Calm";
         break;
