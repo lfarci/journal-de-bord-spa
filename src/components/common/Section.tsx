@@ -7,7 +7,7 @@ interface IProfileSection {
     children: React.ReactNode;
 }
 
-function ProfileSection(props: IProfileSection) {
+function Section(props: IProfileSection) {
 
     const showTitle = (): boolean => props.title !== undefined;
     const showDivider = (): boolean => props.divider === undefined ? false : props.divider;
@@ -21,4 +21,4 @@ function ProfileSection(props: IProfileSection) {
     </div>;
 }
 
-export default ProfileSection;
+export default Section;
