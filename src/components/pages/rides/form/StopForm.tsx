@@ -9,7 +9,7 @@ interface IStopFormProps {
 	/**
 	 * This form title.
 	 */
-	title: string;
+	title?: string;
 	/**
 	 * The form description.
 	 */
@@ -17,15 +17,20 @@ interface IStopFormProps {
 	/**
 	 * Is the form data.
 	 */
-	value: Stop | null;
+	value?: Stop;
 	/**
 	 * Called when the stop data change.
 	 */
 	onChange: (data: Stop) => void;
+	/**
+	 * When set to true the form asks the user for a date. Otherwise, the date
+	 * is set to now.
+	 */
+	datetime?: boolean;
 }
 
-function getDefaultValue(value: Stop | null): Stop {
-	if (value == null) {
+function getDefaultValue(value: Stop | undefined): Stop {
+	if (value === undefined) {
 		return {
 			moment: new Date(),
 			location: {
@@ -49,6 +54,9 @@ function StopForm(props: IStopFormProps) {
 
 	const [stop, setStop] = useState<Stop>(getDefaultValue(props.value));
 
+	const hasTitle = (): boolean => props.title !== undefined;
+	const showDateTime = (): boolean => props.datetime === undefined ? false : props.datetime;
+
 	const fetchLocations = (): Location[] => {
 		return [
 			{ id: 0, name: "Home", latitude: 34.34, longitude: 23.23 },
@@ -57,12 +65,15 @@ function StopForm(props: IStopFormProps) {
 			{ id: 3, name: "Library", latitude: 34.34, longitude: 23.23 },
 		];
 	}
+
 	return (
 		<div>
-			<Typography variant="h6">
-				{props.title}
-			</Typography>
-			<Divider/>
+			{
+				hasTitle() && <div>
+					<Typography variant="h6">{props.title}</Typography>
+					<Divider/>
+				</div>
+			}
 			<OdometerField
 				id="stop-odometer-value"
 				label="Odometer Value"
@@ -90,7 +101,7 @@ function StopForm(props: IStopFormProps) {
 					props.onChange(editedStop);
 				}}
 			/>
-			<DatetimeField
+			{ showDateTime() && <DatetimeField
 				id="stop-datetime"
 				label="Date and time"
 				hint="Enter the stop date and time."
@@ -101,7 +112,7 @@ function StopForm(props: IStopFormProps) {
 					setStop(editedStop);
 					props.onChange(editedStop);
 				}}
-			/>
+			/>}
 		</div>
 	);
 }

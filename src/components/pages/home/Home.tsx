@@ -11,19 +11,23 @@ import { ResourcesService } from "../../../services/ResourcesService";
 import { AuthService } from "../../../services/AuthService";
 import { RecentRide } from "../../../types";
 import { User } from "oidc-client";
+import { StartRideFormDialog } from "./control/dialogs";
 
 interface IHomeState {
 	recentRides: RecentRide[];
 	isLoading: boolean;
 	error: Error | undefined;
+	showNewRideFormDialog: boolean;
 }
 
 function Home() {
 
+	const [openNewRideForm, showNewRideForm] = useState<boolean>(false);
 	const [state, setState] = useState<IHomeState>({
 		recentRides: [],
 		isLoading: true,
-		error: undefined
+		error: undefined,
+		showNewRideFormDialog: false,
 	});
 
 	useEffect(() => {
@@ -53,11 +57,11 @@ function Home() {
 				distanceObjective={1500}
 			/>
 			<RideControlCard
-				tracking={true}
+				tracking={false}
 				departureLocationName="WORK"
 				trackingMilliseconds={3600000 * 24}
 				isLoading={state.isLoading}
-				onStartRide={() => console.log("Start a new ride")}
+				onStartRide={() => showNewRideForm(true)}
 				onCancelRide={() => console.log("Cancel a new ride")}
 				onFinishRide={() => console.log("Finish a new ride")}
 			/>
@@ -67,6 +71,14 @@ function Home() {
 				isLoading={state.isLoading}
 			/>
 		</div>
+		<StartRideFormDialog 
+			open={openNewRideForm}
+			onSubmit={(data: any) => {
+				console.log(data);
+				showNewRideForm(false);
+			}}
+			onCancel={() => showNewRideForm(false)}
+		/>
 	</Page>;
 
 }
