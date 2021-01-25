@@ -3,12 +3,11 @@ import React, { useState } from "react";
 import { BottomNavigation, BottomNavigationAction } from "@material-ui/core";
 import HomeRoundedIcon from '@material-ui/icons/HomeRounded';
 import RestoreRoundedIcon from '@material-ui/icons/RestoreRounded';
-import EqualizerRoundedIcon from '@material-ui/icons/EqualizerRounded';
 
 import "./ApplicationBottomNavigation.scss";
 import { useHistory } from "react-router-dom";
 
-export type ContentKey = "home" | "history" | "statistics" | undefined;
+export type ContentKey = "home" | "history" | undefined;
 
 interface IApplicationBottomNavigationProps {
 	contentKey: ContentKey;
@@ -46,13 +45,7 @@ const entries: IBottomNavigationEntry[] = [
 		label: "History",
 		url: "/rides",
 		icon: <RestoreRoundedIcon />
-	},
-	{
-		key: "statistics",
-		label: "Statistics",
-		url: "/statistics",
-		icon: <EqualizerRoundedIcon />
-	},
+	}
 ];
 
 function ApplicationBottomNavigation(props: IApplicationBottomNavigationProps) {

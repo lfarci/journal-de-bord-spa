@@ -2,7 +2,6 @@ import React from 'react';
 import { Route, Switch, withRouter } from "react-router-dom";
 import { Home, Landing, RidesRoutes } from './components/pages';
 import PrivateRoute from './components/navigation/PrivateRoute';
-import Statistics from './components/statistics/Statistics';
 
 import "./styles/App.scss";
 import LogInCallback from './components/navigation/callbacks/LogInCallback';
@@ -32,13 +31,6 @@ function App() {
 		<PrivateRoute
 			path="/profile"
 			element={Profile}
-			isAuthenticated={authService.isLoggedIn()}
-			redirectTo="/"
-		/>
-
-		<PrivateRoute
-			path="/statistics"
-			element={Statistics}
 			isAuthenticated={authService.isLoggedIn()}
 			redirectTo="/"
 		/>
