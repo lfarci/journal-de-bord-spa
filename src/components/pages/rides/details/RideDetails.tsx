@@ -1,7 +1,6 @@
 import { User } from "oidc-client";
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
-import { useEffect } from "react";
 import { RouteComponentProps, withRouter } from "react-router-dom";
 import { AuthService } from "../../../../services/AuthService";
 import { ResourcesService } from "../../../../services/ResourcesService";
@@ -12,12 +11,6 @@ import { Page, Property, Section } from "../../../common";
 type RideDetailsParams = { rideId: string };
 
 type RideDetailsProps = RouteComponentProps<RideDetailsParams>;
-
-interface IRideDetailsState {
-	ride: Ride | undefined;
-	isLoading: boolean;
-	error: Error | undefined;
-}
 
 interface IStopSectionProps {
 	title: string;
@@ -37,6 +30,12 @@ function StopSection(props: IStopSectionProps) {
 	</Section>;
 }
 
+interface IRideDetailsState {
+	ride: Ride | undefined;
+	isLoading: boolean;
+	error: Error | undefined;
+}
+
 const RideDetails: React.FC<RideDetailsProps> = ({ match }: RideDetailsProps) => {
 
 	const [state, setState] = useState<IRideDetailsState>({
@@ -45,26 +44,26 @@ const RideDetails: React.FC<RideDetailsProps> = ({ match }: RideDetailsProps) =>
 		error: undefined
 	});
 
-	const showArrival = (): boolean => state.ride?.arrival !== undefined;
-
 	useEffect(() => {
 		const authService = new AuthService();
 		const resources = new ResourcesService();
-		const getRide = async () => {
+		const fetchRide = async () => {
 			const user: User | null = await authService.getUser();
 			if (user) {
 				const userId = user?.profile.sub;
 				const rideId = match.params.rideId!!;
 				const ride = await resources.getRide(userId, rideId);
-				setState({ ride: ride, isLoading: false, error: undefined });
+				setState(prev => ({ ...prev, ride: ride, isLoading: false, error: undefined}));
 			}
 		};
 		try {
-			if (authService.isLoggedIn()) getRide();
+			if (authService.isLoggedIn()) fetchRide();
 		} catch (error) {
-			setState({ ride: undefined, isLoading: true, error: error });
+			setState(prev => ({ ...prev, isLoading: false, error: undefined}));
 		}
 	}, [match.params.rideId]);
+
+	const showArrival = (): boolean => state.ride?.arrival !== undefined;
 
 	return <Page title={"Ride details"} isLoading={state.isLoading} error={state.error}>
 		<Section title="Overview" divider>
@@ -87,7 +86,6 @@ const RideDetails: React.FC<RideDetailsProps> = ({ match }: RideDetailsProps) =>
 		</Section>
 		<StopSection title="Departure" divider stop={state.ride?.departure!!}/>
 		{ showArrival() && <StopSection title="Arrival" stop={state.ride?.arrival!!}/>}
-		
 	</Page>
 };
 

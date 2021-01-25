@@ -78,8 +78,6 @@ export class ResourcesService {
                     id = 0; 
                 }
                 await this.sleep(1000);
-                console.log("GET ride of id", id);
-                console.log(JSON.stringify(rides[id], null, 2));
                 resolve(rides[id]);
             } catch (error) {
                reject(error);
