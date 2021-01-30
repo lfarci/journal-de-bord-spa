@@ -78,7 +78,7 @@ function Home() {
 			open={openNewRideForm}
 			locations={state.locations}
 			onSubmit={(data: any) => {
-				console.log(data);
+				console.log("READY TO START A NEW RIDE WITH", JSON.stringify(data, null, 2));
 				showNewRideForm(false);
 			}}
 			onCancel={() => showNewRideForm(false)}

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import TextField from '@material-ui/core/TextField';
 import { Location } from '../../../../../types';
 import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
+import { LocationService } from '../../../../../services/LocationService';
 
 interface LocationOption {
     userInput?: string;
@@ -19,18 +20,8 @@ interface ILocationFieldProps {
     onChange: (location: Location) => void;
 }
 
-const findLocation = (option: LocationOption, locations: Location[]): Location => {
-    const locationName = option.userInput ? option.userInput : option.label;
-    let location = locations.find(l => l.name === locationName);
-    if (!location) {
-        // TODO: find the current location
-        location = {
-            name: locationName,
-            latitude: 0.0,
-            longitude: 0.0
-        };
-    }
-    return location;
+const findLocation = (optionLabel: string, locations: Location[]): Location | undefined => {
+    return locations.find(l => l.name === optionLabel);
 }
 
 /**
@@ -46,17 +37,32 @@ function LocationField(props: ILocationFieldProps) {
         label: props.value.name
     });
 
+    const [currentLocation, setCurrentLocation] = useState<Location | undefined>(undefined);
+
     const { onChange: handleChange, options: locations } = props;
 
     const filter = createFilterOptions<LocationOption>();
     const options: LocationOption[] = props.options.map(option => ({ label: option.name }));
 
     useEffect(() => {
-        if (locationOption) {
-            const location = findLocation(locationOption, locations);
-            handleChange(location);
+        const askForCurrentLocation = async (locationName: string) => {
+            setCurrentLocation(await LocationService.makeCurrentLocation(locationName));
         }
-    }, [locationOption, locations, handleChange]);
+
+        if (locationOption) {
+            let location = findLocation(locationOption.label, locations);
+            const askable = !currentLocation || currentLocation.name !== locationOption.label;
+            if (!location && askable) { 
+                askForCurrentLocation(locationOption.label);
+            }
+            if (!location && currentLocation) { 
+                location = currentLocation;
+            }
+            if (location) { 
+                handleChange(location);
+            }
+        }
+    }, [locationOption, currentLocation, locations, handleChange]);
 
     return <Autocomplete freeSolo
         options={options}
