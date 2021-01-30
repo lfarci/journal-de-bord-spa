@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import TextField from '@material-ui/core/TextField';
 import { Location } from '../../../../../types';
 import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
-import { LocationService } from '../../../../../services/LocationService';
+import { GeolocationService } from '../../../../../services/GeolocationService';
 
 interface LocationOption {
     userInput?: string;
@@ -46,7 +46,7 @@ function LocationField(props: ILocationFieldProps) {
 
     useEffect(() => {
         const askForCurrentLocation = async (locationName: string) => {
-            setCurrentLocation(await LocationService.makeCurrentLocation(locationName));
+            setCurrentLocation(await GeolocationService.makeCurrentLocation(locationName));
         }
 
         if (locationOption) {

@@ -1,59 +1,73 @@
 import { Location } from "../types";
 
-interface GeolocationCoordinates {
-    readonly accuracy: number;
-    readonly altitude: number | null;
-    readonly altitudeAccuracy: number | null;
-    readonly heading: number | null;
-    readonly latitude: number;
-    readonly longitude: number;
-    readonly speed: number | null;
-}
-
-interface GeolocationPosition {
-    readonly coords: GeolocationCoordinates;
-    readonly timestamp: number;
-}
-
-interface GeolocationPositionError {
-    readonly code: number;
-    readonly message: string;
-    readonly PERMISSION_DENIED: number;
-    readonly POSITION_UNAVAILABLE: number;
-    readonly TIMEOUT: number;
-}
+import * as model from "./journal-de-bord-sample.json";
 
 export class LocationService {
-    
-    public static OPTIONS: PositionOptions = {
-        enableHighAccuracy: false,
-        timeout: 5000,
-        maximumAge: 0
-    };
 
-    static getCurrentPosition = async (): Promise<GeolocationPosition> =>  {
+    public static DEFAULT = { name: "Unkown", latitude: 0, longitude: 0 };
+    public static LOCATIONS: Location[] = model.locations;
+
+    public static exist = async (locationName: string): Promise<boolean> => {
         return new Promise(async (resolve, reject) => {
-            const onSuccess = (position: GeolocationPosition) => resolve(position);
-            const onError = (error: GeolocationPositionError) => reject(error);
             try {
-                navigator.geolocation.getCurrentPosition(onSuccess, onError, LocationService.OPTIONS);
+                resolve(LocationService.LOCATIONS.find(l => l.name === locationName) != undefined);
             } catch (error) {
                reject(error);
             }
         });
     }
 
-    static makeCurrentLocation = async (locationName: string): Promise<Location | undefined> => {
+    public static findById = (locationId: number): Location | undefined => {
+        return LocationService.LOCATIONS.find(l => l.id === locationId);
+    }
+
+    public static findByName = async (locationName: string): Promise<Location | undefined> => {
         return new Promise(async (resolve, reject) => {
             try {
-                const position = await LocationService.getCurrentPosition();
-                resolve({
-                    name: locationName,
-                    latitude: position.coords.latitude,
-                    longitude: position.coords.longitude,
-                });
+                resolve(LocationService.LOCATIONS.find(l => l.name === locationName));
             } catch (error) {
-                resolve(undefined);
+               reject(error);
+            }
+        });
+    }
+
+    public static getAll = async (): Promise<Location[]> => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                resolve(LocationService.LOCATIONS);
+            } catch (error) {
+               reject(error);
+            }
+        });
+    }
+
+    public static put = async (location: Location): Promise<void> => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                if (await LocationService.exist(location.name)) {
+                    let outdated = await LocationService.findByName(location.name);
+                    if (outdated) await LocationService.delete(outdated);
+                } else {
+                    LocationService.LOCATIONS.push(location);
+                }
+                resolve();
+            } catch (error) {
+               reject(error);
+            }
+        });
+    }
+
+    public static delete = async (location: Location): Promise<void> => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                if (await LocationService.exist(location.name)) {
+                    const target = await LocationService.findByName(location.name);
+                    const index = LocationService.LOCATIONS.indexOf(target!!);
+                    LocationService.LOCATIONS.slice(index, 1);
+                }
+                resolve();
+            } catch (error) {
+               reject(error);
             }
         });
     }
