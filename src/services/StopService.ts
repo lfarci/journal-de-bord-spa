@@ -87,7 +87,7 @@ export class StopService {
                 if (stop.id && await StopService.exist(stop.id)) {
                     const target = await StopService.findById(stop.id);
                     const index = StopService.STOPS.indexOf(target!!);
-                    StopService.STOPS.slice(index, 1);
+                    StopService.STOPS.splice(index, 1);
                 }
                 resolve();
             } catch (error) {

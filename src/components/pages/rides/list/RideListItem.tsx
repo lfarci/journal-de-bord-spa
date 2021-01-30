@@ -78,7 +78,7 @@ function RideListItem(props: IRideListItem) {
 				>
 					<Grid item>
 						<Typography variant="h6">{getTitle(props.ride)}</Typography>
-						{/* <Typography variant="caption">{props.ride.departure.moment.toLocaleDateString()}</Typography> */}
+						<Typography variant="caption">{props.ride.departure.moment.toLocaleDateString()}</Typography>
 					</Grid>
 					<Grid container
 						direction="row"

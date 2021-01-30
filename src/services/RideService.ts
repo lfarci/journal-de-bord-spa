@@ -90,4 +90,19 @@ export class RideService {
         });
     }
 
+    public static deleteById = async (rideId: number): Promise<void> => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                if (await RideService.exist(rideId)) {
+                    const target = await RideService.findById(rideId);
+                    const index = RideService.RIDES.indexOf(target!!);
+                    RideService.RIDES.splice(index, 1);
+                }
+                resolve();
+            } catch (error) {
+               reject(error);
+            }
+        });
+    }
+
 }

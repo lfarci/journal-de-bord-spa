@@ -63,7 +63,7 @@ export class LocationService {
                 if (await LocationService.exist(location.name)) {
                     const target = await LocationService.findByName(location.name);
                     const index = LocationService.LOCATIONS.indexOf(target!!);
-                    LocationService.LOCATIONS.slice(index, 1);
+                    LocationService.LOCATIONS.splice(index, 1);
                 }
                 resolve();
             } catch (error) {

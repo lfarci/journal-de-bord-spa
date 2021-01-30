@@ -15,9 +15,10 @@ import { User } from "oidc-client";
 export type RideScreenContentKey = "form" | "list" | "details";
 
 interface IRidesState {
-	rides: Ride[];
-	isLoading: boolean;
-	error: Error | undefined;
+    rides: Ride[];
+    deletableRideId: number | undefined;
+    isLoading: boolean;
+    error: Error | undefined;
 }
 
 /**
@@ -26,52 +27,68 @@ interface IRidesState {
  */
 function Rides(props: {}) {
 
-	const history = useHistory();
-	const { path } = useRouteMatch();
-	const errorTitle = "Error while loading your rides";
-	const errorMessage = "The application wasn't able to load your rides. This is an internal error. Try again.";
+    const history = useHistory();
+    const { path } = useRouteMatch();
+    const errorTitle = "Error while loading your rides";
+    const errorMessage = "The application wasn't able to load your rides. This is an internal error. Try again.";
 
-	const [state, setState] = useState<IRidesState>({
-		rides: [],
-		isLoading: true,
-		error: undefined
-	});
+    const [state, setState] = useState<IRidesState>({
+        rides: [],
+        deletableRideId: undefined,
+        isLoading: true,
+        error: undefined
+    });
 
-	useEffect(() => {
-		const getRides = async () => {
-			const authService = new AuthService();
-			try {
-				const user: User | null = await authService.getUser();
-				if (user) {
-					const rides = await RideService.getAll(user.profile.sub);
-					setState({ rides: rides, isLoading: false, error: undefined });
-				}
-			} catch (error) {
-				error.name = errorTitle;
-				error.message = errorMessage;
-				console.error(error);
-				setState({ rides: [], isLoading: false, error: error });
-			}
-		};
-		getRides();
-	}, []);
+    useEffect(() => {
+        console.log("efect");
+        const getRides = async () => {
+            const authService = new AuthService();
+            try {
+                const user: User | null = await authService.getUser();
+                if (user) {
+                    if (state.deletableRideId !== undefined) {
+                        await RideService.deleteById(state.deletableRideId);
+                    }
+                    const rides = await RideService.getAll(user.profile.sub);
+                    setState(prev => ({
+                        ...prev,
+                        rides: rides,
+                        isLoading: false,
+                        error: undefined,
+                        deletableRideId: undefined
+                    }));
+                }
+            } catch (error) {
+                error.name = errorTitle;
+                error.message = errorMessage;
+                console.error(error);
+                setState(prev => ({ ...prev, isLoading: false, error: error }));
+            }
+        };
+        getRides();
+    }, [state.deletableRideId]);
 
-	return <Page title="My rides" selected="history" isLoading={state.isLoading} error={state.error} showBottomNavigation>
-		<div className="rides-content">
-			<RideList
-				rides={state.rides}
-				onShowDetails={(rideId: number) => history.push(`${path}/${rideId}`)}
-			/>
-			<Fab
-				color="primary"
-				aria-label="add"
-				className="action-button"
-				onClick={() => history.push(`${path}/form`)}
-			>
-				<AddIcon />
-			</Fab>
-		</div>
-	</Page>;
+    return <Page title="My rides" selected="history" isLoading={state.isLoading} error={state.error} showBottomNavigation>
+        <div className="rides-content">
+            <RideList
+                rides={state.rides}
+                onDelete={(rideId: number) => {
+                    if (window.confirm("De you really want to delete the ride?")) {
+                        setState(prev => ({ ...prev, isLoading: true, deletableRideId: rideId }));
+                    }
+                }}
+                onShowDetails={(rideId: number) => history.push(`${path}/${rideId}`)}
+            />
+            <Fab
+                color="primary"
+                aria-label="add"
+                className="action-button"
+                onClick={() => history.push(`${path}/form`)}
+            >
+                <AddIcon />
+            </Fab>
+        </div>
+    </Page>;
 }
 
 export default Rides;
