@@ -15,3 +15,4 @@ export type Progress = _Progress;
 export { getRideDistance } from './Ride';
 export { getRideDistanceString } from './Ride';
 export { getTrafficConditionString } from './Ride';
+export { isStopBefore } from './Stop';
