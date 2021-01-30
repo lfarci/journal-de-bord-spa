@@ -2,9 +2,17 @@ import { Ride } from "../types";
 import * as model from "./journal-de-bord-sample.json";
 import { StopService } from "./StopService";
 
+interface IRideServiceEntity {
+    id: number,
+    departure: number,
+    arrival: number,
+    trafficCondition: number,
+    comment: string
+}
+
 export class RideService {
 
-    private static readRide =(ride: any): Ride => {
+    private static readRide =(ride: IRideServiceEntity): Ride => {
         return {
             id: ride.id,
             driverPseudonym: undefined,
@@ -16,15 +24,15 @@ export class RideService {
     }
 
     private static initialize = (): Ride[] => {
-        return model.stops.map(ride => RideService.readRide(ride));
+        return model.rides.map(ride => RideService.readRide(ride));
     }
 
-    public static RIDES: Ride[];
+    public static RIDES: Ride[] = RideService.initialize();
 
     public static exist = async (rideId: number): Promise<boolean> => {
         return new Promise(async (resolve, reject) => {
             try {
-                resolve(RideService.RIDES.find(r => r.id === rideId) != undefined);
+                resolve(RideService.RIDES.find(r => r.id === rideId) !== undefined);
             } catch (error) {
                reject(error);
             }
@@ -41,7 +49,7 @@ export class RideService {
         });
     }
 
-    public static getAll = async (): Promise<Ride[]> => {
+    public static getAll = async (userId: string): Promise<Ride[]> => {
         return new Promise(async (resolve, reject) => {
             try {
                 resolve(RideService.RIDES);

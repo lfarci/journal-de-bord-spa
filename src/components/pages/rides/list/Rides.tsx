@@ -8,7 +8,9 @@ import { Page } from "../../../common";
 import { useHistory, useRouteMatch } from "react-router-dom";
 
 import "./Rides.scss";
-import { ResourcesService } from "../../../../services/ResourcesService";
+import { AuthService } from "../../../../services/AuthService";
+import { RideService } from "../../../../services/RideService";
+import { User } from "oidc-client";
 
 export type RideScreenContentKey = "form" | "list" | "details";
 
@@ -37,10 +39,13 @@ function Rides(props: {}) {
 
 	useEffect(() => {
 		const getRides = async () => {
-			const resourceServer = new ResourcesService();
+			const authService = new AuthService();
 			try {
-				const rides: Ride[] = await resourceServer.getRides('userid');
-				setState({ rides: rides, isLoading: false, error: undefined });
+				const user: User | null = await authService.getUser();
+				if (user) {
+					const rides = await RideService.getAll(user.profile.sub);
+					setState({ rides: rides, isLoading: false, error: undefined });
+				}
 			} catch (error) {
 				error.name = errorTitle;
 				error.message = errorMessage;

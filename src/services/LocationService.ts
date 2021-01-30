@@ -10,7 +10,7 @@ export class LocationService {
     public static exist = async (locationName: string): Promise<boolean> => {
         return new Promise(async (resolve, reject) => {
             try {
-                resolve(LocationService.LOCATIONS.find(l => l.name === locationName) != undefined);
+                resolve(LocationService.LOCATIONS.find(l => l.name === locationName) !== undefined);
             } catch (error) {
                reject(error);
             }

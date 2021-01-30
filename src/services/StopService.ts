@@ -3,6 +3,13 @@ import { Stop } from "../types";
 import * as model from "./journal-de-bord-sample.json";
 import { LocationService } from "./LocationService";
 
+interface IStopServiceEntity {
+    id: number,
+    location: number,
+    moment: string,
+    odometerValue: number
+}
+
 export class StopService {
 
     public static DEFAULT = {
@@ -11,14 +18,15 @@ export class StopService {
         odometerValue: 0
     };
 
-    private static readStop =(stop: any): Stop => {
+    private static readStop =(stop: IStopServiceEntity): Stop => {
         let location = LocationService.findById(stop.location);
         if (!location) {
             location = LocationService.DEFAULT;
         }
         return {
+            id: stop.id,
             location: location,
-            moment: stop.moment,
+            moment: new Date(stop.moment),
             odometerValue: stop.odometerValue
         }
     }
@@ -32,7 +40,7 @@ export class StopService {
     public static exist = async (stopId: number): Promise<boolean> => {
         return new Promise(async (resolve, reject) => {
             try {
-                resolve(StopService.STOPS.find(s => s.id === stopId) != undefined);
+                resolve(StopService.STOPS.find(s => s.id === stopId) !== undefined);
             } catch (error) {
                reject(error);
             }
@@ -50,7 +58,7 @@ export class StopService {
     }
 
     public static readStopById = (stopId: number): Stop => {
-        const stop = StopService.STOPS.find(s => s.id === stopId);
+        const stop = model.stops.find(s => s.id === stopId);
         if (stop) {
             return StopService.readStop(stop);
         }
