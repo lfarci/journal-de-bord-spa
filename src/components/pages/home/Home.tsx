@@ -9,13 +9,15 @@ import RecentRidesCard from "./rides/RecentRidesCard";
 import { useEffect } from "react";
 import { ResourcesService } from "../../../services/ResourcesService";
 import { AuthService } from "../../../services/AuthService";
-import { RecentRide, Location } from "../../../types";
+import { RecentRide, Location, Stop } from "../../../types";
 import { User } from "oidc-client";
 import { StartRideFormDialog } from "./control/dialogs";
 
 interface IHomeState {
 	recentRides: RecentRide[];
 	locations: Location[];
+	departure: Stop | undefined;
+	tracking: boolean;
 	isLoading: boolean;
 	error: Error | undefined;
 	showNewRideFormDialog: boolean;
@@ -23,10 +25,11 @@ interface IHomeState {
 
 function Home() {
 
-	const [openNewRideForm, showNewRideForm] = useState<boolean>(false);
 	const [state, setState] = useState<IHomeState>({
 		recentRides: [],
 		locations: [],
+		departure: undefined,
+		tracking: false,
 		isLoading: true,
 		error: undefined,
 		showNewRideFormDialog: false,
@@ -38,9 +41,16 @@ function Home() {
 		const getResources = async () => {
 			const user: User | null = await authService.getUser();
 			if (user) {
+				let tracking = await resources.isTracking(user?.profile.sub);
 				const locations = await resources.getLocations(user?.profile.sub);
 				const rides = await resources.getRecentRides(user?.profile.sub, 3);
-				setState((prev) => ({ ...prev, isLoading: false, recentRides: rides, locations: locations }));
+
+				if (state.departure) {
+					await resources.startRide(user.profile.sub, state.departure);
+					tracking = await resources.isTracking(user?.profile.sub);
+				}
+
+				setState((prev) => ({ ...prev, isLoading: false, recentRides: rides, locations: locations, departure: undefined, tracking: tracking }));
 			}
 		}
 		try {
@@ -50,7 +60,7 @@ function Home() {
 		} catch (error) {
 			setState((prev) => ({ ...prev, isLoading: false, error: error }));
 		}
-	}, []);
+	}, [state.departure]);
 
 	return <Page title="Home" selected="home" error={state.error} showBottomNavigation>
 		<div className="home-cards">
@@ -60,11 +70,11 @@ function Home() {
 				distanceObjective={1500}
 			/>
 			<RideControlCard
-				tracking={false}
-				departureLocationName="WORK"
+				tracking={state.tracking}
+				departureLocationName={state.departure?.location.name!!}
 				trackingMilliseconds={3600000 * 24}
 				isLoading={state.isLoading}
-				onStartRide={() => showNewRideForm(true)}
+				onStartRide={() => setState((prev) => ({ ...prev, showNewRideFormDialog: true }))}
 				onCancelRide={() => console.log("Cancel a new ride")}
 				onFinishRide={() => console.log("Finish a new ride")}
 			/>
@@ -75,13 +85,17 @@ function Home() {
 			/>
 		</div>
 		<StartRideFormDialog 
-			open={openNewRideForm}
+			open={state.showNewRideFormDialog}
 			locations={state.locations}
-			onSubmit={(data: any) => {
-				console.log("READY TO START A NEW RIDE WITH", JSON.stringify(data, null, 2));
-				showNewRideForm(false);
+			onSubmit={async (data: Stop) => {
+				setState((prev) => ({
+					...prev,
+					isLoading: true,
+					departure: data,
+					showNewRideFormDialog: false
+				}));
 			}}
-			onCancel={() => showNewRideForm(false)}
+			onCancel={() => setState((prev) => ({ ...prev, showNewRideFormDialog: false }))}
 		/>
 	</Page>;
 

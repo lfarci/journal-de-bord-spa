@@ -39,6 +39,8 @@ export default function RideControlCard(props: IRideControlCardProps) {
     const onCancel = () => { if (props.onCancelRide !== undefined) props.onCancelRide() };
     const onFinish = () => { if (props.onFinishRide !== undefined) props.onFinishRide() };
 
+    console.log(props.departureLocationName);
+
     return <Card elevation={12} className="home-control-card">
         {props.tracking
             ? <RideControlCardContent
