@@ -1,4 +1,4 @@
-import { getRideDistance, RecentRide, Ride } from "../types";
+import { getRideDistance, RecentRide, Ride, Location } from "../types";
 import { Progress } from "../types/Progress";
 import { Environment } from "./Environment";
 import * as data from "./sample.json";
@@ -45,6 +45,23 @@ export class ResourcesService {
             try {
                 await this.sleep(1000);
                 resolve(data.user.image);
+            } catch (error) {
+               reject(error);
+            }
+        });
+    }
+
+    /**
+     * Gets all the locations visited by the specified user.
+     *
+     * @param userId is the identifier of the specified user.
+     */
+    public async getLocations(userId: string): Promise<Location[]> {
+        return new Promise(async (resolve, reject) => {
+            try {
+                await this.sleep(1000);
+                const rides = ResourcesService.readRidesFromSample();
+                resolve(rides.map(ride => ride.departure.location));
             } catch (error) {
                reject(error);
             }

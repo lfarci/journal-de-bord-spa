@@ -3,19 +3,15 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import {Location, Stop} from "../../../../../types";
+import { Location, Stop } from "../../../../../types";
 import { Button, DialogContentText } from '@material-ui/core';
 import StopForm from '../../../rides/form/StopForm';
 
 interface IStartRideFormDialogProps {
 	open: boolean;
+	locations: Location[];
 	onSubmit: (value: Stop) => void;
 	onCancel: () => void;
-}
-
-interface ObjectiveFormDialogState {
-	location: Location;
-	odometer: number;
 }
 
 function StartRideFormDialog(props: IStartRideFormDialogProps) {
@@ -36,7 +32,10 @@ function StartRideFormDialog(props: IStartRideFormDialogProps) {
 			<DialogContentText>
 				Fill the form and click save to start tracking your ride.
 			</DialogContentText>
-			<StopForm onChange={setStop} />
+			<StopForm
+				value={stop}
+				onChange={setStop}
+				availableLocations={props.locations} />
 		</DialogContent>
 		<DialogActions>
 			<Button onClick={() => props.onCancel()} color="primary">Cancel</Button>

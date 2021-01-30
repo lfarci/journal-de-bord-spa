@@ -9,12 +9,13 @@ import RecentRidesCard from "./rides/RecentRidesCard";
 import { useEffect } from "react";
 import { ResourcesService } from "../../../services/ResourcesService";
 import { AuthService } from "../../../services/AuthService";
-import { RecentRide } from "../../../types";
+import { RecentRide, Location } from "../../../types";
 import { User } from "oidc-client";
 import { StartRideFormDialog } from "./control/dialogs";
 
 interface IHomeState {
 	recentRides: RecentRide[];
+	locations: Location[];
 	isLoading: boolean;
 	error: Error | undefined;
 	showNewRideFormDialog: boolean;
@@ -25,6 +26,7 @@ function Home() {
 	const [openNewRideForm, showNewRideForm] = useState<boolean>(false);
 	const [state, setState] = useState<IHomeState>({
 		recentRides: [],
+		locations: [],
 		isLoading: true,
 		error: undefined,
 		showNewRideFormDialog: false,
@@ -33,16 +35,17 @@ function Home() {
 	useEffect(() => {
 		const authService = new AuthService();
 		const resources = new ResourcesService();
-		const getRides = async () => {
+		const getResources = async () => {
 			const user: User | null = await authService.getUser();
 			if (user) {
-				const rides = await resources.getRecentRides("uid", 3);
-				setState((prev) => ({ ...prev, isLoading: false, recentRides: rides }));
+				const locations = await resources.getLocations(user?.profile.sub);
+				const rides = await resources.getRecentRides(user?.profile.sub, 3);
+				setState((prev) => ({ ...prev, isLoading: false, recentRides: rides, locations: locations }));
 			}
 		}
 		try {
 			if (authService.isLoggedIn()) {
-				getRides();
+				getResources();
 			}
 		} catch (error) {
 			setState((prev) => ({ ...prev, isLoading: false, error: error }));
@@ -73,6 +76,7 @@ function Home() {
 		</div>
 		<StartRideFormDialog 
 			open={openNewRideForm}
+			locations={state.locations}
 			onSubmit={(data: any) => {
 				console.log(data);
 				showNewRideForm(false);
