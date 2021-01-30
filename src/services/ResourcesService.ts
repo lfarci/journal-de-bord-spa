@@ -1,9 +1,11 @@
-import { getRideDistance, RecentRide, Ride } from "../types";
+import { getRideDistance, RecentRide, Ride, Location, Stop } from "../types";
 import { Progress } from "../types/Progress";
 import { Environment } from "./Environment";
 import * as data from "./sample.json";
 
 export class ResourcesService {
+
+    public static TRACKING = false;
 
     private _resourceServerUri: string;
 
@@ -13,6 +15,17 @@ export class ResourcesService {
 
     private async sleep(ms: number): Promise<void> {
         return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    public async isTracking(userId: string): Promise<boolean> {
+        return new Promise(async (resolve, reject) => {
+            try {
+                await this.sleep(500);
+                resolve(ResourcesService.TRACKING);
+            } catch (error) {
+               reject(error);
+            }
+        });
     }
 
     /**
@@ -45,6 +58,23 @@ export class ResourcesService {
             try {
                 await this.sleep(1000);
                 resolve(data.user.image);
+            } catch (error) {
+               reject(error);
+            }
+        });
+    }
+
+    /**
+     * Gets all the locations visited by the specified user.
+     *
+     * @param userId is the identifier of the specified user.
+     */
+    public async getLocations(userId: string): Promise<Location[]> {
+        return new Promise(async (resolve, reject) => {
+            try {
+                await this.sleep(1000);
+                const rides = ResourcesService.readRidesFromSample();
+                resolve(rides.map(ride => ride.departure.location));
             } catch (error) {
                reject(error);
             }
@@ -126,6 +156,18 @@ export class ResourcesService {
                     drivenDistance: ResourcesService.readTotalDistanceFromSample(),
                     distanceObjective: await this.getObjective(userId)
                 });
+            } catch (error) {
+               reject(error);
+            }
+        });
+    }
+
+    public async startRide(userId: string, departure: Stop): Promise<void> {
+        return new Promise(async (resolve, reject) => {
+            try {
+                await this.sleep(1000);
+                ResourcesService.TRACKING = true;
+                resolve();
             } catch (error) {
                reject(error);
             }

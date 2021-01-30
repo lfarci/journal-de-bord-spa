@@ -73,7 +73,7 @@ function RideForm(props: IRideFormProps) {
 
 	return <Page title="New ride" isLoading={props.isLoading} error={props.error}>
 		<div id="ride-form-container">
-			<StopForm
+			<StopForm datetime
 				title="Departure"
 				value={ride.departure}
 				onChange={(data: Stop) => {
@@ -82,7 +82,7 @@ function RideForm(props: IRideFormProps) {
 					handleChange(newRide);
 				}}
 			/>
-			<StopForm
+			<StopForm datetime
 				title="Arrival"
 				value={ride.arrival!!}
 				onChange={(data: Stop) => {
