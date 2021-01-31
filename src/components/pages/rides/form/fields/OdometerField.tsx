@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { TextField, InputAdornment } from '@material-ui/core';
 
@@ -20,32 +20,43 @@ interface IOdometerFieldProps {
  */
 function OdometerField(props: IOdometerFieldProps) {
 
-	const [isValid, setValid] = useState<boolean>(true);
-	const [hint, setHint] = useState<string>(props.hint);
+	const { hint, min, onChange } = { ...props };
+
+	const [text, setText] = useState<string>(props.value.toString());
+	const [value, setValue] = useState<number>(props.value);
+	const [validation, setValidation] = useState({
+		valid: value >= (min ? min : 0),
+		hint: props.hint
+	});
+
+	useEffect(() => {
+		const isValid = value >= (min ? min : 0);
+		let h = isValid ? hint : `The odometer must be greater than ${min ? min : 0} km.`;
+		setValidation({ valid: isValid, hint: h });
+		onChange(value);
+	}, [value, min, hint, onChange]);
 
 	return <TextField required
 		id={props.id}
 		label={props.label}
 		type="number"
 		placeholder={props.placeholder}
-		value={props.value}
+		value={text}
 		variant="outlined"
 		fullWidth={true}
-		helperText={hint}
+		helperText={validation.hint}
 		margin="normal"
 		InputProps={{ endAdornment: <InputAdornment position="end">Km</InputAdornment>, }}
 		onChange={(event: React.ChangeEvent<any>) => {
-			const newValue: number = event.target.value;
-			setValid(newValue > 0);
-			if (newValue < 0)
-				setHint("The value must be positive!");
-			else if (props.min && newValue < props.min)
-				setHint(`You started the ride with a value of ${props.min} km.`);
-			else
-				setHint(props.hint);
-			props.onChange(newValue);
+			if (event.target.value === "") {
+				setText("");
+				setValidation({ valid: false, hint: "Please, complete the field properly." });
+			} else {
+				setText(event.target.value);
+				setValue(parseInt(event.target.value));
+			}
 		}}
-		error={!isValid}
+		error={!validation.valid}
 	/>;
 }
 

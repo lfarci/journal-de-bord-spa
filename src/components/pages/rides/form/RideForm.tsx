@@ -5,7 +5,7 @@ import "./RideForm.scss";
 import { Button, Typography, Divider } from '@material-ui/core';
 
 import { CommentField, TrafficConditionField, TrafficCondition } from './fields';
-import { isStopBefore, isValidRide, Ride, Stop, validateRide } from '../../../../types';
+import { isValidRide, Ride, Stop, validateRide } from '../../../../types';
 import StopForm from './StopForm';
 
 interface IRideFormProps {
@@ -51,6 +51,8 @@ const RideForm = (props: IRideFormProps) => {
     const [trafficCondition, setTrafficCondition] = useState<TrafficCondition>(getDefaultTrafficCondition());
     const [comment, setComment] = useState<string | undefined>(getDefaultComment());
 
+    const [arrivalOdometerMin, setArrivalOdometerMin] = useState<number>(0);
+
     const [validation, setValidation] = useState<{
         messages: string[], valid: boolean
     }>({
@@ -59,20 +61,19 @@ const RideForm = (props: IRideFormProps) => {
     });
 
     const { onSubmit } = { ...props };
-    const hasEnoughData = () => departure && arrival && trafficCondition;
+    const readDataAsRide = () => makeRide(departure!!, arrival!!, trafficCondition, comment);
 
     useEffect(() => {
-        if (hasEnoughData()) {
+        if (departure) setArrivalOdometerMin(departure.odometerValue + 1);
+        if (departure && arrival && trafficCondition) {
             const ride = makeRide(departure!!, arrival!!, trafficCondition, comment);
             setValidation((prev => ({
-                ... prev,
+                ...prev,
                 valid: isValidRide(ride),
                 messages: validateRide(ride)
             })));
         }
     }, [departure, arrival, trafficCondition, comment]);
-
-
 
     return <div id="ride-form-container">
         <StopForm datetime 
@@ -83,6 +84,7 @@ const RideForm = (props: IRideFormProps) => {
         <StopForm datetime
             title="Arrival"
             value={arrival}
+            odometerMin={arrivalOdometerMin}
             onChange={setArrival}
         />
         <Typography variant="h6">Retrospective</Typography>
@@ -114,13 +116,7 @@ const RideForm = (props: IRideFormProps) => {
             color="primary"
             size="large"
             disabled={!validation.valid}
-            onClick={() => 	onSubmit({
-                departure: departure!!,
-                arrival: arrival!!,
-                trafficCondition: trafficCondition,
-                comment: comment,
-                driverPseudonym: undefined
-            })}
+            onClick={() => 	onSubmit(readDataAsRide())}
         >
             Save
         </Button>

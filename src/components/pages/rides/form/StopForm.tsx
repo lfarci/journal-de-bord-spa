@@ -15,6 +15,11 @@ interface IStopFormProps {
      */
     description?: string;
     /**
+     * Set this value to limit the minimal accepted value for the odometer.
+     * Default is 0.
+     */
+    odometerMin?: number;
+    /**
      * Is the form data.
      */
     value?: Stop;
@@ -48,6 +53,7 @@ function StopForm(props: IStopFormProps) {
     const hasTitle = () => props.title !== undefined;
     const showDateTime = () => props.datetime === undefined ? false : props.datetime;
     const getLocations = () => props.availableLocations === undefined ? [] : props.availableLocations;
+    const getOdometerMin = () => props.odometerMin === undefined ? 0 : props.odometerMin;
 
     const getDefaultMoment = () => props.value ? props.value.moment : new Date();
     const getDefaultOdometer = () => props.value ? props.value.odometerValue : 0;
@@ -83,6 +89,7 @@ function StopForm(props: IStopFormProps) {
                 placeholder="e.g. 454543"
                 hint="Enter the current odometer value of your vehicle."
                 value={odometer}
+                min={getOdometerMin()}
                 onChange={setOdometer}
             />
             <LocationField

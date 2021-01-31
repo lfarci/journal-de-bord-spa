@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { RouteComponentProps } from "react-router-dom";
-import { ResourcesService } from "../../../../services/ResourcesService";
 import { Ride } from "../../../../types";
 import { Page } from "../../../common";
 import RideForm from "./RideForm";
@@ -32,14 +30,7 @@ function RideFormPage() {
             isDriving={false}
             onChange={() => { }}
             onSubmit={async (data: Ride) => {
-                const resources = new ResourcesService();
-                try {
-                    setLoading(true);
-                    await resources.postRide(data);
-                    setLoading(false);
-                } catch (error) {
-                    setState((prev) => ({...prev, isLoading: false, error: error }))
-                }
+                console.log("[SUBMITTED]", JSON.stringify(data, null, 2));
             }}
         />
     </Page>;
