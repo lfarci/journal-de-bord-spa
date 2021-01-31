@@ -1,6 +1,73 @@
+import moment, { DurationInputArg2 } from "moment";
 import { Ride, Stop } from "..";
-import { getRideDistance, getRideDuration } from "../Ride";
-import { makeRide, makeStop } from "./helpers";
+import { getRideDistance, getRideDuration, isValidRide } from "../Ride";
+import { makeRide, makeStop, makeValidRide } from "./helpers";
+
+describe("isValidRide", () => {
+
+    const invalidateDeparture = (ride: Ride, amount: number, unit: DurationInputArg2) => {
+        const arrivalMoment = moment(ride.arrival?.moment);
+        const departureMoment = arrivalMoment.add(amount, unit);
+        ride.departure.moment = departureMoment.toDate();
+        return ride;
+    }
+
+    const invalidateArrival = (ride: Ride, amount: number, unit: DurationInputArg2) => {
+        const departureMoment = moment(ride.departure.moment);
+        const arrivalMoment = departureMoment.add(amount, unit);
+        if (ride.arrival) {
+            ride.arrival.moment = arrivalMoment.toDate();
+        }
+        return ride;
+    }
+
+    const invalidateOdometer = (ride: Ride, amount: number) => {
+        if (ride.arrival) {
+            ride.departure.odometerValue = ride.arrival?.odometerValue + amount;
+        }
+        return ride;
+    }
+
+    it('returns true when the ride is valid', () => {
+        expect(isValidRide(makeValidRide())).toBeTruthy();
+    });
+
+    it('returns false when the ride departure is one millisecond before arrival', () => {
+        const valid = makeValidRide();
+        expect(isValidRide(invalidateArrival(valid, 1, 'millisecond'))).toBeFalsy();
+    });
+
+    it('returns false when the ride departure is one second before arrival', () => {
+        const valid = makeValidRide();
+        expect(isValidRide(invalidateArrival(valid, 1, 'second'))).toBeFalsy();
+    });
+
+    it('returns true when the ride departure is one minute before arrival', () => {
+        const valid = makeValidRide();
+        expect(isValidRide(invalidateArrival(valid, 1, 'minute'))).toBeTruthy();
+    });
+
+    it('returns false when the ride departure is one millisecond after arrival', () => {
+        const valid = makeValidRide();
+        expect(isValidRide(invalidateDeparture(valid, 1, 'millisecond'))).toBeFalsy();
+    });
+
+    it('returns false when the ride departure is one second after arrival', () => {
+        const valid = makeValidRide();
+        expect(isValidRide(invalidateDeparture(valid, 1, 'second'))).toBeFalsy();
+    });
+
+    it('returns false when the ride departure is one minute after arrival', () => {
+        const valid = makeValidRide();
+        expect(isValidRide(invalidateDeparture(valid, 1, 'minute'))).toBeFalsy();
+    });
+
+    it('returns false when the ride departure odometer is bigger than arrival', () => {
+        const valid = makeValidRide();
+        expect(isValidRide(invalidateOdometer(valid, 1))).toBeFalsy();
+    });
+
+});
 
 describe("getRideDistance", () => {
 

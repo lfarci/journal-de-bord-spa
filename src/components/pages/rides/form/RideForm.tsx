@@ -30,7 +30,16 @@ interface IRideFormProps {
 	onSubmit: (data: Ride) => void;
 }
 
-function RideForm(props: IRideFormProps) {
+const makeRide = (dep: Stop, arr: Stop, tc: TrafficCondition, com: string) => ({
+	departure: dep,
+	arrival: arr,
+	trafficCondition: tc,
+	comment: com,
+	driverPseudonym: undefined
+});
+
+
+const RideForm = (props: IRideFormProps) => {
 
 	const getDefaultDeparture = () => props.ride ? props.ride.departure : undefined;
 	const getDefaultArrival = () => props.ride && props.ride.arrival ? props.ride.arrival : undefined;
@@ -52,8 +61,15 @@ function RideForm(props: IRideFormProps) {
 	const [valid, setValid] = useState<boolean>(true);
 
 	const { onSubmit } = { ...props };
+	const hasEnoughData = () => departure && arrival && trafficCondition && comment;
 
 	useEffect(() => {
+
+		if (hasEnoughData()) {
+			// const ride = makeRide(departure, arrival, trafficCondition, comment);
+
+		}
+
 		console.log("RIDE CHANGE", JSON.stringify({
 			departure: departure,
 			arrival: arrival,

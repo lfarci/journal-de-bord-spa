@@ -1,3 +1,4 @@
+import moment from "moment";
 import { Ride, Stop, Location } from "..";
 
 export function makeLocation(location: Partial<Location> = {}): Location {
@@ -27,4 +28,17 @@ export function makeRide(ride: Partial<Ride> = {}): Ride {
         driverPseudonym: "User",
         ...ride
     };
+}
+
+export const makeValidRide = (): Ride => {
+    const departureDate = new Date(2020, 11, 24, 12, 0, 0, 0);
+    const arrivalDate = moment(departureDate).add(1, 'hour').toDate();
+    const departure = makeStop({ moment: departureDate, odometerValue: 10000});
+    const arrival = makeStop({ moment: arrivalDate, odometerValue: 10012});
+    return makeRide({
+        departure: departure, 
+        arrival: arrival,
+        trafficCondition: 1,
+        comment: "This is a valid comment"
+    });
 }

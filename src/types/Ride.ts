@@ -1,6 +1,6 @@
 import moment from "moment";
 import { TrafficCondition } from "../components/pages/rides/form/fields/TrafficConditionField";
-import { Stop } from "./Stop";
+import { isStopBefore, Stop } from "./Stop";
 
 const humanizeDuration = require("humanize-duration");
 
@@ -11,6 +11,21 @@ export type Ride = {
     driverPseudonym: string | undefined;
     trafficCondition: TrafficCondition;
     comment: string | undefined;
+}
+
+/**
+ * Tells if a ride is valid. A ride is valid when:
+ *
+ * - Its departure date is before its arrival date (minute precision).
+ * - Its departure odometer is smaller than its arrival odometer.
+ *
+ * @param ride is a valid ride.
+ * @returns true if the specified ride is valid.
+ */
+export const isValidRide = (ride: Ride): boolean => {
+    return ride.arrival !== undefined 
+        && isStopBefore(ride.arrival, ride.departure)
+        && ride.departure.odometerValue < ride.arrival.odometerValue;
 }
 
 export const getRideDistance = (ride: Ride) => {
