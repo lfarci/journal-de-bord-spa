@@ -13,6 +13,7 @@ export type User = _User;
 export type Progress = _Progress;
 
 export { isValidRide } from './Ride';
+export { validateRide } from './Ride';
 export { getRideDistance } from './Ride';
 export { getRideDistanceString } from './Ride';
 export { getTrafficConditionString } from './Ride';

@@ -28,6 +28,17 @@ export const isValidRide = (ride: Ride): boolean => {
         && ride.departure.odometerValue < ride.arrival.odometerValue;
 }
 
+export const validateRide = (ride: Ride): string[] => {
+    const messages: string[] = [];
+    if (ride.arrival && !isValidRide(ride)) {
+        if (!isStopBefore(ride.arrival, ride.departure))
+            messages.push("The ride departure should be before the arrival.");
+        if (ride.departure.odometerValue >= ride.arrival.odometerValue)
+            messages.push("The ride departure odometer should be smaller than the arrival one.");
+    }
+    return messages;
+}
+
 export const getRideDistance = (ride: Ride) => {
     if (ride.arrival === undefined) {
         throw Error("Cannot read distance without an arrival");
