@@ -10,18 +10,15 @@ interface IRideFormPageState {
 
 function RideFormPage() {
 
-    const [state, setState] = useState<IRideFormPageState>({
+    const [state] = useState<IRideFormPageState>({
         isLoading: false,
         error: undefined
     });
-
-    const setLoading = (value: boolean) => setState((prev) => ({...prev, isLoading: value }));
 
     useEffect(() => {
         const query = new URLSearchParams(window.location.search);
         const rideId = query.get("rideId");
         console.log("[Form should be rendering for]", rideId);
-
     });
 
     return <Page title="New ride" isLoading={state.isLoading} error={state.error}>

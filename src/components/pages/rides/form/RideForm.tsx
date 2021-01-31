@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
-
-import "./RideForm.scss";
-
 import { Button, Typography, Divider } from '@material-ui/core';
 
 import { CommentField, TrafficConditionField, TrafficCondition } from './fields';
 import { isValidRide, Ride, Stop, validateRide } from '../../../../types';
 import StopForm from './StopForm';
+
+import "./RideForm.scss";
 
 interface IRideFormProps {
     /**
@@ -52,6 +51,7 @@ const RideForm = (props: IRideFormProps) => {
     const [comment, setComment] = useState<string | undefined>(getDefaultComment());
 
     const [arrivalOdometerMin, setArrivalOdometerMin] = useState<number>(0);
+    const [arrivalMomentMin, setArrivalMomentMin] = useState<Date | undefined>(undefined);
 
     const [validation, setValidation] = useState<{
         messages: string[], valid: boolean
@@ -64,7 +64,10 @@ const RideForm = (props: IRideFormProps) => {
     const readDataAsRide = () => makeRide(departure!!, arrival!!, trafficCondition, comment);
 
     useEffect(() => {
-        if (departure) setArrivalOdometerMin(departure.odometerValue + 1);
+        if (departure) {
+            setArrivalOdometerMin(departure.odometerValue + 1);
+            setArrivalMomentMin(departure.moment);
+        }
         if (departure && arrival && trafficCondition) {
             const ride = makeRide(departure!!, arrival!!, trafficCondition, comment);
             setValidation((prev => ({
@@ -85,6 +88,7 @@ const RideForm = (props: IRideFormProps) => {
             title="Arrival"
             value={arrival}
             odometerMin={arrivalOdometerMin}
+            momentMin={arrivalMomentMin}
             onChange={setArrival}
         />
         <Typography variant="h6">Retrospective</Typography>

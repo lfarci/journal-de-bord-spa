@@ -19,6 +19,7 @@ interface IStopFormProps {
      * Default is 0.
      */
     odometerMin?: number;
+    momentMin?: Date;
     /**
      * Is the form data.
      */
@@ -105,6 +106,7 @@ function StopForm(props: IStopFormProps) {
                 id="stop-datetime"
                 label="Date and time"
                 hint="Enter the stop date and time."
+                min={props.momentMin}
                 value={moment}
                 onChange={setMoment}
             />}
