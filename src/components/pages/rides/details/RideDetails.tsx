@@ -1,12 +1,16 @@
+import React, { useEffect, useState } from "react";
+import { RouteComponentProps, useHistory, useRouteMatch, withRouter } from "react-router-dom";
+import EditIcon from '@material-ui/icons/Edit';
+import { Fab } from "@material-ui/core";
 import { User } from "oidc-client";
-import React, { useEffect } from "react";
-import { useState } from "react";
-import { RouteComponentProps, withRouter } from "react-router-dom";
+
 import { AuthService } from "../../../../services/AuthService";
 import { ResourcesService } from "../../../../services/ResourcesService";
 import { getRideDistanceString, Ride, Stop } from "../../../../types";
 import { getRideDurationString, getTrafficConditionString } from "../../../../types/Ride";
 import { Page, Property, Section } from "../../../common";
+
+import "./RideDetails.scss";
 
 type RideDetailsParams = { rideId: string };
 
@@ -86,6 +90,17 @@ const RideDetails: React.FC<RideDetailsProps> = ({ match }: RideDetailsProps) =>
 		</Section>
 		<StopSection title="Departure" divider stop={state.ride?.departure!!}/>
 		{ showArrival() && <StopSection title="Arrival" stop={state.ride?.arrival!!}/>}
+		<Fab
+			color="primary"
+			aria-label="edit"
+			className="ride-edit-button"
+			onClick={() => {
+				const rideId = match.params.rideId!!; 
+				window.location.href = `${window.location.origin}/rides/form?rideId=${rideId}`;
+			}}
+            >
+            <EditIcon />
+        </Fab>
 	</Page>
 };
 
