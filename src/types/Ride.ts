@@ -8,7 +8,7 @@ export type Ride = {
     id?: number;
     departure: Stop;
     arrival: Stop | undefined;
-    driverPseudonym: string | undefined;
+    driverPseudonym?: string | undefined;
     trafficCondition: TrafficCondition;
     comment: string | undefined;
 }

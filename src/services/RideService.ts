@@ -12,6 +12,8 @@ interface IRideServiceEntity {
 
 export class RideService {
 
+    public static KEY = "rides";
+
     private static readRide =(ride: IRideServiceEntity): Ride => {
         return {
             id: ride.id,
@@ -27,12 +29,21 @@ export class RideService {
         return model.rides.map(ride => RideService.readRide(ride));
     }
 
+    public static writeSampleToLocalStorage = (): void => {
+        localStorage.setItem(RideService.KEY, JSON.stringify(model.rides));
+    }
+
+    public static rides(): Ride[] {
+        return JSON.parse(localStorage["rides"]);
+    }
+
     public static RIDES: Ride[] = RideService.initialize();
+    public static SEQUENCE: number = RideService.RIDES.length;
 
     public static exist = async (rideId: number): Promise<boolean> => {
         return new Promise(async (resolve, reject) => {
             try {
-                resolve(RideService.RIDES.find(r => r.id === rideId) !== undefined);
+                resolve(RideService.rides().find(r => r.id === rideId) !== undefined);
             } catch (error) {
                reject(error);
             }
@@ -42,7 +53,7 @@ export class RideService {
     public static findById = async (rideId: number): Promise<Ride | undefined> => {
         return new Promise(async (resolve, reject) => {
             try {
-                resolve(RideService.RIDES.find(s => s.id === rideId));
+                resolve(RideService.rides().find(s => s.id === rideId));
             } catch (error) {
                reject(error);
             }
@@ -52,23 +63,23 @@ export class RideService {
     public static getAll = async (userId: string): Promise<Ride[]> => {
         return new Promise(async (resolve, reject) => {
             try {
-                resolve(RideService.RIDES);
+                resolve(RideService.rides());
             } catch (error) {
                reject(error);
             }
         });
     }
 
-    public static put = async (ride: Ride): Promise<void> => {
+    public static put = async (ride: Ride): Promise<number> => {
         return new Promise(async (resolve, reject) => {
             try {
-                if (ride.id && await RideService.exist(ride.id)) {
-                    let outdated = await RideService.findById(ride.id);
-                    if (outdated) await RideService.delete(outdated);
+                if (ride.id !== undefined && await RideService.exist(ride.id)) {
+                    await RideService.deleteById(ride.id);
                 } else {
-                    RideService.RIDES.push(ride);
+                    ride = { ...ride, id: RideService.SEQUENCE++ };
                 }
-                resolve();
+                RideService.rides().push(ride);
+                resolve(ride.id!!);
             } catch (error) {
                reject(error);
             }
@@ -78,10 +89,10 @@ export class RideService {
     public static delete = async (ride: Ride): Promise<void> => {
         return new Promise(async (resolve, reject) => {
             try {
-                if (ride.id && await RideService.exist(ride.id)) {
+                if (ride.id !== undefined && await RideService.exist(ride.id)) {
                     const target = await RideService.findById(ride.id);
                     const index = RideService.RIDES.indexOf(target!!);
-                    RideService.RIDES.slice(index, 1);
+                    RideService.RIDES.splice(index, 1);
                 }
                 resolve();
             } catch (error) {

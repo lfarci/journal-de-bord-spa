@@ -26,6 +26,7 @@ function RideFormPage({ match }: RideFormPageProps) {
     });
 
     const title = (): string => match.params.rideId ? "Edit the ride" : "Create a new ride";
+    const rideId = (): number => parseInt(match.params.rideId);
 
     useEffect(() => {
         if (match.params.rideId) {
@@ -53,6 +54,17 @@ function RideFormPage({ match }: RideFormPageProps) {
             onChange={() => { }}
             onSubmit={async (data: Ride) => {
                 console.log("[SUBMITTED]", JSON.stringify(data, null, 2));
+                if (data.id && data.id !== rideId()) {
+                    // error
+                }
+                try {
+                    setState(prev => ({...prev, isLoading: true, error: undefined}));
+                    const rideId = await RideService.put(data);
+                    console.log(RideService.RIDES);
+                    window.location.href = `${window.location.origin}/rides/${rideId}`;
+                } catch(error) {
+                    setState(prev => ({...prev, isLoading: false, error: error}));
+                }
             }}
         />
     </Page>;

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Route, Switch, withRouter } from "react-router-dom";
 import { Home, Landing, RidesRoutes } from './components/pages';
 import PrivateRoute from './components/navigation/PrivateRoute';
@@ -8,10 +8,21 @@ import LogInCallback from './components/navigation/callbacks/LogInCallback';
 import { AuthService } from './services/AuthService';
 import SilentRenewCallback from './components/navigation/SilentRenewCallback';
 import Profile from './components/pages/profile/Profile';
+import { RideService } from './services/RideService';
+import { LocationService } from './services/LocationService';
+import { StopService } from './services/StopService';
 
 function App() {
 
 	const authService = new AuthService();
+
+	useEffect(() => {
+		if (process.env.NODE_ENV === "development") {
+			LocationService.writeSampleToLocalStorage();
+			StopService.writeSampleToLocalStorage();
+			RideService.writeSampleToLocalStorage();
+		}
+	});
 
 	return <Switch>
 

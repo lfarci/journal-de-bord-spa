@@ -60,7 +60,12 @@ const RideForm = (props: IRideFormProps) => {
     });
 
     const { onSubmit } = { ...props };
-    const readDataAsRide = () => makeRide(departure!!, arrival!!, trafficCondition, comment);
+    const readDataAsRide = () => { 
+        let ride: Ride = makeRide(departure!!, arrival!!, trafficCondition, comment);
+        if (props.ride && props.ride.id !== undefined)
+            ride = { ...ride, id: props.ride.id };
+        return ride;
+    };
 
     useEffect(() => {
         if (departure) {
@@ -68,14 +73,16 @@ const RideForm = (props: IRideFormProps) => {
             setArrivalMomentMin(departure.moment);
         }
         if (departure && arrival && trafficCondition) {
-            const ride = makeRide(departure!!, arrival!!, trafficCondition, comment);
+            let ride: Ride = makeRide(departure!!, arrival!!, trafficCondition, comment);
+            if (props.ride && props.ride.id !== undefined)
+                ride = { ...ride, id: props.ride.id };
             setValidation((prev => ({
                 ...prev,
                 valid: isValidRide(ride),
                 messages: validateRide(ride)
             })));
         }
-    }, [departure, arrival, trafficCondition, comment]);
+    }, [departure, arrival, trafficCondition, comment, props.ride]);
 
     return <div id="ride-form-container">
         <StopForm datetime 
