@@ -13,7 +13,7 @@ export default function RidesRoutes(props: { isAuthenticated: boolean, redirectT
 			redirectTo={props.redirectTo}
 		/>
 		<PrivateRoute exact strict
-			path="/rides/form"
+			path="/rides/form/:rideId(\d+)?"
 			element={RideFormPage}
 			isAuthenticated={props.isAuthenticated}
 			redirectTo={props.redirectTo}

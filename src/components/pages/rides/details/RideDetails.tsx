@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { RouteComponentProps, useHistory, useRouteMatch, withRouter } from "react-router-dom";
+import { RouteComponentProps, withRouter } from "react-router-dom";
 import EditIcon from '@material-ui/icons/Edit';
 import { Fab } from "@material-ui/core";
 import { User } from "oidc-client";
@@ -63,7 +63,7 @@ const RideDetails: React.FC<RideDetailsProps> = ({ match }: RideDetailsProps) =>
 		try {
 			if (authService.isLoggedIn()) fetchRide();
 		} catch (error) {
-			setState(prev => ({ ...prev, isLoading: false, error: undefined}));
+			setState(prev => ({ ...prev, isLoading: false, error: error}));
 		}
 	}, [match.params.rideId]);
 
@@ -96,7 +96,7 @@ const RideDetails: React.FC<RideDetailsProps> = ({ match }: RideDetailsProps) =>
 			className="ride-edit-button"
 			onClick={() => {
 				const rideId = match.params.rideId!!; 
-				window.location.href = `${window.location.origin}/rides/form?rideId=${rideId}`;
+				window.location.href = `${window.location.origin}/rides/form/${rideId}`;
 			}}
             >
             <EditIcon />

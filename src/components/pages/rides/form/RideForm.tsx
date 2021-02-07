@@ -37,7 +37,6 @@ const makeRide = (dep: Stop, arr: Stop, tc: TrafficCondition, com: string | unde
     driverPseudonym: undefined
 });
 
-
 const RideForm = (props: IRideFormProps) => {
 
     const getDefaultDeparture = () => props.ride ? props.ride.departure : undefined;
