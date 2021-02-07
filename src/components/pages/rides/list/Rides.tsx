@@ -40,7 +40,6 @@ function Rides(props: {}) {
     });
 
     useEffect(() => {
-        console.log("efect");
         const getRides = async () => {
             const authService = new AuthService();
             try {
