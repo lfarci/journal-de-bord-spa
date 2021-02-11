@@ -8,9 +8,10 @@ import LogInCallback from './components/navigation/callbacks/LogInCallback';
 import { AuthService } from './services/AuthService';
 import SilentRenewCallback from './components/navigation/SilentRenewCallback';
 import Profile from './components/pages/profile/Profile';
-import { RideService } from './services/RideService';
-import { LocationService } from './services/LocationService';
-import { StopService } from './services/StopService';
+import { RideService } from './services/local/RideService';
+import { LocationService } from './services/local/LocationService';
+import { StopService } from './services/local/StopService';
+import { makeRide, makeStop } from './types/__test__/helpers';
 
 function App() {
 

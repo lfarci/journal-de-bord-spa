@@ -2,7 +2,7 @@ import { User } from "oidc-client";
 import React, { useEffect, useState } from "react";
 import { RouteComponentProps } from "react-router-dom";
 import { AuthService } from "../../../../services/AuthService";
-import { RideService } from "../../../../services/RideService";
+import { RideService } from "../../../../services/local/RideService";
 import { Ride } from "../../../../types";
 import { Page } from "../../../common";
 import RideForm from "./RideForm";
@@ -60,7 +60,6 @@ function RideFormPage({ match }: RideFormPageProps) {
                 try {
                     setState(prev => ({...prev, isLoading: true, error: undefined}));
                     const rideId = await RideService.put(data);
-                    console.log(RideService.RIDES);
                     window.location.href = `${window.location.origin}/rides/${rideId}`;
                 } catch(error) {
                     setState(prev => ({...prev, isLoading: false, error: error}));

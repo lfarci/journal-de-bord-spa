@@ -10,7 +10,7 @@ import { getRideDurationString, getTrafficConditionString } from "../../../../ty
 import { Page, Property, Section } from "../../../common";
 
 import "./RideDetails.scss";
-import { RideService } from "../../../../services/RideService";
+import { RideService } from "../../../../services/local/RideService";
 
 type RideDetailsParams = { rideId: string };
 
@@ -49,7 +49,6 @@ const RideDetails: React.FC<RideDetailsProps> = ({ match }: RideDetailsProps) =>
     });
 
     useEffect(() => {
-        console.log(RideService.RIDES);
         const authService = new AuthService();
         const fetchRide = async () => {
             const user: User | null = await authService.getUser();

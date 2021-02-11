@@ -1,4 +1,4 @@
-import { Stop } from "../types";
+import { Stop } from "../../types";
 
 import * as model from "./journal-de-bord-sample.json";
 import { LocationService } from "./LocationService";
@@ -124,7 +124,7 @@ export class StopService {
                     stopId = outdated?.id!!;
                     if (outdated) await StopService.delete(outdated);
                 } else {
-                    const seq = StopService.readSequence();
+                    const seq: number = StopService.readSequence();
                     stopId = seq;
                     StopService.writeSequence(seq + 1);
                 }

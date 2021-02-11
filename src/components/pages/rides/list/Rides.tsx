@@ -9,7 +9,7 @@ import { useHistory, useRouteMatch } from "react-router-dom";
 
 import "./Rides.scss";
 import { AuthService } from "../../../../services/AuthService";
-import { RideService } from "../../../../services/RideService";
+import { RideService } from "../../../../services/local/RideService";
 import { User } from "oidc-client";
 
 export type RideScreenContentKey = "form" | "list" | "details";

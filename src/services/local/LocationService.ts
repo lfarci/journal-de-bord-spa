@@ -1,24 +1,35 @@
-import { Location } from "../types";
+import { collapseTextChangeRangesAcrossMultipleVersions } from "typescript";
+import { Location } from "../../types";
+import { IStorage } from "./IStorage";
 
 import * as model from "./journal-de-bord-sample.json";
 
 export class LocationService {
 
+    public static STORAGE: IStorage = localStorage;
     public static KEY = "locations";
     public static DEFAULT = { name: "Unknown", latitude: 0, longitude: 0 };
 
-    private static readSequence = (): number => {
-        return localStorage[`${LocationService.KEY}-seq`];
+    public static readSequence = (): number | undefined => {
+        const key = `${LocationService.KEY}-seq`;
+        const item = LocationService.STORAGE.getItem(key);
+        return item !== null ? parseInt(item!!): undefined;
     }
 
-    private static writeSequence = (value: number): void => {
-        localStorage[`${LocationService.KEY}-seq`] = value;
+    public static writeSequence = (value: number): void => {
+        const key: string = `${LocationService.KEY}-seq`;
+        const sequence: string = value.toString();
+        LocationService.STORAGE.setItem(key, sequence);
     }
 
     public static writeToLocalStorage = (locations: Location[]): void => {
-        localStorage.setItem(LocationService.KEY, JSON.stringify(locations));
-        const ids = locations.map(l => l.id ? l.id : 0);
-        LocationService.writeSequence(Math.max(...ids) + 1);
+        let sequence: number = 0;
+        if (locations.length > 0) {
+            const ids = locations.map(l => l.id ? l.id : 0);
+            sequence = Math.max(...ids) + 1;
+        }
+        LocationService.STORAGE.setItem(LocationService.KEY, JSON.stringify(locations));
+        LocationService.writeSequence(sequence);
     }
 
     public static writeSampleToLocalStorage = (): void => {
@@ -26,7 +37,15 @@ export class LocationService {
     }
 
     public static readFromLocalStorage = (): Location[] => {
-        return JSON.parse(localStorage[LocationService.KEY]);
+        try {
+            const parsable = LocationService.STORAGE.getItem(LocationService.KEY);
+            if (parsable === null) {
+                throw new Error("no locations to read in storage.");
+            }
+            return JSON.parse(parsable);
+        } catch (error) {
+            throw new Error("Could not read locations: " + error.message);
+        }
     }
 
     public static exist = async (locationName: string): Promise<boolean> => {
@@ -41,15 +60,21 @@ export class LocationService {
     }
 
     public static findById = (locationId: number): Location | undefined => {
-        const locations = LocationService.readFromLocalStorage();
-        return locations.find(l => l.id === locationId);
+        if (LocationService.STORAGE.getItem(LocationService.KEY)) {
+            const locations = LocationService.readFromLocalStorage();
+            return locations.find(l => l.id === locationId);
+        }
+        return undefined;
     }
 
     public static findByName = async (locationName: string): Promise<Location | undefined> => {
         return new Promise(async (resolve, reject) => {
             try {
-                const locations = LocationService.readFromLocalStorage();
-                resolve(locations.find(l => l.name === locationName));
+                if (LocationService.STORAGE.getItem(LocationService.KEY)) {
+                    const locations = LocationService.readFromLocalStorage();
+                    resolve(locations.find(l => l.name === locationName));
+                }
+                resolve(undefined);
             } catch (error) {
                reject(error);
             }
