@@ -82,11 +82,11 @@ export class LocationService {
     }
 
     public static getAll = async (): Promise<Location[]> => {
-        return new Promise(async (resolve, reject) => {
+        return new Promise(async (resolve, _) => {
             try {
                 resolve(LocationService.readFromLocalStorage());
             } catch (error) {
-               reject(error);
+               resolve([]);
             }
         });
     }
@@ -94,6 +94,8 @@ export class LocationService {
     public static put = async (location: Location): Promise<number> => {
         return new Promise(async (resolve, reject) => {
             try {
+                if (LocationService.readSequence() === undefined)
+                    reject(new Error());
                 let locationId;
                 if (await LocationService.exist(location.name)) {
                     let outdated = await LocationService.findByName(location.name);
@@ -102,7 +104,7 @@ export class LocationService {
                 } else {
                     const seq = LocationService.readSequence();
                     locationId = seq;
-                    LocationService.writeSequence(seq + 1);
+                    LocationService.writeSequence(seq!! + 1);
                 }
                 const locations = LocationService.readFromLocalStorage();
                 locations.push({...location, id: locationId});
@@ -114,15 +116,27 @@ export class LocationService {
         });
     }
 
+    public static deleteByName = async (name: string): Promise<void> => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                if (await LocationService.exist(name)) {
+                    const locations = LocationService.readFromLocalStorage();
+                    const index = locations.findIndex(l => l.name === name);
+                    locations.splice(index, 1);
+                    LocationService.writeToLocalStorage(locations);
+                }
+                resolve();
+            } catch (error) {
+               reject(error);
+            }
+        });
+    }
+
     public static delete = async (location: Location): Promise<void> => {
         return new Promise(async (resolve, reject) => {
             try {
                 if (await LocationService.exist(location.name)) {
-                    const locations = LocationService.readFromLocalStorage();
-                    const target = await LocationService.findByName(location.name);
-                    const index = locations.indexOf(target!!);
-                    locations.splice(index, 1);
-                    LocationService.writeToLocalStorage(locations);
+                    await LocationService.deleteByName(location.name);
                 }
                 resolve();
             } catch (error) {

@@ -1,6 +1,7 @@
 import { LocationService } from "../LocationService";
 import { DictionnaryStorage } from "./DictionaryStorage";
 import { Location } from "../../../types";
+import { IStorage } from "../IStorage";
 
 beforeEach(() => LocationService.STORAGE = new DictionnaryStorage());
 
@@ -174,6 +175,190 @@ describe("findByName", () => {
 
     it("returns undefined when there are no locations in storage", async () => {
         expect(await LocationService.findByName("A")).toBe(undefined);
+    });
+
+});
+
+describe("getAll", () => {
+
+    it("resolves the expected number of locations", async () => {
+        LocationService.writeToLocalStorage([
+            {id: 0, name: "A", latitude: 0.0, longitude: 0.0 },
+            {id: 1, name: "B", latitude: 0.0, longitude: 0.0 },
+            {id: 2, name: "C", latitude: 0.0, longitude: 0.0 },
+        ]);
+        expect((await LocationService.getAll()).length).toBe(3);
+    });
+
+    it("resolves locations with the expected name", async () => {
+        LocationService.writeToLocalStorage([
+            {id: 0, name: "Library", latitude: 0.0, longitude: 0.0 },
+        ]);
+        expect((await LocationService.getAll())[0].name).toBe("Library");
+    });
+
+    it("resolves an empty array when there are no locations in the storage", async () => {
+        expect((await LocationService.getAll()).length).toBe(0);
+    });
+
+    it("resolves an empty array when the JSON in storage is invalid", async () => {
+        LocationService.STORAGE.setItem(LocationService.KEY, "invalid JSON");
+        expect((await LocationService.getAll()).length).toBe(0);
+    });
+
+});
+
+describe("put", () => {
+
+    const initialize = (storage: IStorage) => {
+        storage.setItem(LocationService.KEY, "[]");
+        storage.setItem(`${LocationService.KEY}-seq`, "0");
+    }
+
+    it("puts new locations with an id", async () => {
+        initialize(LocationService.STORAGE);
+        await LocationService.put(
+            {name: "Library", latitude: 0.0, longitude: 0.0 }
+        );
+        expect((await LocationService.findByName("Library"))?.id).toBe(0);
+    });
+
+    it("overwrites the location with the same name that is already in storage", async () => {
+        initialize(LocationService.STORAGE);
+        await LocationService.put({name: "A", latitude: 0.0, longitude: 0.0 });
+        await LocationService.put({name: "A", latitude: 1.0, longitude: 1.0 });
+        expect((await LocationService.getAll())[0].name).toBe("A");
+        expect((await LocationService.getAll())[0].latitude).toBe(1.0);
+        expect((await LocationService.getAll())[0].longitude).toBe(1.0);
+    });
+
+    it("puts once after multiple calls with the same location", async () => {
+        initialize(LocationService.STORAGE);
+        await LocationService.put({name: "A", latitude: 0.0, longitude: 0.0 });
+        await LocationService.put({name: "A", latitude: 0.0, longitude: 0.0 });
+        await LocationService.put({name: "A", latitude: 0.0, longitude: 0.0 });
+        expect((await LocationService.getAll()).length).toBe(1);
+    });
+
+    it("the new location id is the one of the outdated one after overwrite", async () => {
+        initialize(LocationService.STORAGE);
+        await LocationService.put({name: "A", latitude: 0.0, longitude: 0.0 });
+        const outdated = await LocationService.findByName("A");
+        await LocationService.put({name: "A", latitude: 1.0, longitude: 1.0 });
+        const updated = await LocationService.findByName("A");
+        expect(outdated?.id).toBe(updated?.id);
+    });
+
+    it("sets a new location id to the sequence value", async () => {
+        initialize(LocationService.STORAGE);
+        LocationService.writeSequence(237);
+        await LocationService.put({name: "A", latitude: 0.0, longitude: 0.0 });
+        const location = await LocationService.findByName("A");
+        expect(location?.id).toBe(237);
+    });
+
+    it("resolves the sequence id when the location is not in storage", async () => {
+        initialize(LocationService.STORAGE);
+        LocationService.writeSequence(237);
+        const id = await LocationService.put({name: "A", latitude: 0.0, longitude: 0.0 });
+        expect(id).toBe(237);
+    });
+
+    it("resolves the updated location id when overwriting", async () => {
+        initialize(LocationService.STORAGE);
+        const outdated = await LocationService.put({name: "A", latitude: 0.0, longitude: 0.0 });
+        const updated = await LocationService.put({name: "A", latitude: 1.0, longitude: 1.0 });
+        expect(outdated).toBe(updated);
+    });
+
+    it("increments the sequence value after putting a new location", async () => {
+        initialize(LocationService.STORAGE);
+        LocationService.writeSequence(237);
+        await LocationService.put({name: "A", latitude: 0.0, longitude: 0.0 });
+        expect(LocationService.readSequence()).toBe(238);
+    });
+
+    it("throws an error when the storage locations has not been initialized", async () => {
+        LocationService.writeSequence(0);
+        await expect(
+            LocationService.put({name: "A", latitude: 0.0, longitude: 0.0 })
+        ).rejects.toThrowError();
+    });
+
+    it("throws an error when the storage sequence has not been initialized", async () => {
+        LocationService.STORAGE.setItem("locations", "[]");
+        await expect(
+            LocationService.put({name: "A", latitude: 0.0, longitude: 0.0 })
+        ).rejects.toThrowError();
+    });
+
+});
+
+describe("getAll", () => {
+
+    it("resolves the expected number of locations", async () => {
+        LocationService.writeToLocalStorage([
+            {id: 0, name: "A", latitude: 0.0, longitude: 0.0 },
+            {id: 1, name: "B", latitude: 0.0, longitude: 0.0 },
+            {id: 2, name: "C", latitude: 0.0, longitude: 0.0 },
+        ]);
+        expect((await LocationService.getAll()).length).toBe(3);
+    });
+
+    it("resolves locations with the expected name", async () => {
+        LocationService.writeToLocalStorage([
+            {id: 0, name: "Library", latitude: 0.0, longitude: 0.0 },
+        ]);
+        expect((await LocationService.getAll())[0].name).toBe("Library");
+    });
+
+    it("resolves an empty array when there are no locations in the storage", async () => {
+        expect((await LocationService.getAll()).length).toBe(0);
+    });
+
+    it("resolves an empty array when the JSON in storage is invalid", async () => {
+        LocationService.STORAGE.setItem(LocationService.KEY, "invalid JSON");
+        expect((await LocationService.getAll()).length).toBe(0);
+    });
+
+});
+
+describe("delete", () => {
+
+    const initialize = (storage: IStorage) => {
+        storage.setItem(LocationService.KEY, "[]");
+        storage.setItem(`${LocationService.KEY}-seq`, "0");
+    }
+
+    it("keeps all location when trying to delete an unknown location", async () => {
+        initialize(LocationService.STORAGE);
+        await LocationService.put({ name: "A", latitude: 0.0, longitude: 0.0 });
+        await LocationService.put({ name: "B", latitude: 0.0, longitude: 0.0 });
+        await LocationService.put({ name: "C", latitude: 0.0, longitude: 0.0 });
+        const unknown = {id: 0, name: "Library", latitude: 0.0, longitude: 0.0 };
+        await LocationService.delete(unknown);
+        expect((await LocationService.getAll()).length).toBe(3);
+    });
+
+    it("deletes the expected location", async () => {
+        initialize(LocationService.STORAGE);
+        const location = { name: "C", latitude: 0.0, longitude: 0.0 };
+        await LocationService.put(location);
+        expect(await LocationService.exist(location.name)).toBeTruthy();
+        await LocationService.delete(location);
+        expect(await LocationService.exist(location.name)).toBeFalsy();
+    });
+
+    it("deletes exclusively the expected location", async () => {
+        initialize(LocationService.STORAGE);
+        const target = { name: "A", latitude: 0.0, longitude: 0.0 };
+        await LocationService.put({ name: "B", latitude: 0.0, longitude: 0.0 });
+        await LocationService.put(target);
+        await LocationService.put({ name: "C", latitude: 0.0, longitude: 0.0 });
+        await LocationService.delete(target);
+        expect(await LocationService.exist("A")).toBeFalsy();
+        expect(await LocationService.exist("B")).toBeTruthy();
+        expect(await LocationService.exist("C")).toBeTruthy();
     });
 
 });
