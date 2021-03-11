@@ -9,8 +9,8 @@ import { useHistory, useRouteMatch } from "react-router-dom";
 
 import "./Rides.scss";
 import { AuthService } from "../../../../services/AuthService";
-import { RideService } from "../../../../services/local/RideService";
 import { User } from "oidc-client";
+import RideService from "../../../../services/RideService";
 
 export type RideScreenContentKey = "form" | "list" | "details";
 
@@ -48,7 +48,7 @@ function Rides(props: {}) {
                     if (state.deletableRideId !== undefined) {
                         await RideService.deleteById(state.deletableRideId);
                     }
-                    const rides = await RideService.getAll(user.profile.sub);
+                    const rides = await RideService.getAll();
                     setState(prev => ({
                         ...prev,
                         rides: rides,

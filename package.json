@@ -17,6 +17,7 @@
     "@types/react-dom": "^16.9.8",
     "@types/react-router-dom": "^5.1.5",
     "autosuggest-highlight": "^3.1.1",
+    "axios": "^0.21.1",
     "fontsource-roboto": "^2.2.6",
     "lodash": "^4.17.20",
     "moment": "^2.27.0",
