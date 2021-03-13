@@ -7,6 +7,23 @@ export default class HttpService {
     private static basePath = "api/drivers";
     private static authentication = new AuthService();
 
+    public static async post<Entity>(path: string, data: Entity): Promise<void> {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const config = await HttpService.makeRequestConfig();
+                const url: string = await HttpService.makeUrl(path);
+                const response = await axios.post<Entity>(url, data, config);
+                if (response.status === 201) {
+                    resolve();
+                } else {
+                    reject(Error("Error while updating resource."));
+                }
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
+
     public static async get<Entity>(path: string): Promise<Entity> {
         return new Promise(async (resolve, reject) => {
             try {
@@ -30,7 +47,6 @@ export default class HttpService {
                 const config = await HttpService.makeRequestConfig();
                 const url: string = await HttpService.makeUrl(path);
                 const response = await axios.put<Entity>(url, data, config);
-                console.log(JSON.stringify(response, null, 2));
                 if (response.status === 204) {
                     resolve();
                 } else {

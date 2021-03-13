@@ -4,6 +4,7 @@ import { LocationField, OdometerField } from './fields';
 import { Stop, Location } from '../../../../types';
 import DatetimeField from './fields/DatetimeField';
 import { Typography, Divider } from '@material-ui/core';
+import LocationService, { LocationData } from '../../../../services/LocationService';
 
 interface IStopFormProps {
     /**
@@ -33,12 +34,13 @@ interface IStopFormProps {
      * is set to now.
      */
     datetime?: boolean;
-    /**
-     * This defines the available locations. Available locations are the ones
-     * that the user has visited in the past. They will be used in a combo box.
-     */
     availableLocations?: Location[];
+    onError?: (error: Error) => void;
 }
+
+// fetchAvailableLocations();
+
+
 
 /**
  * The fields are used to describe a stop. A stop is made of a moment, a
@@ -53,11 +55,11 @@ function StopForm(props: IStopFormProps) {
     const { onChange: handleStopChange } = props;
     const hasTitle = () => props.title !== undefined;
     const showDateTime = () => props.datetime === undefined ? false : props.datetime;
-    const getLocations = () => props.availableLocations === undefined ? [] : props.availableLocations;
     const getOdometerMin = () => props.odometerMin === undefined ? 0 : props.odometerMin;
 
     const getDefaultMoment = () => props.value ? props.value.moment : new Date();
     const getDefaultOdometer = () => props.value ? props.value.odometerValue : 0;
+    const getLocations = () => props.availableLocations === undefined ? [] : props.availableLocations;
     const getDefaultLocation = () => {
         if (props.value) return props.value.location;
         const locations = getLocations();
@@ -68,13 +70,30 @@ function StopForm(props: IStopFormProps) {
     const [odometer, setOdometer] = useState<number>(getDefaultOdometer());
     const [location, setLocation] = useState<Location>(getDefaultLocation());
 
+    const [locationId, setLocationId] = useState<number | undefined>(undefined);
+
+    const [locations, setLocations] = useState<Location[]>([]);
+
     useEffect(() => {
+
+        const fetchAvailableLocations = async () => {
+            try {
+                const data: Location[] = await LocationService.getAll();
+                setLocations(data);
+            } catch (error) {
+                if (props.onError) props.onError(error);
+            }
+        };
+        fetchAvailableLocations();
+
+        console.log(locationId);
+
         handleStopChange({
             moment: moment,
             location: location,
             odometerValue: odometer
         });
-    }, [moment, odometer, location, handleStopChange]);
+    }, [moment, odometer, location, locationId, handleStopChange]);
 
     return (
         <div>
@@ -98,9 +117,9 @@ function StopForm(props: IStopFormProps) {
                 label="Location"
                 placeholder="e.g. Home"
                 hint="Enter your current location name"
-                options={getLocations()}
+                options={locations}
                 value={location}
-                onChange={setLocation}
+                onChange={setLocationId}
             />
             { showDateTime() && <DatetimeField
                 id="stop-datetime"

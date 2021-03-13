@@ -61,12 +61,6 @@ const RideForm = (props: IRideFormProps) => {
     });
 
     const { onSubmit } = { ...props };
-    const readDataAsRide = () => { 
-        let ride: Ride = makeRide(departure!!, arrival!!, trafficCondition, comment);
-        if (props.ride && props.ride.id !== undefined)
-            ride = { ...ride, id: props.ride.id };
-        return ride;
-    };
 
     useEffect(() => {
         if (departure) {
