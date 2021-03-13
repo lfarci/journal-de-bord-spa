@@ -1,10 +1,9 @@
 import axios from "axios";
-import { User } from "oidc-client";
 import { TrafficCondition } from "../components/pages/rides/form/fields";
 import { Ride } from "../types";
-import { makeRide } from "../types/__test__/helpers";
 import { AuthService } from "./AuthService";
 import { Environment } from "./Environment";
+import HttpService from "./HttpService";
 
 export default class RideService {
 
@@ -12,34 +11,17 @@ export default class RideService {
 
     public static async findById(rideId: number): Promise<Ride> {
         return new Promise(async (resolve, reject) => {
-            if (this.authentication.isLoggedIn()) {
-                const user = await this.authentication.getUser();
-                const host = Environment.resourceServerUri;
-                const path = `api/drivers/${user?.profile.sub}/rides/${rideId}`;
-
-                console.log("Authenticated as " + user?.profile.nickname);
-
-                const response = await axios.get(`${host}${path}`, {
-                    headers: {
-                        Authorization: `Bearer ${user?.access_token}`
-                    }
-                });
-
-                if (response.status === 200) {
-                    const data = response.data;
-                    data.arrival.moment = new Date(data.arrival.moment);
-                    data.departure.moment = new Date(data.departure.moment);
-                    data.trafficCondition = TrafficCondition.CALM;
-                    resolve(response.data);
-                } else if (response.status === 404) {
-                    reject(Error("Unknown ride, no id:" + rideId));
-                } else {
-                    reject(Error("Error while getting the ride."));
-                }
-
-            } else {
-                reject(Error("No authenticated user."));
+            const ride = await HttpService.get<Ride>(`/rides/${rideId}`);
+            ride.departure.moment = new Date(ride.departure.moment);
+            if (isNaN(ride.departure.moment.getTime()))
+                reject(Error("Invalid departure date."));
+            if (ride.arrival) {
+                ride.arrival.moment = new Date(ride.arrival.moment);
+                if (isNaN(ride.arrival?.moment.getTime()))
+                    reject(Error("Invalid arrival date."));
             }
+            ride.trafficCondition = (TrafficCondition as any)[ride.trafficCondition];
+            resolve(ride);
         });
     }
 

@@ -85,11 +85,14 @@ export const getRideDurationString = (ride: Ride): string => {
 
 export const getTrafficConditionString = (condition: TrafficCondition): string => {
     let trafficConditionString: string;
+    console.log("traffic string? => " + condition);
+    console.log("traffic type? => " + typeof condition);
     switch (condition) {
     case TrafficCondition.VERY_CALM:
         trafficConditionString = "Very calm";
         break;
     case TrafficCondition.CALM:
+        console.log("match")
         trafficConditionString = "Calm";
         break;
     case TrafficCondition.NORMAL:

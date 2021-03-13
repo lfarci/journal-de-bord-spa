@@ -2,9 +2,7 @@ import React, { useEffect, useState } from "react";
 import { RouteComponentProps, withRouter } from "react-router-dom";
 import EditIcon from '@material-ui/icons/Edit';
 import { Fab } from "@material-ui/core";
-import { User } from "oidc-client";
 
-import { AuthService } from "../../../../services/AuthService";
 import { getRideDistanceString, Ride, Stop } from "../../../../types";
 import { getRideDurationString, getTrafficConditionString } from "../../../../types/Ride";
 import { Page, Property, Section } from "../../../common";
@@ -49,20 +47,16 @@ const RideDetails: React.FC<RideDetailsProps> = ({ match }: RideDetailsProps) =>
     });
 
     useEffect(() => {
-        const authService = new AuthService();
-        const fetchRide = async () => {
-            const user: User | null = await authService.getUser();
-            if (user) {
-                const rideId = parseInt(match.params.rideId);
+        const rideId = parseInt(match.params.rideId);
+        const fetchRideDetails = async () => {
+            try {
                 const ride = await RideService.findById(rideId);
-                setState(prev => ({ ...prev, ride: ride, isLoading: false, error: undefined}));
+                setState(prev => ({ ...prev, ride: ride, isLoading: false }));
+            } catch (error) {
+                setState(prev => ({ ...prev, error: error, isLoading: false }));
             }
         };
-        try {
-            if (authService.isLoggedIn()) fetchRide();
-        } catch (error) {
-            setState(prev => ({ ...prev, isLoading: false, error: error}));
-        }
+        fetchRideDetails();
     }, [match.params.rideId]);
 
     const showArrival = (): boolean => state.ride?.arrival !== undefined;
