@@ -1,8 +1,6 @@
-import { User } from "oidc-client";
 import React, { useEffect, useState } from "react";
 import { RouteComponentProps } from "react-router-dom";
-import { AuthService } from "../../../../services/AuthService";
-import RideService from "../../../../services/RideService";
+import RideService, { RideData } from "../../../../services/RideService";
 import { Ride } from "../../../../types";
 import { Page } from "../../../common";
 import RideForm from "./RideForm";
@@ -30,20 +28,17 @@ function RideFormPage({ match }: RideFormPageProps) {
 
     useEffect(() => {
         if (match.params.rideId) {
-            const authService = new AuthService();
+            const rideId = parseInt(match.params.rideId);
             const fetchRide = async () => {
-                const user: User | null = await authService.getUser();
-                if (user) {
-                    const rideId = parseInt(match.params.rideId);
+                try {
                     const ride = await RideService.findById(rideId);
-                    setState(prev => ({ ...prev, ride: ride, isLoading: false, error: undefined}));
+                    console.log(JSON.stringify(ride, null, 2));
+                    setState(prev => ({ ...prev, ride: ride, isLoading: false }));
+                } catch (error) {
+                    setState(prev => ({ ...prev, error: error, isLoading: false }));
                 }
             };
-            try {
-                if (authService.isLoggedIn()) fetchRide();
-            } catch (error) {
-                setState(prev => ({ ...prev, isLoading: false, error: error}));
-            }
+            fetchRide();
         }
     }, [match.params.rideId]);
 
@@ -52,15 +47,11 @@ function RideFormPage({ match }: RideFormPageProps) {
             ride={state.ride}
             isDriving={false}
             onChange={() => { }}
-            onSubmit={async (data: Ride) => {
-                console.log("[SUBMITTED]", JSON.stringify(data, null, 2));
-                if (data.id && data.id !== rideId()) {
-                    // error
-                }
+            onSubmit={async (data: RideData) => {
                 try {
                     setState(prev => ({...prev, isLoading: true, error: undefined}));
-                    // const rideId = await RideService.put(data);
-                    window.location.href = `${window.location.origin}/rides/${rideId}`;
+                    await RideService.updateById(rideId(), data);
+                    window.location.href = `${window.location.origin}/rides/${rideId()}`;
                 } catch(error) {
                     setState(prev => ({...prev, isLoading: false, error: error}));
                 }

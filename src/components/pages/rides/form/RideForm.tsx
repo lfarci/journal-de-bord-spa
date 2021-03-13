@@ -6,6 +6,7 @@ import { isValidRide, Ride, Stop, validateRide } from '../../../../types';
 import StopForm from './StopForm';
 
 import "./RideForm.scss";
+import { RideData } from '../../../../services/RideService';
 
 interface IRideFormProps {
     /**
@@ -26,7 +27,7 @@ interface IRideFormProps {
      * Called when the submit button is clicked. data contain the data
      * submitted by the user.
      */
-    onSubmit: (data: Ride) => void;
+    onSubmit: (data: RideData) => void;
 }
 
 const makeRide = (dep: Stop, arr: Stop, tc: TrafficCondition, com: string | undefined) => ({
@@ -126,7 +127,13 @@ const RideForm = (props: IRideFormProps) => {
             color="primary"
             size="large"
             disabled={!validation.valid}
-            onClick={() => 	onSubmit(readDataAsRide())}
+            onClick={() => 	onSubmit({
+                id: props.ride?.id,
+                departure: props.ride?.departure.id!!,
+                arrival: props.ride?.arrival?.id,
+                trafficCondition: trafficCondition,
+                comment: comment
+            })}
         >
             Save
         </Button>
