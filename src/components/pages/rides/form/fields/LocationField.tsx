@@ -4,8 +4,7 @@ import TextField from '@material-ui/core/TextField';
 import { Location } from '../../../../../types';
 import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
 import { GeolocationService } from '../../../../../services/GeolocationService';
-import LocationService, { LocationData } from '../../../../../services/LocationService';
-import { Fastfood } from '@material-ui/icons';
+import LocationService from '../../../../../services/LocationService';
 
 interface LocationOption {
     userInput?: string;
@@ -19,7 +18,7 @@ interface ILocationFieldProps {
     hint: string;
     options: Location[];
     value: Location;
-    onChange: (location: Location) => void;
+    onChange: (locationId: number) => void;
     onError?: (error: Error) => void;
 }
 
@@ -39,11 +38,13 @@ function LocationField(props: ILocationFieldProps) {
     const [locationOption, setLocation] = useState<LocationOption | null>({
         label: props.value.name
     });
-    const [options, setOptions] = useState<LocationOption[]>([]);
+
     const [currentLocation, setCurrentLocation] = useState<Location | undefined>(undefined);
 
     const { onChange: handleChange, options: locations } = props;
+
     const filter = createFilterOptions<LocationOption>();
+    const options: LocationOption[] = props.options.map(option => ({ label: option.name }));
 
     const createLocation = async (name: string): Promise<boolean> => {
         try {
@@ -62,13 +63,6 @@ function LocationField(props: ILocationFieldProps) {
     }
 
     useEffect(() => {
-
-        const fetchAvailableLocations = async () => {
-            const data: LocationData[] = await LocationService.getAll();
-            setOptions(data.map(location => ({ label: location.name })));
-        };
-        fetchAvailableLocations();
-
         const askForCurrentLocation = async (locationName: string) => {
             setCurrentLocation(await GeolocationService.makeCurrentLocation(locationName));
         }
@@ -82,8 +76,8 @@ function LocationField(props: ILocationFieldProps) {
             if (!location && currentLocation) { 
                 location = currentLocation;
             }
-            if (location) { 
-                handleChange(location);
+            if (location && location.id) {
+                handleChange(location.id);
             }
         }
     }, [locationOption, currentLocation, locations, handleChange]);
