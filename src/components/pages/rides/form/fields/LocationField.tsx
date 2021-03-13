@@ -4,6 +4,8 @@ import TextField from '@material-ui/core/TextField';
 import { Location } from '../../../../../types';
 import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
 import { GeolocationService } from '../../../../../services/GeolocationService';
+import LocationService, { LocationData } from '../../../../../services/LocationService';
+import { Fastfood } from '@material-ui/icons';
 
 interface LocationOption {
     userInput?: string;
@@ -18,6 +20,7 @@ interface ILocationFieldProps {
     options: Location[];
     value: Location;
     onChange: (location: Location) => void;
+    onError?: (error: Error) => void;
 }
 
 const findLocation = (optionLabel: string, locations: Location[]): Location | undefined => {
@@ -36,15 +39,36 @@ function LocationField(props: ILocationFieldProps) {
     const [locationOption, setLocation] = useState<LocationOption | null>({
         label: props.value.name
     });
-
+    const [options, setOptions] = useState<LocationOption[]>([]);
     const [currentLocation, setCurrentLocation] = useState<Location | undefined>(undefined);
 
     const { onChange: handleChange, options: locations } = props;
-
     const filter = createFilterOptions<LocationOption>();
-    const options: LocationOption[] = props.options.map(option => ({ label: option.name }));
+
+    const createLocation = async (name: string): Promise<boolean> => {
+        try {
+            await LocationService.create({
+                name: name,
+                longitude: 0.0,
+                latitude: 0.0
+            });
+            return true;
+        } catch (error) {
+            if (props.onError) {
+                props.onError(error);
+            }
+            return false;
+        }
+    }
 
     useEffect(() => {
+
+        const fetchAvailableLocations = async () => {
+            const data: LocationData[] = await LocationService.getAll();
+            setOptions(data.map(location => ({ label: location.name })));
+        };
+        fetchAvailableLocations();
+
         const askForCurrentLocation = async (locationName: string) => {
             setCurrentLocation(await GeolocationService.makeCurrentLocation(locationName));
         }
@@ -86,11 +110,13 @@ function LocationField(props: ILocationFieldProps) {
                 error={false}
             />
         )}
-        onChange={(event: React.ChangeEvent<any>, newValue: string | LocationOption | null) => {
+        onChange={async (event: React.ChangeEvent<any>, newValue: string | LocationOption | null) => {
             if (typeof newValue === 'string') {
                 setLocation({ label: newValue });
             } else if (newValue && newValue.userInput) {
-                setLocation({ label: newValue.userInput });
+                if (await createLocation(newValue.userInput)) {
+                    setLocation({ label: newValue.userInput });
+                }
             } else {
                 setLocation(newValue);
             }
