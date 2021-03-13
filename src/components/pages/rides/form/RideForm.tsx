@@ -7,6 +7,7 @@ import StopForm from './StopForm';
 
 import "./RideForm.scss";
 import { RideData } from '../../../../services/RideService';
+import StopService from '../../../../services/StopService';
 
 interface IRideFormProps {
     /**
@@ -28,6 +29,8 @@ interface IRideFormProps {
      * submitted by the user.
      */
     onSubmit: (data: RideData) => void;
+
+    onError?: (error: Error) => void;
 }
 
 const makeRide = (dep: Stop, arr: Stop, tc: TrafficCondition, com: string | undefined) => ({
@@ -121,13 +124,25 @@ const RideForm = (props: IRideFormProps) => {
             color="primary"
             size="large"
             disabled={!validation.valid}
-            onClick={() => 	onSubmit({
-                id: props.ride?.id,
-                departure: props.ride?.departure.id!!,
-                arrival: props.ride?.arrival?.id,
-                trafficCondition: trafficCondition,
-                comment: comment
-            })}
+            onClick={async () => {
+
+                try {
+                    if (departure)
+                        await StopService.update(departure);
+                    if (arrival)
+                        await StopService.update(arrival)
+                } catch (error) {
+                    if (props.onError) props.onError(error);
+                }
+
+                onSubmit({
+                    id: props.ride?.id,
+                    departure: props.ride?.departure.id!!,
+                    arrival: props.ride?.arrival?.id,
+                    trafficCondition: trafficCondition,
+                    comment: comment
+                });
+            }}
         >
             Save
         </Button>

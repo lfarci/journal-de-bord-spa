@@ -86,11 +86,10 @@ function StopForm(props: IStopFormProps) {
         };
         fetchAvailableLocations();
 
-        console.log(locationId);
-
         handleStopChange({
+            id: props.value?.id ? props.value.id : undefined,
             moment: moment,
-            location: location,
+            location: { ...location, id: locationId },
             odometerValue: odometer
         });
     }, [moment, odometer, location, locationId, handleStopChange]);

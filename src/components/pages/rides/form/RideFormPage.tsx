@@ -56,6 +56,9 @@ function RideFormPage({ match }: RideFormPageProps) {
                     setState(prev => ({...prev, isLoading: false, error: error}));
                 }
             }}
+            onError={(error: Error) => {
+                setState(prev => ({ ...prev, error: error }));
+            }}
         />
     </Page>;
 }
