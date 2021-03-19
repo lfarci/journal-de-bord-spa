@@ -1,9 +1,11 @@
-import { RecentRide, Ride } from "../types";
+import { getRideDistance, RecentRide, Ride, Location, Stop } from "../types";
 import { Progress } from "../types/Progress";
 import { Environment } from "./Environment";
 import * as data from "./sample.json";
 
 export class ResourcesService {
+
+    public static TRACKING = false;
 
     private _resourceServerUri: string;
 
@@ -13,6 +15,17 @@ export class ResourcesService {
 
     private async sleep(ms: number): Promise<void> {
         return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    public async isTracking(userId: string): Promise<boolean> {
+        return new Promise(async (resolve, reject) => {
+            try {
+                await this.sleep(500);
+                resolve(ResourcesService.TRACKING);
+            } catch (error) {
+               reject(error);
+            }
+        });
     }
 
     /**
@@ -52,6 +65,23 @@ export class ResourcesService {
     }
 
     /**
+     * Gets all the locations visited by the specified user.
+     *
+     * @param userId is the identifier of the specified user.
+     */
+    public async getLocations(userId: string): Promise<Location[]> {
+        return new Promise(async (resolve, reject) => {
+            try {
+                await this.sleep(1000);
+                const rides = ResourcesService.readRidesFromSample();
+                resolve(rides.map(ride => ride.departure.location));
+            } catch (error) {
+               reject(error);
+            }
+        });
+    }
+
+    /**
      * Gets all the rides driven by the specified user.
      *
      * @param userId is the identifier of the specified user.
@@ -67,10 +97,22 @@ export class ResourcesService {
         });
     }
 
-    private getDistance(ride: Ride): number {
-        const departureOdometer = ride.departure.odometerValue!!;
-        const arrivalOdometer = ride.arrival?.odometerValue!!;
-        return arrivalOdometer - departureOdometer;
+    public async getRide(userId: string, rideId: string): Promise<Ride> {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const rides: Ride[] = await this.getRides(userId);
+                let id: number;
+                try {
+                    id = parseInt(rideId)
+                } catch (error) {
+                    id = 0; 
+                }
+                await this.sleep(1000);
+                resolve(rides[id]);
+            } catch (error) {
+               reject(error);
+            }
+        });
     }
 
     private adaptedRecentRides = (rides: Ride[]): RecentRide[] => {
@@ -79,7 +121,7 @@ export class ResourcesService {
 			departureLocationName: ride.departure.location.name!!,
 			arrivalLocationName: ride.arrival?.location.name!!,
 			date: ride.arrival?.moment!!,
-			distance: this.getDistance(ride)
+			distance: getRideDistance(ride)
 		}));
 	}
 
@@ -120,10 +162,34 @@ export class ResourcesService {
         });
     }
 
+    public async startRide(userId: string, departure: Stop): Promise<void> {
+        return new Promise(async (resolve, reject) => {
+            try {
+                await this.sleep(1000);
+                ResourcesService.TRACKING = true;
+                resolve();
+            } catch (error) {
+               reject(error);
+            }
+        });
+    }
+
     public async deleteJournal(userId: string): Promise<void> {
         return new Promise(async (resolve, reject) => {
             try {
                 await this.sleep(1000);
+                resolve();
+            } catch (error) {
+               reject(error);
+            }
+        });
+    }
+
+    public async postRide(ride: Ride): Promise<void> {
+        return new Promise(async (resolve, reject) => {
+            try {
+                await this.sleep(1000);
+                console.log(JSON.stringify(ride, null, 2));
                 resolve();
             } catch (error) {
                reject(error);

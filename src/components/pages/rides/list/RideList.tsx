@@ -6,6 +6,7 @@ import RideListItem from "./RideListItem";
 interface IRideList {
 	rides: Ride[];
 	onShowDetails: (rideId: number) => void;
+	onDelete: (rideId: number) => void;
 }
 
 function AnyRides(props: IRideList) {
@@ -14,16 +15,7 @@ function AnyRides(props: IRideList) {
 			key={index}
 			className="rides-list-item"
 			ride={ride}
-			onDelete={() => {
-				// TODO: Show confirmation dialog
-				console.log(`[DELETE] Ride { id: ${ride.id} }`)
-				if (window.confirm("Do you really want to delete this ride?")) {
-					// TODO: request deletion to the backend
-					console.log("[DELETE] Deletion has been confirmed.");
-				} else {
-					console.log("[DELETE] Deletion has been canceled.");
-				}
-			}}
+			onDelete={() => props.onDelete(ride.id!!)}
 			onDetails={() => props.onShowDetails(ride.id!!)}
 		/>)
 	}</div>;
@@ -36,7 +28,11 @@ function RideList(props: IRideList) {
 	return <div className="rides-list">
 		{
 			hasAnyRides()
-				? <AnyRides rides={props.rides} onShowDetails={props.onShowDetails} />
+				? <AnyRides 
+					rides={props.rides}
+					onDelete={props.onDelete}
+					onShowDetails={props.onShowDetails} 
+				/>
 				: <ZeroContentMessage
 					title="You have no rides"
 					message="Start tracking your rides. You'll find them here!"

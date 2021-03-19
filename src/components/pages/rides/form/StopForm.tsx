@@ -1,43 +1,46 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { LocationField, OdometerField } from './fields';
 import { Stop, Location } from '../../../../types';
 import DatetimeField from './fields/DatetimeField';
 import { Typography, Divider } from '@material-ui/core';
+import LocationService from '../../../../services/LocationService';
 
 interface IStopFormProps {
-	/**
-	 * This form title.
-	 */
-	title: string;
-	/**
-	 * The form description.
-	 */
-	description?: string;
-	/**
-	 * Is the form data.
-	 */
-	value: Stop | null;
-	/**
-	 * Called when the stop data change.
-	 */
-	onChange: (data: Stop) => void;
+    /**
+     * This form title.
+     */
+    title?: string;
+    /**
+     * The form description.
+     */
+    description?: string;
+    /**
+     * Set this value to limit the minimal accepted value for the odometer.
+     * Default is 0.
+     */
+    odometerMin?: number;
+    momentMin?: Date;
+    /**
+     * Is the form data.
+     */
+    value?: Stop;
+    /**
+     * Called when the stop data change.
+     */
+    onChange: (data: Stop) => void;
+    /**
+     * When set to true the form asks the user for a date. Otherwise, the date
+     * is set to now.
+     */
+    datetime?: boolean;
+    availableLocations?: Location[];
+    onError?: (error: Error) => void;
 }
 
-function getDefaultValue(value: Stop | null): Stop {
-	if (value == null) {
-		return {
-			moment: new Date(),
-			location: {
-				name: "Home",
-				latitude: 0.0,
-				longitude: 0.0
-			},
-			odometerValue: 0
-		};
-	}
-	return value;
-}
+// fetchAvailableLocations();
+
+
 
 /**
  * The fields are used to describe a stop. A stop is made of a moment, a
@@ -47,63 +50,89 @@ function getDefaultValue(value: Stop | null): Stop {
  */
 function StopForm(props: IStopFormProps) {
 
-	const [stop, setStop] = useState<Stop>(getDefaultValue(props.value));
+    const DEFAULT_LOCATION = { name: "Home", latitude: 0.0, longitude: 0.0 };
 
-	const fetchLocations = (): Location[] => {
-		return [
-			{ id: 0, name: "Home", latitude: 34.34, longitude: 23.23 },
-			{ id: 1, name: "Workplace", latitude: 34.34, longitude: 23.23 },
-			{ id: 2, name: "Store", latitude: 34.34, longitude: 23.23 },
-			{ id: 3, name: "Library", latitude: 34.34, longitude: 23.23 },
-		];
-	}
-	return (
-		<div>
-			<Typography variant="h6">
-				{props.title}
-			</Typography>
-			<Divider/>
-			<OdometerField
-				id="stop-odometer-value"
-				label="Odometer Value"
-				placeholder="e.g. 454543"
-				hint="Enter the current odometer value of your vehicle."
-				value={stop.odometerValue}
-				onChange={(value: number) => {
-					const editedStop = {...stop};
-					editedStop.odometerValue = value;
-					setStop(editedStop);
-					props.onChange(editedStop);
-				}}
-			/>
-			<LocationField
-				id="stop-location"
-				label="Location"
-				placeholder="e.g. Home"
-				hint="Enter your current location name"
-				options={fetchLocations()}
-				value={stop.location}
-				onChange={(value: Location) => {
-					const editedStop = {...stop};
-					editedStop.location = value;
-					setStop(editedStop);
-					props.onChange(editedStop);
-				}}
-			/>
-			<DatetimeField
-				id="stop-datetime"
-				label="Date and time"
-				hint="Enter the stop date and time."
-				value={stop.moment}
-				onChange={(value: Date) => {
-					const editedStop = {...stop};
-					editedStop.moment = value;
-					setStop(editedStop);
-					props.onChange(editedStop);
-				}}
-			/>
-		</div>
-	);
+    const { onChange: handleStopChange } = props;
+    const hasTitle = () => props.title !== undefined;
+    const showDateTime = () => props.datetime === undefined ? false : props.datetime;
+    const getOdometerMin = () => props.odometerMin === undefined ? 0 : props.odometerMin;
+
+    const getDefaultMoment = () => props.value ? props.value.moment : new Date();
+    const getDefaultOdometer = () => props.value ? props.value.odometerValue : 0;
+    const getLocations = () => props.availableLocations === undefined ? [] : props.availableLocations;
+    const getDefaultLocation = () => {
+        if (props.value) return props.value.location;
+        const locations = getLocations();
+        return locations.length === 0 ? DEFAULT_LOCATION : locations[0];
+    };
+
+    const [moment, setMoment] = useState<Date>(getDefaultMoment());
+    const [odometer, setOdometer] = useState<number>(getDefaultOdometer());
+    const [location] = useState<Location>(getDefaultLocation());
+
+    const [locationId, setLocationId] = useState<number | undefined>(undefined);
+
+    const [locations, setLocations] = useState<Location[]>([]);
+
+    const { id: stopId } = { ...props.value };
+    const { onError } = { ...props };
+
+    useEffect(() => {
+
+        const fetchAvailableLocations = async () => {
+            try {
+                const data: Location[] = await LocationService.getAll();
+                setLocations(data);
+            } catch (error) {
+                if (onError) onError(error);
+            }
+        };
+        fetchAvailableLocations();
+
+        handleStopChange({
+            id: stopId ? stopId : undefined,
+            moment: moment,
+            location: { ...location, id: locationId },
+            odometerValue: odometer
+        });
+    }, [moment, odometer, location, locationId, handleStopChange, onError, stopId]);
+
+    return (
+        <div>
+            {
+                hasTitle() && <div>
+                    <Typography variant="h6">{props.title}</Typography>
+                    <Divider/>
+                </div>
+            }
+            <OdometerField
+                id="stop-odometer-value"
+                label="Odometer Value"
+                placeholder="e.g. 454543"
+                hint="Enter the current odometer value of your vehicle."
+                value={odometer}
+                min={getOdometerMin()}
+                onChange={setOdometer}
+            />
+            <LocationField
+                id="stop-location"
+                label="Location"
+                placeholder="e.g. Home"
+                hint="Enter your current location name"
+                options={locations}
+                value={location}
+                onChange={setLocationId}
+            />
+            { showDateTime() && <DatetimeField
+                id="stop-datetime"
+                label="Date and time"
+                hint="Enter the stop date and time."
+                min={props.momentMin}
+                value={moment}
+                onChange={setMoment}
+            />}
+        </div>
+    );
 }
 
 export default StopForm;

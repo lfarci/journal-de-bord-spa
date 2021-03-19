@@ -39,6 +39,16 @@ npm start
 
 The custom environment variables are set following the [React documentation](https://create-react-app.dev/docs/adding-custom-environment-variables/). Their value can be accessed as follows `process.env["VARIABLE_NAME"]`.
 
+#### Example
+This example can be used with a Keycloak authorization server. This is currently the only server that was tested with the application.
+```
+REACT_APP_AUTH_SERVER_URI=https://authorization-server.com/auth/realms/realmname
+REACT_APP_RESOURCE_SERVER_URI=https://resource-server.com/
+REACT_APP_CLIENT_ID=my-local-application-client-id
+REACT_APP_AUTH_SERVER_LOGIN_URI=https://authorization-server.com/auth/realms/realmname/protocol/openid-connect/auth
+REACT_APP_AUTH_SERVER_REGISTER_URI=https://authorization-server.com/auth/realms/realmname/protocol/openid-connect/registrations
+```
+
 ## Deployment
 This web client is published on Netlify. This section focuses on this platform. The configuration is easy. Netlify documentation explains how it is done right [here](https://docs.netlify.com/configure-builds/environment-variables/#declare-variables).
 

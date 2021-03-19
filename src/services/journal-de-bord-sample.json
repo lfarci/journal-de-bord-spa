@@ -1,0 +1,94 @@
+{
+    "user": {
+        "name" : "Sample user",
+        "image": "https://www.kirkham-legal.co.uk/wp-content/uploads/2017/02/profile-placeholder.png",
+        "objective": 1500
+    },
+    "rides": [
+        {
+            "id": 0,
+            "departure": 0,
+            "arrival": 1,
+            "trafficCondition": 1,
+            "comment": "I had a hard time finding my home."
+        },
+        {
+            "id": 1,
+            "departure": 2,
+            "arrival": 3,
+            "trafficCondition": 2,
+            "comment": "It was hard to park at the store!"
+        },
+        {
+            "id": 2,
+            "departure": 4,
+            "arrival": 5,
+            "trafficCondition": 3,
+            "comment": "It was dark."
+        }
+    ],
+    "stops": [
+        {
+            "id": 0,
+            "moment": "2020-10-01T12:00:00.000Z",
+            "location": 1,
+            "odometerValue": 10000
+        },
+        {
+            "id": 1,
+            "moment": "2020-10-01T13:00:00.000Z",
+            "location": 3,
+            "odometerValue": 10047
+        },
+        {
+            "id": 2,
+            "moment": "2020-10-03T10:00:00.000Z",
+            "location": 3,
+            "odometerValue": 10047
+        },
+        {
+            "id": 3,
+            "moment": "2020-10-03T10:30:00.000Z",
+            "location": 0,
+            "odometerValue": 10053
+        },
+        {
+            "id": 4,
+            "moment": "2020-10-06T19:00:00.000Z",
+            "location": 3,
+            "odometerValue": 10047
+        },
+        {
+            "id": 5,
+            "moment": "2020-10-06T19:15:00.000Z",
+            "location": 2,
+            "odometerValue": 10053
+        }
+    ],
+    "locations": [
+        {
+            "id": 0,
+            "name": "Store",
+            "latitude": 23.345,
+            "longitude": 3.2
+        },
+        {
+            "id": 1,
+            "name": "Library",
+            "latitude": 65.123,
+            "longitude": 54.2
+        },
+        {
+            "id": 2,
+            "name": "Gym",
+            "latitude": 76.345,
+            "longitude": 34.234
+        },
+        {
+            "id": 3,
+            "name": "Home",
+            "latitude": 54.32,
+            "longitude": 67.323
+        }
+    ]
+}

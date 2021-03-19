@@ -52,7 +52,7 @@ function Page(props: IPageProps) {
 	const authService = new AuthService();
 
 	const [state, setState] = useState<IPageState>({
-		content: props.selected ? props.selected : undefined
+		content: props.selected ? props.selected : undefined,
 	});
 
 	const isLoading = (): boolean => props.isLoading === undefined ? false : props.isLoading;
