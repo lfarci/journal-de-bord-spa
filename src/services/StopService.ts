@@ -33,6 +33,22 @@ export default class StopService {
         };
     }
 
+    public static async create(stop: Stop): Promise<number> {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const data = StopService.makeStopData(stop);
+                const response = await HttpService.post<StopData>("/stops", data);
+                if ("stopId" in response) {
+                    resolve(response.stopId);
+                } else {
+                    reject(Error("No stop id was provided in the response."));
+                }
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
+
     public static async update(stop: Stop): Promise<void> {
         return new Promise(async (resolve, reject) => {
             try {

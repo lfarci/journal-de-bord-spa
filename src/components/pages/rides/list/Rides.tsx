@@ -39,32 +39,33 @@ function Rides(props: {}) {
         error: undefined
     });
 
+    const deleteRide = async () => {
+        if (!state.deletableRideId) return;
+        const rides = [ ...state.rides ];
+        const target = rides.find(r => r.id === state.deletableRideId);
+        if (target) {
+            rides.splice(rides.indexOf(target), 1);
+        }
+        await RideService.deleteById(state.deletableRideId);
+        setState(prev => ({ ...prev, rides: rides, isLoading: false }));
+    };
+
     useEffect(() => {
-        const getRides = async () => {
-            const authService = new AuthService();
+        const handleChange = async () => {
             try {
-                const user: User | null = await authService.getUser();
-                if (user) {
-                    if (state.deletableRideId !== undefined) {
-                        await RideService.deleteById(state.deletableRideId);
-                    }
+                if (state.deletableRideId !== undefined) {
+                    deleteRide();
+                } else {
                     const rides = await RideService.getAll();
-                    setState(prev => ({
-                        ...prev,
-                        rides: rides,
-                        isLoading: false,
-                        error: undefined,
-                        deletableRideId: undefined
-                    }));
+                    setState(prev => ({ ...prev, rides: rides, isLoading: false }));
                 }
             } catch (error) {
                 error.name = errorTitle;
                 error.message = errorMessage;
-                console.error(error);
                 setState(prev => ({ ...prev, isLoading: false, error: error }));
             }
         };
-        getRides();
+        handleChange();
     }, [state.deletableRideId]);
 
     return <Page title="My rides" selected="history" isLoading={state.isLoading} error={state.error} showBottomNavigation>

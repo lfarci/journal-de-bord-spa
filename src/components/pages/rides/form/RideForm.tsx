@@ -126,22 +126,50 @@ const RideForm = (props: IRideFormProps) => {
             disabled={!validation.valid}
             onClick={async () => {
 
-                try {
-                    if (departure)
-                        await StopService.update(departure);
-                    if (arrival)
-                        await StopService.update(arrival)
-                } catch (error) {
-                    if (props.onError) props.onError(error);
+                if (props.ride) {
+                    try {
+                        if (departure)
+                            await StopService.update(departure);
+                        if (arrival)
+                            await StopService.update(arrival)
+
+                        onSubmit({
+                            id: props.ride?.id,
+                            departure: props.ride?.departure.id!!,
+                            arrival: props.ride?.arrival?.id,
+                            trafficCondition: trafficCondition,
+                            comment: comment
+                        });
+
+                    } catch (error) {
+                        if (props.onError) props.onError(error);
+                    }
+                } else {
+                    try {
+                        let departureId: number | undefined = undefined;
+                        let arrivalId: number | undefined = undefined;
+                        if (departure)
+                            departureId = await StopService.create(departure);
+                        if (arrival)
+                            arrivalId = await StopService.create(arrival)
+
+                        if (departureId && arrivalId) {
+                            onSubmit({
+                                departure: departureId,
+                                arrival: arrivalId,
+                                trafficCondition: trafficCondition,
+                                comment: comment
+                            });
+                        } else {
+                            console.error("The stops could not be created for whatever reason.");
+                        }
+
+                    } catch (error) {
+                        if (props.onError) props.onError(error);
+                    }
                 }
 
-                onSubmit({
-                    id: props.ride?.id,
-                    departure: props.ride?.departure.id!!,
-                    arrival: props.ride?.arrival?.id,
-                    trafficCondition: trafficCondition,
-                    comment: comment
-                });
+
             }}
         >
             Save

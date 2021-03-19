@@ -50,8 +50,13 @@ function RideFormPage({ match }: RideFormPageProps) {
             onSubmit={async (data: RideData) => {
                 try {
                     setState(prev => ({...prev, isLoading: true, error: undefined}));
-                    await RideService.updateById(rideId(), data);
-                    window.location.href = `${window.location.origin}/rides/${rideId()}`;
+                    let id = match.params.rideId;
+                    if (state.ride) {
+                        await RideService.updateById(rideId(), data);
+                    } else {
+                        id = String(await RideService.create(data));
+                    }
+                    window.location.href = `${window.location.origin}/rides/${id}`;
                 } catch(error) {
                     setState(prev => ({...prev, isLoading: false, error: error}));
                 }

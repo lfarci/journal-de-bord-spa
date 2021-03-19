@@ -7,14 +7,14 @@ export default class HttpService {
     private static basePath = "api/drivers";
     private static authentication = new AuthService();
 
-    public static async post<Entity>(path: string, data: Entity): Promise<void> {
+    public static async post<Entity>(path: string, data: Entity): Promise<any> {
         return new Promise(async (resolve, reject) => {
             try {
                 const config = await HttpService.makeRequestConfig();
                 const url: string = await HttpService.makeUrl(path);
                 const response = await axios.post<Entity>(url, data, config);
                 if (response.status === 201) {
-                    resolve();
+                    resolve(response.data);
                 } else {
                     reject(Error("Error while updating resource."));
                 }
@@ -51,6 +51,23 @@ export default class HttpService {
                     resolve();
                 } else {
                     reject(Error("Error while updating resource."));
+                }
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
+
+    public static async delete(path: string): Promise<void> {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const config = await HttpService.makeRequestConfig();
+                const url: string = await HttpService.makeUrl(path);
+                const response = await axios.delete(url, config);
+                if (response.status === 204) {
+                    resolve();
+                } else {
+                    reject(Error("Error while deleting resource."));
                 }
             } catch (error) {
                 reject(error);
@@ -120,7 +137,9 @@ export default class HttpService {
         return new Promise(async (resolve, reject) => {
             try {
                 const accessToken = await HttpService.getAccessToken();
-                resolve({ headers: { Authorization: `Bearer ${accessToken}` } });
+                resolve({ headers: { 
+                    Authorization: `Bearer ${accessToken}`
+                } });
             } catch (error) {
                 reject(error);
             }
