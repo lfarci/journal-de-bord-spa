@@ -4,7 +4,7 @@ import { LocationField, OdometerField } from './fields';
 import { Stop, Location } from '../../../../types';
 import DatetimeField from './fields/DatetimeField';
 import { Typography, Divider } from '@material-ui/core';
-import LocationService, { LocationData } from '../../../../services/LocationService';
+import LocationService from '../../../../services/LocationService';
 
 interface IStopFormProps {
     /**
@@ -68,11 +68,14 @@ function StopForm(props: IStopFormProps) {
 
     const [moment, setMoment] = useState<Date>(getDefaultMoment());
     const [odometer, setOdometer] = useState<number>(getDefaultOdometer());
-    const [location, setLocation] = useState<Location>(getDefaultLocation());
+    const [location] = useState<Location>(getDefaultLocation());
 
     const [locationId, setLocationId] = useState<number | undefined>(undefined);
 
     const [locations, setLocations] = useState<Location[]>([]);
+
+    const { id: stopId } = { ...props.value };
+    const { onError } = { ...props };
 
     useEffect(() => {
 
@@ -81,18 +84,18 @@ function StopForm(props: IStopFormProps) {
                 const data: Location[] = await LocationService.getAll();
                 setLocations(data);
             } catch (error) {
-                if (props.onError) props.onError(error);
+                if (onError) onError(error);
             }
         };
         fetchAvailableLocations();
 
         handleStopChange({
-            id: props.value?.id ? props.value.id : undefined,
+            id: stopId ? stopId : undefined,
             moment: moment,
             location: { ...location, id: locationId },
             odometerValue: odometer
         });
-    }, [moment, odometer, location, locationId, handleStopChange]);
+    }, [moment, odometer, location, locationId, handleStopChange, onError, stopId]);
 
     return (
         <div>

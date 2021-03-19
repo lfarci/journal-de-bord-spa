@@ -8,8 +8,6 @@ import { Page } from "../../../common";
 import { useHistory, useRouteMatch } from "react-router-dom";
 
 import "./Rides.scss";
-import { AuthService } from "../../../../services/AuthService";
-import { User } from "oidc-client";
 import RideService from "../../../../services/RideService";
 
 export type RideScreenContentKey = "form" | "list" | "details";
@@ -39,26 +37,15 @@ function Rides(props: {}) {
         error: undefined
     });
 
-    const deleteRide = async () => {
-        if (!state.deletableRideId) return;
-        const rides = [ ...state.rides ];
-        const target = rides.find(r => r.id === state.deletableRideId);
-        if (target) {
-            rides.splice(rides.indexOf(target), 1);
-        }
-        await RideService.deleteById(state.deletableRideId);
-        setState(prev => ({ ...prev, rides: rides, isLoading: false }));
-    };
-
     useEffect(() => {
         const handleChange = async () => {
             try {
+                console.log("[useEffect] IN")
                 if (state.deletableRideId !== undefined) {
-                    deleteRide();
-                } else {
-                    const rides = await RideService.getAll();
-                    setState(prev => ({ ...prev, rides: rides, isLoading: false }));
+                    await RideService.deleteById(state.deletableRideId);
                 }
+                const rides = await RideService.getAll();
+                setState(prev => ({ ...prev, rides: rides, isLoading: false, deletableRideId: undefined }));
             } catch (error) {
                 error.name = errorTitle;
                 error.message = errorMessage;
