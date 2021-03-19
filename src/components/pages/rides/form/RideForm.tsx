@@ -7,6 +7,7 @@ import StopForm from './StopForm';
 
 import "./RideForm.scss";
 import { RideData } from '../../../../services/RideService';
+import StopService from '../../../../services/StopService';
 
 interface IRideFormProps {
     /**
@@ -28,6 +29,8 @@ interface IRideFormProps {
      * submitted by the user.
      */
     onSubmit: (data: RideData) => void;
+
+    onError?: (error: Error) => void;
 }
 
 const makeRide = (dep: Stop, arr: Stop, tc: TrafficCondition, com: string | undefined) => ({
@@ -121,13 +124,53 @@ const RideForm = (props: IRideFormProps) => {
             color="primary"
             size="large"
             disabled={!validation.valid}
-            onClick={() => 	onSubmit({
-                id: props.ride?.id,
-                departure: props.ride?.departure.id!!,
-                arrival: props.ride?.arrival?.id,
-                trafficCondition: trafficCondition,
-                comment: comment
-            })}
+            onClick={async () => {
+
+                if (props.ride) {
+                    try {
+                        if (departure)
+                            await StopService.update(departure);
+                        if (arrival)
+                            await StopService.update(arrival)
+
+                        onSubmit({
+                            id: props.ride?.id,
+                            departure: props.ride?.departure.id!!,
+                            arrival: props.ride?.arrival?.id,
+                            trafficCondition: trafficCondition,
+                            comment: comment
+                        });
+
+                    } catch (error) {
+                        if (props.onError) props.onError(error);
+                    }
+                } else {
+                    try {
+                        let departureId: number | undefined = undefined;
+                        let arrivalId: number | undefined = undefined;
+                        if (departure)
+                            departureId = await StopService.create(departure);
+                        if (arrival)
+                            arrivalId = await StopService.create(arrival)
+
+                        if (departureId && arrivalId) {
+                            onSubmit({
+                                departure: departureId,
+                                arrival: arrivalId,
+                                trafficCondition: trafficCondition,
+                                comment: comment
+                            });
+                        } else {
+                            console.error("The stops could not be created for whatever reason.");
+                        }
+
+                    } catch (error) {
+                        if (props.onError) props.onError(error);
+                    }
+                }
+
+
+            }}
         >
             Save
         </Button>

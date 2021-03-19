@@ -1,8 +1,6 @@
-import axios from "axios";
 import { TrafficCondition } from "../components/pages/rides/form/fields";
 import { Ride } from "../types";
 import { AuthService } from "./AuthService";
-import { Environment } from "./Environment";
 import HttpService from "./HttpService";
 
 export type RideData = {
@@ -17,6 +15,21 @@ export default class RideService {
 
     private static authentication = new AuthService();
 
+    public static async create(data: RideData): Promise<number> {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const response = await HttpService.post<RideData>("/rides", data);
+                if ("rideId" in response) {
+                    resolve(response.rideId);
+                } else {
+                    reject(Error("No ride id in the response."));
+                }
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
+
     public static async findById(rideId: number): Promise<Ride> {
         return new Promise(async (resolve, reject) => {
             try {
@@ -30,18 +43,11 @@ export default class RideService {
 
     public static async getAll(): Promise<Ride[]> {
         return new Promise(async (resolve, reject) => {
-            if (this.authentication.isLoggedIn()) {
-                const user = await this.authentication.getUser();
-                const host = Environment.resourceServerUri;
-                const path = `/drivers/${user?.profile.sub}/rides/${0}`;
-                const response = await axios.get(`${host}${path}`, {
-                    headers: {
-                        Authorization: `Bearer ${user?.access_token}`
-                    }
-                });
-                resolve([]);
-            } else {
-                reject(Error("No authenticated user."));
+            try {
+                const rides = await HttpService.get<Ride[]>("/rides");
+                resolve(rides.map(ride => this.formatted(ride)));
+            } catch (error) {
+                reject(error);
             }
         });
     }
@@ -58,21 +64,7 @@ export default class RideService {
     }
 
     public static async deleteById(rideId: number): Promise<void> {
-        return new Promise(async (resolve, reject) => {
-            if (this.authentication.isLoggedIn()) {
-                const user = await this.authentication.getUser();
-                const host = Environment.resourceServerUri;
-                const path = `/drivers/${user?.profile.sub}/rides/${0}`;
-                const response = await axios.get(`${host}${path}`, {
-                    headers: {
-                        Authorization: `Bearer ${user?.access_token}`
-                    }
-                });
-                resolve();
-            } else {
-                reject(Error("No authenticated user."));
-            }
-        });
+        return await HttpService.delete(`/rides/${rideId}`);
     }
 
     private static formatted = (ride: Ride): Ride => {

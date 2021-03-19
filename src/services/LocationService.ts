@@ -1,8 +1,3 @@
-import axios from "axios";
-import { TrafficCondition } from "../components/pages/rides/form/fields";
-import { Ride } from "../types";
-import { AuthService } from "./AuthService";
-import { Environment } from "./Environment";
 import HttpService from "./HttpService";
 
 export type LocationData = {
