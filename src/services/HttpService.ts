@@ -24,6 +24,23 @@ export default class HttpService {
         });
     }
 
+    public static async exist<Entity>(path: string): Promise<boolean> {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const config = await HttpService.makeRequestConfig();
+                const url: string = await HttpService.makeUrl(path);
+                const response = await axios.get<Entity>(url, config);
+                resolve(response.status === 200);
+            } catch (error) {
+                if (error.response.status === 404) {
+                    resolve(false);
+                } else {
+                    reject(error);
+                }
+            }
+        });
+    }
+
     public static async get<Entity>(path: string): Promise<Entity> {
         return new Promise(async (resolve, reject) => {
             try {
