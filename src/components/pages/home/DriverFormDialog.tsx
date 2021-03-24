@@ -18,8 +18,10 @@ function DriverFormDialog(props: IDriverFormDialogProps) {
 
     const [objective, setObjective] = useState<number>(0);
 
+    const getUserName = (): string => new AuthService().getUserGivenName();
+
     return <Dialog open={props.open} onClose={props.onCancel} aria-labelledby="form-dialog-title">
-        <DialogTitle id="form-dialog-title">Welcome!</DialogTitle>
+        <DialogTitle id="form-dialog-title">Welcome {getUserName()}!</DialogTitle>
         <DialogContent>
             <DialogContentText>
                 Fill the form and click submit and start using the application.
