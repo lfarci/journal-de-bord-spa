@@ -13,12 +13,11 @@ export type RideData = {
 
 export default class RideService {
 
-    private static authentication = new AuthService();
-
     public static async create(data: RideData): Promise<number> {
         return new Promise(async (resolve, reject) => {
             try {
-                const response = await HttpService.post<RideData>("/rides", data);
+                const url = await HttpService.makeUrlForCurrentDriver("/rides");
+                const response = await HttpService.post<RideData>(url, data);
                 if ("rideId" in response) {
                     resolve(response.rideId);
                 } else {

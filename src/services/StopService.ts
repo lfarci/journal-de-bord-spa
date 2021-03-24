@@ -10,34 +10,12 @@ export type StopData = {
 
 export default class StopService {
 
-    private static async updateById(stopId: number, data: StopData): Promise<void> {
-        return new Promise(async (resolve, reject) => {
-            try {
-                await HttpService.put<StopData>(`/stops/${stopId}`, data);
-                resolve();
-            } catch (error) {
-                reject(error);
-            }
-        });
-    }
-
-    private static makeStopData(stop: Stop): StopData {
-        if (!stop.location?.id && !stop.moment) {
-            throw new Error("Invalid stop.");
-        }
-        return {
-            id: stop.id,
-            locationId: stop.location.id!!,
-            moment: stop.moment.toISOString(),
-            odometerValue: stop.odometerValue
-        };
-    }
-
     public static async create(stop: Stop): Promise<number> {
         return new Promise(async (resolve, reject) => {
             try {
                 const data = StopService.makeStopData(stop);
-                const response = await HttpService.post<StopData>("/stops", data);
+                const url = await HttpService.makeUrlForCurrentDriver("/stops");
+                const response = await HttpService.post<StopData>(url, data);
                 if ("stopId" in response) {
                     resolve(response.stopId);
                 } else {
@@ -59,6 +37,18 @@ export default class StopService {
                 reject(error);
             }
         });
+    }
+
+    private static makeStopData(stop: Stop): StopData {
+        if (!stop.location?.id && !stop.moment) {
+            throw new Error("Invalid stop.");
+        }
+        return {
+            id: stop.id,
+            locationId: stop.location.id!!,
+            moment: stop.moment.toISOString(),
+            odometerValue: stop.odometerValue
+        };
     }
 
 }

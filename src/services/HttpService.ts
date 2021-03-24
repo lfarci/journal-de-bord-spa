@@ -4,19 +4,18 @@ import { Environment } from "./Environment";
 
 export default class HttpService {
 
-    private static basePath = "api/drivers";
+    public static basePath = "api/drivers";
     private static authentication = new AuthService();
 
-    public static async post<Entity>(path: string, data: Entity): Promise<any> {
+    public static async post<Entity>(url: string, data: Entity): Promise<any> {
         return new Promise(async (resolve, reject) => {
             try {
                 const config = await HttpService.makeRequestConfig();
-                const url: string = await HttpService.makeUrl(path);
                 const response = await axios.post<Entity>(url, data, config);
                 if (response.status === 201) {
                     resolve(response.data);
                 } else {
-                    reject(Error("Error while updating resource."));
+                    reject(Error(`Error while posting resource to ${url}.`));
                 }
             } catch (error) {
                 reject(error);
@@ -28,7 +27,7 @@ export default class HttpService {
         return new Promise(async (resolve, reject) => {
             try {
                 const config = await HttpService.makeRequestConfig();
-                const url: string = await HttpService.makeUrl(path);
+                const url: string = await HttpService.makeUrlForCurrentDriver(path);
                 const response = await axios.get<Entity>(url, config);
                 resolve(response.status === 200);
             } catch (error) {
@@ -45,7 +44,7 @@ export default class HttpService {
         return new Promise(async (resolve, reject) => {
             try {
                 const config = await HttpService.makeRequestConfig();
-                const url: string = await HttpService.makeUrl(path);
+                const url: string = await HttpService.makeUrlForCurrentDriver(path);
                 const response = await axios.get<Entity>(url, config);
                 if (response.status === 200) {
                     resolve(response.data);
@@ -62,7 +61,7 @@ export default class HttpService {
         return new Promise(async (resolve, reject) => {
             try {
                 const config = await HttpService.makeRequestConfig();
-                const url: string = await HttpService.makeUrl(path);
+                const url: string = await HttpService.makeUrlForCurrentDriver(path);
                 const response = await axios.put<Entity>(url, data, config);
                 if (response.status === 204) {
                     resolve();
@@ -79,7 +78,7 @@ export default class HttpService {
         return new Promise(async (resolve, reject) => {
             try {
                 const config = await HttpService.makeRequestConfig();
-                const url: string = await HttpService.makeUrl(path);
+                const url: string = await HttpService.makeUrlForCurrentDriver(path);
                 const response = await axios.delete(url, config);
                 if (response.status === 204) {
                     resolve();
@@ -138,7 +137,7 @@ export default class HttpService {
         });
     }
 
-    private static async makeUrl(resource: string): Promise<string> {
+    public static async makeUrlForCurrentDriver(resource: string): Promise<string> {
         return new Promise(async (resolve, reject) => {
             try {
                 const userId = await HttpService.getUserIdentifier();
