@@ -32,7 +32,8 @@ export default class RideService {
     public static async findById(rideId: number): Promise<Ride> {
         return new Promise(async (resolve, reject) => {
             try {
-                const ride = await HttpService.get<Ride>(`/rides/${rideId}`);
+                const url = await HttpService.makeUrlForCurrentDriver(`/rides/${rideId}`);
+                const ride = await HttpService.get<Ride>(url);
                 resolve(this.formatted(ride));
             } catch (error) {
                 reject(error);
@@ -43,7 +44,8 @@ export default class RideService {
     public static async getAll(): Promise<Ride[]> {
         return new Promise(async (resolve, reject) => {
             try {
-                const rides = await HttpService.get<Ride[]>("/rides");
+                const url = await HttpService.makeUrlForCurrentDriver("/rides");
+                const rides = await HttpService.get<Ride[]>(url);
                 resolve(rides.map(ride => this.formatted(ride)));
             } catch (error) {
                 reject(error);

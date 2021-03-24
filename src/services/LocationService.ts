@@ -22,7 +22,9 @@ export default class LocationService {
     }
 
     public static async getAll(): Promise<LocationData[]> {
-        return await HttpService.get<LocationData[]>(`/locations`);
+        return await HttpService.get<LocationData[]>(
+            await HttpService.makeUrlForCurrentDriver("/locations")
+        );
     }
 
 }
