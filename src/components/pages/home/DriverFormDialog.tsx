@@ -37,7 +37,7 @@ function DriverFormDialog(props: IDriverFormDialogProps) {
             />
         </DialogContent>
         <DialogActions>
-            <Button onClick={() => props.onCancel()} color="primary">Exit</Button>
+            <Button onClick={() => props.onCancel()} color="primary">Log out</Button>
             <Button 
                 onClick={async () => {
                     const user = await new AuthService().getUser();
