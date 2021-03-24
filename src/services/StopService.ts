@@ -31,7 +31,8 @@ export default class StopService {
         return new Promise(async (resolve, reject) => {
             try {
                 const data = StopService.makeStopData(stop);
-                await HttpService.put<StopData>(`/stops/${stop.id}`, data);
+                const url = await HttpService.makeUrlForCurrentDriver(`/stops/${stop.id}`);
+                await HttpService.put<StopData>(url, data);
                 resolve();
             } catch (error) {
                 reject(error);

@@ -55,11 +55,10 @@ export default class HttpService {
         });
     }
 
-    public static async put<Entity>(path: string, data: Entity): Promise<void> {
+    public static async put<Entity>(url: string, data: Entity): Promise<void> {
         return new Promise(async (resolve, reject) => {
             try {
                 const config = await HttpService.makeRequestConfig();
-                const url: string = await HttpService.makeUrlForCurrentDriver(path);
                 const response = await axios.put<Entity>(url, data, config);
                 if (response.status === 204) {
                     resolve();
@@ -72,11 +71,10 @@ export default class HttpService {
         });
     }
 
-    public static async delete(path: string): Promise<void> {
+    public static async delete(url: string): Promise<void> {
         return new Promise(async (resolve, reject) => {
             try {
                 const config = await HttpService.makeRequestConfig();
-                const url: string = await HttpService.makeUrlForCurrentDriver(path);
                 const response = await axios.delete(url, config);
                 if (response.status === 204) {
                     resolve();
