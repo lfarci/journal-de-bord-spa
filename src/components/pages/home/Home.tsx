@@ -7,13 +7,9 @@ import "./Home.scss";
 import RideControlCard from "./control/RideControlCard";
 import RecentRidesCard from "./rides/RecentRidesCard";
 import { useEffect } from "react";
-import { ResourcesService } from "../../../services/ResourcesService";
 import { AuthService } from "../../../services/AuthService";
 import { RecentRide, Location, Stop, Driver } from "../../../types";
-import { User } from "oidc-client";
 import { StartRideFormDialog } from "./control/dialogs";
-import LocationService from "../../../services/LocationService";
-import RideService from "../../../services/RideService";
 import DriverService from "../../../services/DriverService";
 import DriverFormDialog from "./DriverFormDialog";
 
@@ -45,19 +41,18 @@ function Home() {
 		const getResources = async () => {
 				try {
 					const driver = await DriverService.getCurrentDriver();
-
 					if (driver) {
-						console.log("The driver already exist and is ready to be used");
+						setState(prev => ({ ...prev, isLoading: false }));
 					} else {
-						// create new driver
-						setState(prev => ({ ...prev, isLoading: false, showDriverFormDialog: true}));
+						setState(prev => ({
+							...prev,
+							isLoading: false,
+							showDriverFormDialog: true
+						}));
 					}
-
-
 				if (state.departure) {
 					console.log("Ready to start your ride!");
 				}
-
 			} catch (error) {
 				setState(prev => ({ ...prev, isLoading: false, error: error }));
 			}
@@ -65,7 +60,7 @@ function Home() {
 		getResources();
 	}, [state.departure]);
 
-	return <Page title="Home" selected="home" error={state.error} showBottomNavigation>
+	return <Page title="Home" selected="home" error={state.error} isLoading={state.isLoading} showBottomNavigation>
 		<div className="home-cards">
 			<ProgressOverviewCard
 				className="home-progress-overview-card"
@@ -103,9 +98,8 @@ function Home() {
 		<DriverFormDialog
 			open={state.showDriverFormDialog}
 			onSubmit={async (data: Driver) => {
-				console.log(JSON.stringify(data, null, 2));
 				try {
-					setState(prev => ({ ...prev, isLoading: true }));
+					setState(prev => ({ ...prev, isLoading: true, showDriverFormDialog: false }));
 					await DriverService.create(data);
 					setState(prev => ({ ...prev, isLoading: false }));
 				} catch (error) {

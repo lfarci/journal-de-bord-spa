@@ -1,6 +1,5 @@
 import { TrafficCondition } from "../components/pages/rides/form/fields";
 import { Ride } from "../types";
-import { AuthService } from "./AuthService";
 import HttpService from "./HttpService";
 
 export type RideData = {

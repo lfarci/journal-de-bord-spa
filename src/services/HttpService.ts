@@ -117,7 +117,7 @@ export default class HttpService {
         });
     }
 
-    private static getUserIdentifier(): Promise<string> {
+    public static getUserIdentifier(): Promise<string> {
         return new Promise(async (resolve, reject) => {
             try {
                 await HttpService.requireValidAuthentication();
@@ -133,7 +133,7 @@ export default class HttpService {
         });
     }
 
-    public static async makeUrlForCurrentDriver(resource: string): Promise<string> {
+    public static async makeUrlForCurrentDriver(resource: string = ""): Promise<string> {
         return new Promise(async (resolve, reject) => {
             try {
                 const userId = await HttpService.getUserIdentifier();
