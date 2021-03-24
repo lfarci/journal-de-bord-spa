@@ -7,11 +7,11 @@ import "./Home.scss";
 import RideControlCard from "./control/RideControlCard";
 import RecentRidesCard from "./rides/RecentRidesCard";
 import { useEffect } from "react";
-import { ResourcesService } from "../../../services/ResourcesService";
 import { AuthService } from "../../../services/AuthService";
-import { RecentRide, Location, Stop } from "../../../types";
-import { User } from "oidc-client";
+import { RecentRide, Location, Stop, Driver } from "../../../types";
 import { StartRideFormDialog } from "./control/dialogs";
+import DriverService from "../../../services/DriverService";
+import DriverFormDialog from "./DriverFormDialog";
 
 interface IHomeState {
 	recentRides: RecentRide[];
@@ -21,6 +21,7 @@ interface IHomeState {
 	isLoading: boolean;
 	error: Error | undefined;
 	showNewRideFormDialog: boolean;
+	showDriverFormDialog: boolean;
 }
 
 function Home() {
@@ -33,36 +34,33 @@ function Home() {
 		isLoading: true,
 		error: undefined,
 		showNewRideFormDialog: false,
+		showDriverFormDialog: false,
 	});
 
 	useEffect(() => {
-		const authService = new AuthService();
-		const resources = new ResourcesService();
 		const getResources = async () => {
-			const user: User | null = await authService.getUser();
-			if (user) {
-				let tracking = await resources.isTracking(user?.profile.sub);
-				const locations = await resources.getLocations(user?.profile.sub);
-				const rides = await resources.getRecentRides(user?.profile.sub, 3);
-
+				try {
+					const driver = await DriverService.getCurrentDriver();
+					if (driver) {
+						setState(prev => ({ ...prev, isLoading: false }));
+					} else {
+						setState(prev => ({
+							...prev,
+							isLoading: false,
+							showDriverFormDialog: true
+						}));
+					}
 				if (state.departure) {
-					await resources.startRide(user.profile.sub, state.departure);
-					tracking = await resources.isTracking(user?.profile.sub);
+					console.log("Ready to start your ride!");
 				}
-
-				setState((prev) => ({ ...prev, isLoading: false, recentRides: rides, locations: locations, departure: undefined, tracking: tracking }));
+			} catch (error) {
+				setState(prev => ({ ...prev, isLoading: false, error: error }));
 			}
 		}
-		try {
-			if (authService.isLoggedIn()) {
-				getResources();
-			}
-		} catch (error) {
-			setState((prev) => ({ ...prev, isLoading: false, error: error }));
-		}
+		getResources();
 	}, [state.departure]);
 
-	return <Page title="Home" selected="home" error={state.error} showBottomNavigation>
+	return <Page title="Home" selected="home" error={state.error} isLoading={state.isLoading} showBottomNavigation>
 		<div className="home-cards">
 			<ProgressOverviewCard
 				className="home-progress-overview-card"
@@ -96,6 +94,19 @@ function Home() {
 				}));
 			}}
 			onCancel={() => setState((prev) => ({ ...prev, showNewRideFormDialog: false }))}
+		/>
+		<DriverFormDialog
+			open={state.showDriverFormDialog}
+			onSubmit={async (data: Driver) => {
+				try {
+					setState(prev => ({ ...prev, isLoading: true, showDriverFormDialog: false }));
+					await DriverService.create(data);
+					setState(prev => ({ ...prev, isLoading: false }));
+				} catch (error) {
+					setState(prev => ({ ...prev, isLoading: false, error: error}));
+				}
+			}}
+			onCancel={ () => new AuthService().logout() }
 		/>
 	</Page>;
 

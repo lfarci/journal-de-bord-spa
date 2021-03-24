@@ -1,6 +1,5 @@
 import { TrafficCondition } from "../components/pages/rides/form/fields";
 import { Ride } from "../types";
-import { AuthService } from "./AuthService";
 import HttpService from "./HttpService";
 
 export type RideData = {
@@ -13,12 +12,11 @@ export type RideData = {
 
 export default class RideService {
 
-    private static authentication = new AuthService();
-
     public static async create(data: RideData): Promise<number> {
         return new Promise(async (resolve, reject) => {
             try {
-                const response = await HttpService.post<RideData>("/rides", data);
+                const url = await HttpService.makeUrlForCurrentDriver("/rides");
+                const response = await HttpService.post<RideData>(url, data);
                 if ("rideId" in response) {
                     resolve(response.rideId);
                 } else {
@@ -33,7 +31,8 @@ export default class RideService {
     public static async findById(rideId: number): Promise<Ride> {
         return new Promise(async (resolve, reject) => {
             try {
-                const ride = await HttpService.get<Ride>(`/rides/${rideId}`);
+                const url = await HttpService.makeUrlForCurrentDriver(`/rides/${rideId}`);
+                const ride = await HttpService.get<Ride>(url);
                 resolve(this.formatted(ride));
             } catch (error) {
                 reject(error);
@@ -44,7 +43,8 @@ export default class RideService {
     public static async getAll(): Promise<Ride[]> {
         return new Promise(async (resolve, reject) => {
             try {
-                const rides = await HttpService.get<Ride[]>("/rides");
+                const url = await HttpService.makeUrlForCurrentDriver("/rides");
+                const rides = await HttpService.get<Ride[]>(url);
                 resolve(rides.map(ride => this.formatted(ride)));
             } catch (error) {
                 reject(error);
@@ -55,7 +55,8 @@ export default class RideService {
     public static async updateById(rideId: number, data: RideData): Promise<void> {
         return new Promise(async (resolve, reject) => {
             try {
-                await HttpService.put<RideData>(`/rides/${rideId}`, data);
+                const url = await HttpService.makeUrlForCurrentDriver(`/rides/${rideId}`);
+                await HttpService.put<RideData>(url, data);
                 resolve();
             } catch (error) {
                 reject(error);
@@ -64,7 +65,9 @@ export default class RideService {
     }
 
     public static async deleteById(rideId: number): Promise<void> {
-        return await HttpService.delete(`/rides/${rideId}`);
+        return await HttpService.delete(
+            await HttpService.makeUrlForCurrentDriver(`/rides/${rideId}`)
+        );
     }
 
     private static formatted = (ride: Ride): Ride => {

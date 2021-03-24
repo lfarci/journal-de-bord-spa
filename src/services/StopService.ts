@@ -10,10 +10,29 @@ export type StopData = {
 
 export default class StopService {
 
-    private static async updateById(stopId: number, data: StopData): Promise<void> {
+    public static async create(stop: Stop): Promise<number> {
         return new Promise(async (resolve, reject) => {
             try {
-                await HttpService.put<StopData>(`/stops/${stopId}`, data);
+                const data = StopService.makeStopData(stop);
+                const url = await HttpService.makeUrlForCurrentDriver("/stops");
+                const response = await HttpService.post<StopData>(url, data);
+                if ("stopId" in response) {
+                    resolve(response.stopId);
+                } else {
+                    reject(Error("No stop id was provided in the response."));
+                }
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
+
+    public static async update(stop: Stop): Promise<void> {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const data = StopService.makeStopData(stop);
+                const url = await HttpService.makeUrlForCurrentDriver(`/stops/${stop.id}`);
+                await HttpService.put<StopData>(url, data);
                 resolve();
             } catch (error) {
                 reject(error);
@@ -31,34 +50,6 @@ export default class StopService {
             moment: stop.moment.toISOString(),
             odometerValue: stop.odometerValue
         };
-    }
-
-    public static async create(stop: Stop): Promise<number> {
-        return new Promise(async (resolve, reject) => {
-            try {
-                const data = StopService.makeStopData(stop);
-                const response = await HttpService.post<StopData>("/stops", data);
-                if ("stopId" in response) {
-                    resolve(response.stopId);
-                } else {
-                    reject(Error("No stop id was provided in the response."));
-                }
-            } catch (error) {
-                reject(error);
-            }
-        });
-    }
-
-    public static async update(stop: Stop): Promise<void> {
-        return new Promise(async (resolve, reject) => {
-            try {
-                const data = StopService.makeStopData(stop);
-                await HttpService.put<StopData>(`/stops/${stop.id}`, data);
-                resolve();
-            } catch (error) {
-                reject(error);
-            }
-        });
     }
 
 }

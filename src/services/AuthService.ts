@@ -43,6 +43,14 @@ export class AuthService {
 		return false;
 	}
 
+	public getUserGivenName(): string {
+		const item: string | null = sessionStorage.getItem(`oidc.user:${Environment.authority}:${Environment.clientId}`);
+		if (item && JSON.parse(item).profile.given_name) {
+			return JSON.parse(item).profile.given_name;
+		}
+		return "unknown";
+	}
+
 	public getUser(): Promise<User | null> {
 		return this._userManager.getUser();
 	}

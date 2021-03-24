@@ -12,7 +12,8 @@ export default class LocationService {
     public static async create(data: LocationData): Promise<void> {
         return new Promise(async (resolve, reject) => {
             try {
-                await HttpService.post<LocationData>(`/locations`, data);
+                const url = await HttpService.makeUrlForCurrentDriver("/locations");
+                await HttpService.post<LocationData>(url, data);
                 resolve();
             } catch (error) {
                 reject(error);
@@ -21,7 +22,9 @@ export default class LocationService {
     }
 
     public static async getAll(): Promise<LocationData[]> {
-        return await HttpService.get<LocationData[]>(`/locations`);
+        return await HttpService.get<LocationData[]>(
+            await HttpService.makeUrlForCurrentDriver("/locations")
+        );
     }
 
 }
