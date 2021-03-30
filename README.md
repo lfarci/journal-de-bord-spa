@@ -1,6 +1,14 @@
 # Journal de bord web client
 This project is a single page application inteded to provide a web client for the Journal de bord project. It is developed using React and TypeScript.
 
+### Prerequisites
+You should install Node.js and `npm`.
+
+```bash
+> sudo apt install npm
+> sudo apt install nodejs
+```
+
 ## Getting started
 This section explains how to run the project locally.
 
@@ -17,6 +25,9 @@ cp .env.example .env
 
 # Edit the .env file and set the variables values
 vi .env
+
+# Intall dependencies
+npm install
 
 # And run it!
 npm start
