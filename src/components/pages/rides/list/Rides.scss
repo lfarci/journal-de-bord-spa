@@ -22,6 +22,19 @@
         .rides-list-item:last-child {
             margin-bottom: 16px;
         }
+
+        .rides-list-load-button-container {
+        
+            width: 100%;
+            margin-top: 16px;
+            text-align: center;
+
+            .rides-list-load-button {
+                margin-bottom: 16px;
+            }
+
+        }
+
     }
 
     .zero-content-message {

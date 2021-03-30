@@ -10,6 +10,12 @@ export type RideData = {
     comment?: string;
 }
 
+export type RidesData = {
+    rides: Ride[];
+    totalPages: number;
+    isLastPage: boolean;
+}
+
 export default class RideService {
 
     public static async create(data: RideData): Promise<number> {
@@ -40,12 +46,14 @@ export default class RideService {
         });
     }
 
-    public static async getAll(): Promise<Ride[]> {
+    public static async getAll(page: number = 0, size: number = 10): Promise<RidesData> {
         return new Promise(async (resolve, reject) => {
             try {
-                const url = await HttpService.makeUrlForCurrentDriver("/rides");
-                const rides = await HttpService.get<Ride[]>(url);
-                resolve(rides.map(ride => this.formatted(ride)));
+                const path = `/rides?page=${page}&size=${size}`;
+                const url = await HttpService.makeUrlForCurrentDriver(path);
+                const data = await HttpService.get<RidesData>(url);
+                data.rides = data.rides.map(ride => this.formatted(ride));
+                resolve(data);
             } catch (error) {
                 reject(error);
             }

@@ -17,6 +17,9 @@ interface IRidesState {
     deletableRideId: number | undefined;
     isLoading: boolean;
     error: Error | undefined;
+    page: number;
+    hasLoadAllRides: boolean;
+    loadingMore: boolean;
 }
 
 /**
@@ -24,6 +27,8 @@ interface IRidesState {
  * form.
  */
 function Rides(props: {}) {
+
+    const PAGE_SIZE = 10;
 
     const history = useHistory();
     const { path } = useRouteMatch();
@@ -34,18 +39,26 @@ function Rides(props: {}) {
         rides: [],
         deletableRideId: undefined,
         isLoading: true,
-        error: undefined
+        error: undefined,
+        page: 0,
+        hasLoadAllRides: false,
+        loadingMore: false
     });
 
     useEffect(() => {
         const handleChange = async () => {
             try {
-                console.log("[useEffect] IN")
                 if (state.deletableRideId !== undefined) {
                     await RideService.deleteById(state.deletableRideId);
                 }
-                const rides = await RideService.getAll();
-                setState(prev => ({ ...prev, rides: rides, isLoading: false, deletableRideId: undefined }));
+                const data = await RideService.getAll(0, PAGE_SIZE);
+                setState(prev => ({ ...prev,
+                    rides: data.rides,
+                    isLoading: false,
+                    deletableRideId: undefined,
+                    page: 1,
+                    hasLoadAllRides: data.isLastPage
+                }));
             } catch (error) {
                 error.name = errorTitle;
                 error.message = errorMessage;
@@ -59,12 +72,31 @@ function Rides(props: {}) {
         <div className="rides-content">
             <RideList
                 rides={state.rides}
+                showLoadMore={!state.hasLoadAllRides}
+                loadingMore={state.loadingMore} 
                 onDelete={(rideId: number) => {
                     if (window.confirm("De you really want to delete the ride?")) {
                         setState(prev => ({ ...prev, isLoading: true, deletableRideId: rideId }));
                     }
                 }}
                 onShowDetails={(rideId: number) => history.push(`${path}/${rideId}`)}
+                onLoadMore={async () => {
+                    try {
+                        setState(prev => ({ ...prev, loadingMore: true }));
+                        const data = await RideService.getAll(state.page, PAGE_SIZE);
+                        let rides = [ ...state.rides ];
+                        rides = rides.concat(data.rides);
+                        setState(prev => ({
+                            ...prev,
+                            rides: rides,
+                            page: prev.page + 1,
+                            hasLoadAllRides: data.isLastPage,
+                            loadingMore: false
+                        }));
+                    } catch (error) {
+                        setState(prev => ({ ...prev, isLoading: false, error: error }));
+                    }
+                }}
             />
             <Fab
                 color="primary"

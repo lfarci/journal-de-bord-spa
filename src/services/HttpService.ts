@@ -138,7 +138,7 @@ export default class HttpService {
             try {
                 const userId = await HttpService.getUserIdentifier();
                 const host: string = Environment.resourceServerUri;
-                resolve(`${host}${HttpService.basePath}/${userId}${resource}`);
+                resolve(`${host}/${HttpService.basePath}/${userId}${resource}`);
             } catch (error) {
                 reject(error);
             }
