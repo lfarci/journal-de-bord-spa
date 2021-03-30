@@ -40,7 +40,6 @@ function Rides(props: {}) {
     useEffect(() => {
         const handleChange = async () => {
             try {
-                console.log("[useEffect] IN")
                 if (state.deletableRideId !== undefined) {
                     await RideService.deleteById(state.deletableRideId);
                 }
