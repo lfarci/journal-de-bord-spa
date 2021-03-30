@@ -46,13 +46,14 @@ export default class RideService {
         });
     }
 
-    public static async getAll(page: number = 0, size: number = 10): Promise<Ride[]> {
+    public static async getAll(page: number = 0, size: number = 10): Promise<RidesData> {
         return new Promise(async (resolve, reject) => {
             try {
                 const path = `/rides?page=${page}&size=${size}`;
                 const url = await HttpService.makeUrlForCurrentDriver(path);
                 const data = await HttpService.get<RidesData>(url);
-                resolve(data.rides.map(ride => this.formatted(ride)));
+                data.rides = data.rides.map(ride => this.formatted(ride));
+                resolve(data);
             } catch (error) {
                 reject(error);
             }
