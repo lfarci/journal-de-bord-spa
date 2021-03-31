@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Fab } from "@material-ui/core";
 
 import AddIcon from '@material-ui/icons/Add';
@@ -17,6 +17,7 @@ interface IRidesState {
     selectedRideId: number | undefined;
     deletableRideId: number | undefined;
     isLoading: boolean;
+    initialized: boolean;
     error: Error | undefined;
     page: number;
     hasLoadAllRides: boolean;
@@ -41,6 +42,7 @@ function Rides(props: {}) {
         rides: [],
         selectedRideId: undefined,
         deletableRideId: undefined,
+        initialized: false,
         isLoading: true,
         error: undefined,
         page: 0,
@@ -49,29 +51,43 @@ function Rides(props: {}) {
         showDeleteDialogue: false
     });
 
+    const deleteRide = useCallback(async () => {
+        const index = state.rides.findIndex(r => r.id === state.deletableRideId);
+        if (state.deletableRideId !== undefined && index !== -1) {
+            const rides = [...state.rides];
+            rides.splice(index, 1);
+            setState(prev => ({ ...prev, rides: rides }));
+            await RideService.deleteById(state.deletableRideId);
+        }
+    }, [state.rides, state.deletableRideId]);
+
     useEffect(() => {
         const handleChange = async () => {
             try {
                 if (state.deletableRideId !== undefined) {
-                    await RideService.deleteById(state.deletableRideId);
+                    deleteRide();
                 }
-                const data = await RideService.getAll(0, PAGE_SIZE);
-                setState(prev => ({
-                    ...prev,
-                    rides: data.rides,
-                    isLoading: false,
-                    deletableRideId: undefined,
-                    page: 1,
-                    hasLoadAllRides: data.isLastPage
-                }));
+                if (!state.initialized) {
+                    const data = await RideService.getAll(0, PAGE_SIZE);
+                    setState(prev => ({
+                        ...prev,
+                        rides: data.rides,
+                        isLoading: false,
+                        deletableRideId: undefined,
+                        page: 1,
+                        hasLoadAllRides: data.isLastPage,
+                        initialized: true
+                    }));
+                }
             } catch (error) {
+                console.error(error);
                 error.name = errorTitle;
                 error.message = errorMessage;
                 setState(prev => ({ ...prev, isLoading: false, error: error }));
             }
         };
         handleChange();
-    }, [state.deletableRideId]);
+    }, [state.deletableRideId, state.initialized, state.rides, deleteRide]);
 
     return <Page title="My rides" selected="history" isLoading={state.isLoading} error={state.error} showBottomNavigation>
         <div className="rides-content">
@@ -116,7 +132,7 @@ function Rides(props: {}) {
             confirmButtonText="Delete"
             onClose={() => setState(prev => ({ ...prev, showDeleteDialogue: false }))}
             onConfirmation={() => {
-                setState(prev => ({ 
+                setState(prev => ({
                     ...prev,
                     showDeleteDialogue: false,
                     deletableRideId: prev.selectedRideId,
