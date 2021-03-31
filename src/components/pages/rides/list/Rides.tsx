@@ -76,7 +76,7 @@ function Rides(props: {}) {
                 loadingMore={state.loadingMore} 
                 onDelete={(rideId: number) => {
                     if (window.confirm("De you really want to delete the ride?")) {
-                        setState(prev => ({ ...prev, isLoading: true, deletableRideId: rideId }));
+                        setState(prev => ({ ...prev, deletableRideId: rideId }));
                     }
                 }}
                 onShowDetails={(rideId: number) => history.push(`${path}/${rideId}`)}
