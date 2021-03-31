@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Fab } from "@material-ui/core";
 
 import AddIcon from '@material-ui/icons/Add';
 import RideList from "./RideList";
 import { Ride } from "../../../../types";
-import { Page } from "../../../common";
+import { ConfirmationDialogue, Page } from "../../../common";
 import { useHistory, useRouteMatch } from "react-router-dom";
 
 import "./Rides.scss";
@@ -14,12 +14,15 @@ export type RideScreenContentKey = "form" | "list" | "details";
 
 interface IRidesState {
     rides: Ride[];
+    selectedRideId: number | undefined;
     deletableRideId: number | undefined;
     isLoading: boolean;
+    initialized: boolean;
     error: Error | undefined;
     page: number;
     hasLoadAllRides: boolean;
     loadingMore: boolean;
+    showDeleteDialogue: boolean;
 }
 
 /**
@@ -37,54 +40,70 @@ function Rides(props: {}) {
 
     const [state, setState] = useState<IRidesState>({
         rides: [],
+        selectedRideId: undefined,
         deletableRideId: undefined,
+        initialized: false,
         isLoading: true,
         error: undefined,
         page: 0,
         hasLoadAllRides: false,
-        loadingMore: false
+        loadingMore: false,
+        showDeleteDialogue: false
     });
+
+    const deleteRide = useCallback(async () => {
+        const index = state.rides.findIndex(r => r.id === state.deletableRideId);
+        if (state.deletableRideId !== undefined && index !== -1) {
+            const rides = [...state.rides];
+            rides.splice(index, 1);
+            setState(prev => ({ ...prev, rides: rides }));
+            await RideService.deleteById(state.deletableRideId);
+        }
+    }, [state.rides, state.deletableRideId]);
 
     useEffect(() => {
         const handleChange = async () => {
             try {
                 if (state.deletableRideId !== undefined) {
-                    await RideService.deleteById(state.deletableRideId);
+                    deleteRide();
                 }
-                const data = await RideService.getAll(0, PAGE_SIZE);
-                setState(prev => ({ ...prev,
-                    rides: data.rides,
-                    isLoading: false,
-                    deletableRideId: undefined,
-                    page: 1,
-                    hasLoadAllRides: data.isLastPage
-                }));
+                if (!state.initialized) {
+                    const data = await RideService.getAll(0, PAGE_SIZE);
+                    setState(prev => ({
+                        ...prev,
+                        rides: data.rides,
+                        isLoading: false,
+                        deletableRideId: undefined,
+                        page: 1,
+                        hasLoadAllRides: data.isLastPage,
+                        initialized: true
+                    }));
+                }
             } catch (error) {
+                console.error(error);
                 error.name = errorTitle;
                 error.message = errorMessage;
                 setState(prev => ({ ...prev, isLoading: false, error: error }));
             }
         };
         handleChange();
-    }, [state.deletableRideId]);
+    }, [state.deletableRideId, state.initialized, state.rides, deleteRide]);
 
     return <Page title="My rides" selected="history" isLoading={state.isLoading} error={state.error} showBottomNavigation>
         <div className="rides-content">
             <RideList
                 rides={state.rides}
                 showLoadMore={!state.hasLoadAllRides}
-                loadingMore={state.loadingMore} 
+                loadingMore={state.loadingMore}
                 onDelete={(rideId: number) => {
-                    if (window.confirm("De you really want to delete the ride?")) {
-                        setState(prev => ({ ...prev, isLoading: true, deletableRideId: rideId }));
-                    }
+                    setState(prev => ({ ...prev, showDeleteDialogue: true, selectedRideId: rideId }));
                 }}
                 onShowDetails={(rideId: number) => history.push(`${path}/${rideId}`)}
                 onLoadMore={async () => {
                     try {
                         setState(prev => ({ ...prev, loadingMore: true }));
                         const data = await RideService.getAll(state.page, PAGE_SIZE);
-                        let rides = [ ...state.rides ];
+                        let rides = [...state.rides];
                         rides = rides.concat(data.rides);
                         setState(prev => ({
                             ...prev,
@@ -107,6 +126,20 @@ function Rides(props: {}) {
                 <AddIcon />
             </Fab>
         </div>
+        {state.showDeleteDialogue && <ConfirmationDialogue
+            title="Delete the ride?"
+            text="After you click the delete button, the selected ride will be lost permanently."
+            confirmButtonText="Delete"
+            onClose={() => setState(prev => ({ ...prev, showDeleteDialogue: false }))}
+            onConfirmation={() => {
+                setState(prev => ({
+                    ...prev,
+                    showDeleteDialogue: false,
+                    deletableRideId: prev.selectedRideId,
+                    selectedRideId: undefined
+                }));
+            }}
+        />}
     </Page>;
 }
 
