@@ -120,7 +120,7 @@ function RideListItem(props: IRideListItem) {
 			</CardContent>
 			<CardActions>
 				<Button size="small" color="primary" onClick={props.onDetails}>Details</Button>
-				<Button size="small" color="primary" onClick={props.onDelete}>Remove</Button>
+				<Button size="small" color="primary" onClick={props.onDelete}>Delete</Button>
 			</CardActions>
 		</Card>
 	);
