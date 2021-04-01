@@ -1,6 +1,13 @@
+import { DriverStatistics } from "../types";
 import { Driver } from "../types/Driver";
 import { Environment } from "./Environment";
 import HttpService from "./HttpService";
+
+export type DriverStatisticsData = {
+    totalDistance: number;
+    rides: number;
+    locations: number;
+}
 
 export default class DriverService {
 
@@ -14,7 +21,27 @@ export default class DriverService {
                     resolve(undefined);
                 }
             } catch (error) {
-                console.log("Catching an error")
+                reject(error);
+            }
+        });
+    }
+
+    public static async getDriverStatistics(): Promise<DriverStatistics | undefined> {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const userUrl = await HttpService.makeUrlForCurrentDriver("/statistics");
+                if (await HttpService.exist(userUrl)) {
+                    const driver = await this.getCurrentDriver();
+                    const stats = await HttpService.get<DriverStatisticsData>(userUrl);
+                    if (driver) {
+                        resolve({ driver: driver, ...stats });
+                    } else {
+                        resolve(undefined);
+                    }
+                } else {
+                    resolve(undefined);
+                }
+            } catch (error) {
                 reject(error);
             }
         });
