@@ -4,18 +4,11 @@ import RecentRideListItem from "./RecentRideListItem";
 
 import "./RecentRidesCard.scss";
 import { Skeleton } from "@material-ui/lab";
-
-export interface IRecentRide {
-    id: number;
-    departureLocationName: string;
-    arrivalLocationName: string;
-    distance: number;
-    date: Date;
-}
+import { RecentRide } from "../../../../types";
 
 interface IRecentRidesCardProps {
     title: string;
-    rides: IRecentRide[];
+    rides: RecentRide[];
     isLoading?: boolean;
 }
 
