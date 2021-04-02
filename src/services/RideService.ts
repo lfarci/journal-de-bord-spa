@@ -1,5 +1,6 @@
 import { TrafficCondition } from "../components/pages/rides/form/fields";
-import { Ride } from "../types";
+import { getRideDistance, Ride } from "../types";
+import { RecentRide } from "../types/RecentRide";
 import HttpService from "./HttpService";
 
 export type RideData = {
@@ -59,6 +60,28 @@ export default class RideService {
             }
         });
     }
+
+    private static recentRides(rides: Ride[]): RecentRide[] {
+        return rides.map(ride => ({
+            id: ride.id === undefined ? 0 : ride.id,
+            departureLocationName: ride.departure.location.name,
+            arrivalLocationName: ride.arrival?.location.name === undefined ? "" : ride.arrival?.location.name,
+            distance: getRideDistance(ride),
+            date: ride.departure.moment
+        }));
+    }
+
+    public static async getRecentRides(top: number = 5): Promise<RecentRide[]> {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const data = await this.getAll(0, top);
+                resolve(this.recentRides(data.rides));
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
+
 
     public static async updateById(rideId: number, data: RideData): Promise<void> {
         return new Promise(async (resolve, reject) => {
