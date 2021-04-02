@@ -10,3 +10,11 @@ export function makeRecentRide(ride: Partial<RecentRide> = {}): RecentRide {
         ...ride
     };
 }
+
+export const makeRecentRides = (sampleSize: number = 5): RecentRide[] => {
+    const rides = [];
+    for (let i = 0; i < sampleSize; i++) {
+        rides.push(makeRecentRide( { id: i }));
+    }
+    return rides;
+};

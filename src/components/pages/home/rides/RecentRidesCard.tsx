@@ -1,6 +1,5 @@
 import React, { useCallback } from "react";
 import { Card, Typography } from "@material-ui/core";
-import RecentRideListItem from "./RecentRideListItem";
 
 import "./RecentRidesCard.scss";
 import { Skeleton } from "@material-ui/lab";
@@ -8,6 +7,7 @@ import { RecentRide } from "../../../../types";
 import { useEffect } from "react";
 import { useState } from "react";
 import RideService from "../../../../services/RideService";
+import RecentRides from "./RecentRides";
 
 interface IRecentRidesCardState {
     isLoading: boolean;
@@ -16,33 +16,9 @@ interface IRecentRidesCardState {
     rides: RecentRide[];
 }
 
-interface IRecentRidesProps {
-    rides: RecentRide[];
-}
-
 interface IRecentRidesCardProps {
     title: string;
     size?: number;
-}
-
-const RecentRides = (props: IRecentRidesProps) => {
-
-    const empty = (): boolean => props.rides.length === 0;
-
-    return <>
-        {empty()
-            ?
-                <Typography variant="body1" className="home-rides-card-empty">
-                    You have no rides.
-                </Typography>
-            :
-                props.rides.map((ride, index) => <RecentRideListItem key={index} ride={ride} />)
-        }
-    </>;
-}
-
-function sleep(ms: number) {
-  return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 const RecentRidesCard = (props: IRecentRidesCardProps) => {
@@ -68,7 +44,6 @@ const RecentRidesCard = (props: IRecentRidesCardProps) => {
             if (!state.initialized) {
                 const size = requestedSize === undefined ? DEFAULT_SIZE : requestedSize;
                 const rides = await RideService.getRecentRides(size);
-                await sleep(2000);
                 setState(prev => ({ ...prev, rides: rides, isLoading: false, initialized: true }));
             }
         } catch (error) {
