@@ -7,7 +7,7 @@ import { RecentRide } from "../../../../types";
 import { useEffect } from "react";
 import { useState } from "react";
 import RecentRides from "./RecentRides";
-import { getRecentRides } from "../../../../services/RideService";
+import { getRecentRides } from "../../../../services/Rides";
 
 interface IRecentRidesCardState {
     isLoading: boolean;

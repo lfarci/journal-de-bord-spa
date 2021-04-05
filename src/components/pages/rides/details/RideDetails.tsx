@@ -8,7 +8,7 @@ import { getRideDurationString, getTrafficConditionString } from "../../../../ty
 import { Page, Property, Section } from "../../../common";
 
 import "./RideDetails.scss";
-import RideService from "../../../../services/RideService";
+import RideService from "../../../../services/Rides";
 
 type RideDetailsParams = { rideId: string };
 

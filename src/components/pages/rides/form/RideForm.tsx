@@ -6,7 +6,7 @@ import { isValidRide, Ride, Stop, validateRide } from '../../../../types';
 import StopForm from './StopForm';
 
 import "./RideForm.scss";
-import { RideData } from '../../../../services/RideService';
+import { RideData } from '../../../../services/Rides';
 import StopService from '../../../../services/StopService';
 
 interface IRideFormProps {

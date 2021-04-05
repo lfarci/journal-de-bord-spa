@@ -4,14 +4,14 @@ import RecentRidesCard, { RecentRidesSkeleton } from '../RecentRidesCard';
 import { RecentRide } from '../../../../../types';
 import { mount, ReactWrapper, shallow } from 'enzyme';
 import { makeRecentRides, waitForUpdate } from './helpers';
-import { getRecentRides } from '../../../../../services/RideService';
+import { getRecentRides } from '../../../../../services/Rides';
 import { findByTestId, wait } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
 import RecentRides from '../RecentRides';
 import RecentRideListItem from '../RecentRideListItem';
 import { size } from 'lodash';
 
-jest.mock('../../../../../services/RideService', () => ({ getRecentRides: jest.fn() }));
+jest.mock('../../../../../services/Rides', () => ({ getRecentRides: jest.fn() }));
 
 const mountUpdatedRecentRidesCard = async (
     props: { title: string, size: number} = { title: "Recent rides", size: 5 }
