@@ -8,7 +8,7 @@ import { ConfirmationDialogue, Page } from "../../../common";
 import { useHistory, useRouteMatch } from "react-router-dom";
 
 import "./Rides.scss";
-import RideService from "../../../../services/RideService";
+import RideService from "../../../../services/Rides";
 
 export type RideScreenContentKey = "form" | "list" | "details";
 

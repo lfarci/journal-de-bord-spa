@@ -1,7 +1,7 @@
 import { Divider, Typography } from "@material-ui/core";
 import React from "react";
 import { useHistory } from "react-router-dom";
-import { IRecentRide } from "./RecentRidesCard";
+import { RecentRide } from "../../../../types";
 
 const humanizeDuration = require("humanize-duration");
 
@@ -19,12 +19,12 @@ function getPassedTimeSince(date: Date): number {
     return Date.now() - date.getTime();
 }
 
-function getAgoText(ride: IRecentRide) {
+function getAgoText(ride: RecentRide) {
     const duration: number = getPassedTimeSince(ride.date);
     return `${toHumanReadableDuration(duration)} ago`;
 }
 
-export default function RecentRideListItem(props: { ride: IRecentRide }) {
+export default function RecentRideListItem(props: { ride: RecentRide }) {
 
 	const history = useHistory();
 

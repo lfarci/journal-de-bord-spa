@@ -62,11 +62,7 @@ function Home() {
                 onCancelRide={() => console.log("Cancel a new ride")}
                 onFinishRide={() => console.log("Finish a new ride")}
             />
-            <RecentRidesCard
-                title="Recent rides"
-                rides={state.recentRides}
-                isLoading={state.isLoading}
-            />
+            <RecentRidesCard title="Recent rides" size={5} />
         </div>
         <StartRideFormDialog
             open={state.showNewRideFormDialog}
