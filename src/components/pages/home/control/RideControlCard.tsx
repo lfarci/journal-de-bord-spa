@@ -5,13 +5,15 @@ import RideControlCardContent from "./RideControlCardContent";
 
 import "./RideControlCard.scss";
 import { Skeleton } from "@material-ui/lab";
+import { StartRideFormDialog } from "./dialogs";
+import { Stop } from "../../../../types";
+import { useState } from "react";
 
 interface IRideControlCardProps {
     tracking: boolean;
     departureLocationName: string;
     trackingMilliseconds: number;
     isLoading?: boolean;
-    onStartRide?: () => void;
     onCancelRide?: () => void;
     onFinishRide?: () => void;
 }
@@ -29,13 +31,14 @@ export function LoadingRideControlCardSkeleton(props: { title: string, descripti
 
 export default function RideControlCard(props: IRideControlCardProps) {
 
-    // TODO: this should be extracted in external resources
+    const [ showStartDialog, setShowStartDialog ] = useState<boolean>(false);
+
     const startTitle = "Start a new ride";
     const startDescription = "Start tracking your ride. The tracked ride will be logged into your journal when you finish tracking.";
     const trackingDescription = "When you reach your destination you can finish tracking the ride. A new record will be created in your journal.";
 
     const isLoading = () => props.isLoading === undefined ? false : props.isLoading;
-    const onStart = () => { if (props.onStartRide !== undefined) props.onStartRide() };
+    const onStart = () => { setShowStartDialog(true) };
     const onCancel = () => { if (props.onCancelRide !== undefined) props.onCancelRide() };
     const onFinish = () => { if (props.onFinishRide !== undefined) props.onFinishRide() };
 
@@ -65,5 +68,14 @@ export default function RideControlCard(props: IRideControlCardProps) {
                 </div>
             }
         </CardActions>
+        <StartRideFormDialog
+            open={showStartDialog}
+            locations={[]}
+            onSubmit={async (data: Stop) => {
+                console.log(JSON.stringify(data, null, 2));
+                setShowStartDialog(false);
+            }}
+            onCancel={ () => setShowStartDialog(false) }
+        />
     </Card >;
 }
