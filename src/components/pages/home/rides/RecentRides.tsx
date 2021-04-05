@@ -11,7 +11,7 @@ const RecentRides = (props: IRecentRidesProps) => {
 
     const empty = (): boolean => props.rides.length === 0;
 
-    return <div>
+    return <div data-testid="recent-rides-list">
         {empty()
             ?
             <Typography variant="body1" className="home-rides-card-empty">

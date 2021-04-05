@@ -6,8 +6,8 @@ import { Skeleton } from "@material-ui/lab";
 import { RecentRide } from "../../../../types";
 import { useEffect } from "react";
 import { useState } from "react";
-import RideService from "../../../../services/RideService";
 import RecentRides from "./RecentRides";
+import { getRecentRides } from "../../../../services/RideService";
 
 interface IRecentRidesCardState {
     isLoading: boolean;
@@ -21,10 +21,24 @@ interface IRecentRidesCardProps {
     size?: number;
 }
 
+export const RecentRidesSkeleton = (props: { size: number } = { size: 5 }) => {
+
+    const RECENT_RIDE_SKELETON_HEIGHT = 50;
+
+    return <div>
+        {[...Array(props.size)].map((_, i) =>
+            <Skeleton
+                key={i}
+                className="recent-ride-skeleton"
+                height={RECENT_RIDE_SKELETON_HEIGHT}
+                variant="rect"
+        />)}
+    </div>
+}
+
 const RecentRidesCard = (props: IRecentRidesCardProps) => {
 
     const CARD_EVELATION = 12;
-    const RECENT_RIDE_SKELETON_HEIGHT = 50;
     const DEFAULT_SIZE = 5;
 
     const [state, setState] = useState<IRecentRidesCardState>({
@@ -35,6 +49,8 @@ const RecentRidesCard = (props: IRecentRidesCardProps) => {
     });
 
     const { size: requestedSize } = { ...props }
+
+    const size = useCallback(() => requestedSize === undefined ? DEFAULT_SIZE : requestedSize, [requestedSize]);
     const loading = (): boolean => state.isLoading;
     const error = (): boolean => !loading() && state.error !== undefined;
     const success = (): boolean => !error() && !loading();
@@ -42,14 +58,13 @@ const RecentRidesCard = (props: IRecentRidesCardProps) => {
     const fetchRecentRides = useCallback(async () => {
         try {
             if (!state.initialized) {
-                const size = requestedSize === undefined ? DEFAULT_SIZE : requestedSize;
-                const rides = await RideService.getRecentRides(size);
+                const rides = await getRecentRides(size());
                 setState(prev => ({ ...prev, rides: rides, isLoading: false, initialized: true }));
             }
         } catch (error) {
             setState(prev => ({ ...prev, error: error, isLoading: false }));
         }
-    }, [state.initialized, requestedSize]);
+    }, [state.initialized, size]);
 
     useEffect(() => {
         fetchRecentRides();
@@ -57,13 +72,11 @@ const RecentRidesCard = (props: IRecentRidesCardProps) => {
 
     return <Card elevation={CARD_EVELATION} className="home-rides-card">
         <Typography className="home-rides-card-title" variant="h6">{props.title}</Typography>
-        {loading() && [...Array(requestedSize)].map(e => 
-            <Skeleton className="recent-ride-skeleton" height={RECENT_RIDE_SKELETON_HEIGHT} variant="rect"/>
-        )}
-        {error() && <Typography variant="body1" className="home-rides-card-empty">
+        {loading() && <RecentRidesSkeleton size={size()} />}
+        {success() && <RecentRides rides={state.rides} />}
+        {error() && <Typography variant="body1" className="home-rides-card-error">
             An error occured while loading your recent rides. Try reloading the page.
         </Typography>}
-        { success() && <RecentRides rides={state.rides} />}
     </Card >;
 }
 

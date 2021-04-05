@@ -17,6 +17,27 @@ export type RidesData = {
     isLastPage: boolean;
 }
 
+const recentRides = (rides: Ride[]): RecentRide[] => {
+    return rides.map(ride => ({
+        id: ride.id === undefined ? 0 : ride.id,
+        departureLocationName: ride.departure.location.name,
+        arrivalLocationName: ride.arrival?.location.name === undefined ? "" : ride.arrival?.location.name,
+        distance: getRideDistance(ride),
+        date: ride.departure.moment
+    }));
+}
+
+export const getRecentRides = async (top: number = 5): Promise<RecentRide[]> => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const data = await RideService.getAll(0, top);
+            resolve(recentRides(data.rides));
+        } catch (error) {
+            reject(error);
+        }
+    });
+}
+
 export default class RideService {
 
     public static async create(data: RideData): Promise<number> {
