@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -6,10 +6,11 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import { Stop } from "../../../../../types";
 import { Button, CircularProgress, DialogContentText } from '@material-ui/core';
 import StopForm from '../../../rides/form/StopForm';
-import RideService from '../../../../../services/Rides';
+import RideService, { isLastRideFinished } from '../../../../../services/Rides';
 import StopService from '../../../../../services/StopService';
 
 import "./StartRideFormDialog.scss";
+import { useEffect } from 'react';
 
 interface IStartRideFormDialogProps {
     open: boolean;
@@ -28,9 +29,25 @@ function StartRideFormDialog(props: IStartRideFormDialogProps) {
         loading: false,
         error: undefined
     });
+
     const [stop, setStop] = useState<Stop | undefined>(undefined);
 
-    const startDisabled = () => state.loading || state.error != undefined;
+    const startDisabled = () => state.loading || state.error !== undefined;
+
+    const requireLastRideToBeFinished = useCallback(async (): Promise<void> => {
+        try {
+            setState(prev => ({...prev, loading: true}));
+            if (await isLastRideFinished()) {
+                setState(prev => ({...prev, loading: false}));
+            } else {
+                const error = new Error("You cannot start a ride because the last ride is not finished.");
+                setState(prev => ({...prev, loading: false, error: error}));
+            }
+        } catch (error) {
+            const e = new Error("An error occured while loading the dialog. Try again.");
+            setState(prev => ({...prev, loading: false, error: e }));
+        }
+    }, []);
 
     const startRide = async (): Promise<void> => {
         try {
@@ -41,8 +58,8 @@ function StartRideFormDialog(props: IStartRideFormDialogProps) {
                 setState(prev => ({...prev, loading: false}));
             }
         } catch (error) {
-            console.log(error);
-            setState(prev => ({...prev, loading: false, error: error }));
+            const e = new Error("An error occured while starting your ride. Try again.");
+            setState(prev => ({...prev, loading: false, error: e }));
         }
     };
 
@@ -53,12 +70,17 @@ function StartRideFormDialog(props: IStartRideFormDialogProps) {
         }
     };
 
+    useEffect(() => {
+        console.log("on mount");
+        requireLastRideToBeFinished();
+    }, [requireLastRideToBeFinished, props.open]);
+
     return <Dialog open={props.open} onClose={cancel} aria-labelledby="form-dialog-title">
         <DialogTitle id="form-dialog-title">Starting a new ride</DialogTitle>
         <DialogContent>
             {state.loading && !state.error && <div className="form-dialog-progress"><CircularProgress /></div>}
-            {!state.loading && state.error != undefined && <DialogContentText>
-                An error occured while starting your ride. Try again.
+            {!state.loading && state.error !== undefined && <DialogContentText>
+                {state.error.message}
             </DialogContentText>}
             {!state.loading && !state.error && <div>
                 <DialogContentText>

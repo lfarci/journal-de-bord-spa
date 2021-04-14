@@ -38,6 +38,22 @@ export const getRecentRides = async (top: number = 5): Promise<RecentRide[]> => 
     });
 }
 
+export const isLastRideFinished = async (): Promise<boolean> => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const data = await RideService.getAll(0, 1);
+            let isLastRideFinished = false;
+            if (data.rides.length > 0) {
+                isLastRideFinished = data.rides[0].arrival !== null;
+            }
+            console.log(JSON.stringify(data, null, 2));
+            resolve(isLastRideFinished);
+        } catch (error) {
+            reject(error);
+        }
+    });
+}
+
 export default class RideService {
 
     public static async create(data: RideData): Promise<number> {
