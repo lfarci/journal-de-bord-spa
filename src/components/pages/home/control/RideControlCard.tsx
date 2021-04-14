@@ -70,7 +70,6 @@ export default function RideControlCard(props: IRideControlCardProps) {
         </CardActions>
         <StartRideFormDialog
             open={showStartDialog}
-            locations={[]}
             onSubmit={async (data: Stop) => {
                 console.log(JSON.stringify(data, null, 2));
                 setShowStartDialog(false);

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { RouteComponentProps, withRouter } from "react-router-dom";
 import EditIcon from '@material-ui/icons/Edit';
-import { Fab } from "@material-ui/core";
+import { Fab, Typography } from "@material-ui/core";
 
 import { getRideDistanceString, Ride, Stop } from "../../../../types";
 import { getRideDurationString, getTrafficConditionString } from "../../../../types/Ride";
@@ -22,13 +22,19 @@ interface IStopSectionProps {
 
 function StopSection(props: IStopSectionProps) {
     const divider = () => props.divider === undefined ? false : props.divider;
-    const location = () => props.stop.location.name; 
-    const date = () => props.stop.moment.toLocaleDateString(); 
-    const time = () => props.stop.moment.toLocaleTimeString(); 
+    const location = () => props.stop.location.name;
+    const date = () => props.stop.moment.toLocaleDateString();
+    const time = () => props.stop.moment.toLocaleTimeString();
     return <Section title={props.title} divider={divider()}>
-        <Property label="Location" value={location()} />
-        <Property label="Date" value={date()}/>
-        <Property label="Time" value={time()}/>
+        {props.stop
+            ? <div>
+                <Property label="Location" value={location()} />
+                <Property label="Date" value={date()} />
+                <Property label="Time" value={time()} />
+            </div>
+            : <Typography>No stop.</Typography>
+        }
+
     </Section>;
 }
 
@@ -63,7 +69,7 @@ const RideDetails: React.FC<RideDetailsProps> = ({ match }: RideDetailsProps) =>
 
     return <Page title={"Ride details"} isLoading={state.isLoading} error={state.error}>
         <Section title="Overview" divider>
-            <Property 
+            <Property
                 label="Distance"
                 value={getRideDistanceString(state.ride!!)}
             />
@@ -80,17 +86,17 @@ const RideDetails: React.FC<RideDetailsProps> = ({ match }: RideDetailsProps) =>
                 value={state.ride?.comment!!}
             />
         </Section>
-        <StopSection title="Departure" divider stop={state.ride?.departure!!}/>
-        { showArrival() && <StopSection title="Arrival" stop={state.ride?.arrival!!}/>}
+        <StopSection title="Departure" divider stop={state.ride?.departure!!} />
+        {showArrival() && <StopSection title="Arrival" stop={state.ride?.arrival!!} />}
         <Fab
             color="primary"
             aria-label="edit"
             className="ride-edit-button"
             onClick={() => {
-                const rideId = match.params.rideId!!; 
+                const rideId = match.params.rideId!!;
                 window.location.href = `${window.location.origin}/rides/form/${rideId}`;
             }}
-            >
+        >
             <EditIcon />
         </Fab>
     </Page>

@@ -89,6 +89,7 @@ function StopForm(props: IStopFormProps) {
         };
         fetchAvailableLocations();
 
+        // TODO: the location should be an id only
         handleStopChange({
             id: stopId ? stopId : undefined,
             moment: moment,

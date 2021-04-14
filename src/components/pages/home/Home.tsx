@@ -8,12 +8,11 @@ import RideControlCard from "./control/RideControlCard";
 import RecentRidesCard from "./rides/RecentRidesCard";
 import { useEffect } from "react";
 import { AuthService } from "../../../services/AuthService";
-import { RecentRide, Stop, Driver } from "../../../types";
+import { Stop, Driver } from "../../../types";
 import DriverService from "../../../services/DriverService";
 import DriverFormDialog from "./DriverFormDialog";
 
 interface IHomeState {
-    recentRides: RecentRide[];
     departure: Stop | undefined;
     tracking: boolean;
     isLoading: boolean;
@@ -24,7 +23,6 @@ interface IHomeState {
 function Home() {
 
     const [state, setState] = useState<IHomeState>({
-        recentRides: [],
         departure: undefined,
         tracking: false,
         isLoading: false,
