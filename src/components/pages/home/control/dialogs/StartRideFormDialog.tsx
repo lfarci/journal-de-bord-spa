@@ -71,7 +71,6 @@ function StartRideFormDialog(props: IStartRideFormDialogProps) {
     };
 
     useEffect(() => {
-        console.log("on mount");
         requireLastRideToBeFinished();
     }, [requireLastRideToBeFinished, props.open]);
 
