@@ -27,7 +27,7 @@ export default class HttpService {
         return new Promise(async (resolve, reject) => {
             try {
                 const config = await HttpService.makeRequestConfig();
-                const response = await axios.get<Entity>(url, config);
+                const response = await axios.head<Entity>(url, config);
                 resolve(response.status === 200);
             } catch (error) {
                 if (error.response.status === 404) {

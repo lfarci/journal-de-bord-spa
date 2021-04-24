@@ -41,6 +41,7 @@ function ProgressOverviewCard(props: {}) {
 
     const fetchDriverStatistics = useCallback(async () => {
         try {
+            if (!(await DriverService.hasCurrentUserADriver())) return;
             const stats = await DriverService.getDriverStatistics();
             if (stats) {
                 setState(prev => ({ ...prev, isLoading: false, statistics: stats }));

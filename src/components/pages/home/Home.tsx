@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 
 import { ProgressOverviewCard } from "./overview";
 import { Page } from "../../common";
@@ -18,6 +18,7 @@ interface IHomeState {
     isLoading: boolean;
     error: Error | undefined;
     showDriverFormDialog: boolean;
+    userWelcomed: boolean;
 }
 
 function Home() {
@@ -28,20 +29,22 @@ function Home() {
         isLoading: false,
         error: undefined,
         showDriverFormDialog: false,
+        userWelcomed: false
     });
 
-    useEffect(() => {
-        const getResources = async () => {
-            try {
-                if (state.departure) {
-                    console.log("Ready to start your ride!");
-                }
-            } catch (error) {
-                setState(prev => ({ ...prev, isLoading: false, error: error }));
-            }
+    const welcomeUser = useCallback(async (): Promise<void> => {
+        if (!(await DriverService.hasCurrentUserADriver())) {
+            console.log("Awww a stranger, let's create a new driver!");
+            setState(prev => ({ ...prev, showDriverFormDialog: true }));
         }
-        getResources();
-    }, [state.departure]);
+    }, []);
+
+    useEffect(() => {
+        if (!state.userWelcomed) {
+            welcomeUser();
+            setState(prev => ({ ...prev, userWelcomed: true }));
+        }
+    }, [welcomeUser, state.userWelcomed]);
 
     return <Page title="Home" selected="home" error={state.error} isLoading={state.isLoading} showBottomNavigation>
         <div className="home-cards">

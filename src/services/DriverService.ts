@@ -11,6 +11,17 @@ export type DriverStatisticsData = {
 
 export default class DriverService {
 
+    public static async hasCurrentUserADriver(): Promise<boolean> {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const userUrl = await HttpService.makeUrlForCurrentDriver();
+                resolve(await HttpService.exist(userUrl));
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
+
     public static async getCurrentDriver(): Promise<Driver | undefined> {
         return new Promise(async (resolve, reject) => {
             try {
@@ -51,7 +62,7 @@ export default class DriverService {
         return new Promise(async (resolve, reject) => {
             try {
                 const host: string = Environment.resourceServerUri;
-                await HttpService.post<Driver>(`${host}${HttpService.basePath}`, data);
+                await HttpService.post<Driver>(`${host}/${HttpService.basePath}`, data);
                 resolve();
             } catch (error) {
                 reject(error);
