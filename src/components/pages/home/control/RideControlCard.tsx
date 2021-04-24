@@ -6,7 +6,6 @@ import RideControlCardContent from "./RideControlCardContent";
 import "./RideControlCard.scss";
 import { Skeleton } from "@material-ui/lab";
 import { StartRideFormDialog } from "./dialogs";
-import { Stop } from "../../../../types";
 import { useState } from "react";
 
 interface IRideControlCardProps {
@@ -70,10 +69,7 @@ export default function RideControlCard(props: IRideControlCardProps) {
         </CardActions>
         <StartRideFormDialog
             open={showStartDialog}
-            onSubmit={async (data: Stop) => {
-                console.log(JSON.stringify(data, null, 2));
-                setShowStartDialog(false);
-            }}
+            onSubmit={ () => { setShowStartDialog(false); }}
             onCancel={ () => setShowStartDialog(false) }
         />
     </Card >;

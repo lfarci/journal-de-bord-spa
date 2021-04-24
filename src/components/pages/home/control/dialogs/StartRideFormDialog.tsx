@@ -1,20 +1,19 @@
 import React, { useCallback, useState } from 'react';
-import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import { Stop } from "../../../../../types";
-import { Button, CircularProgress, DialogContentText } from '@material-ui/core';
+import { Button, DialogContentText } from '@material-ui/core';
 import StopForm from '../../../rides/form/StopForm';
 import RideService, { isLastRideFinished } from '../../../../../services/Rides';
 import StopService from '../../../../../services/StopService';
 
 import "./StartRideFormDialog.scss";
 import { useEffect } from 'react';
+import { FormDialog } from '.';
 
 interface IStartRideFormDialogProps {
     open: boolean;
-    onSubmit: (value: Stop) => void;
+    onSubmit: () => void;
     onCancel: () => void;
 }
 
@@ -55,7 +54,7 @@ function StartRideFormDialog(props: IStartRideFormDialogProps) {
                 setState(prev => ({...prev, loading: true}));
                 const stopId = await StopService.create(stop);
                 await RideService.create({ departure: stopId, trafficCondition: 0 });
-                setState(prev => ({...prev, loading: false}));
+                props.onSubmit();
             }
         } catch (error) {
             const e = new Error("An error occured while starting your ride. Try again.");
@@ -74,25 +73,18 @@ function StartRideFormDialog(props: IStartRideFormDialogProps) {
         requireLastRideToBeFinished();
     }, [requireLastRideToBeFinished, props.open]);
 
-    return <Dialog open={props.open} onClose={cancel} aria-labelledby="form-dialog-title">
-        <DialogTitle id="form-dialog-title">Starting a new ride</DialogTitle>
+    return <FormDialog title="Starting a new ride" open={props.open} onClose={cancel} loading={state.loading} error={state.error}>
         <DialogContent>
-            {state.loading && !state.error && <div className="form-dialog-progress"><CircularProgress /></div>}
-            {!state.loading && state.error !== undefined && <DialogContentText>
-                {state.error.message}
-            </DialogContentText>}
-            {!state.loading && !state.error && <div>
-                <DialogContentText>
-                    Fill the form and click save to start tracking your ride.
-                </DialogContentText>
-                <StopForm onChange={setStop} />
-            </div>}
+            <DialogContentText>
+                Fill the form and click save to start tracking your ride.
+            </DialogContentText>
+            <StopForm onChange={setStop} />
         </DialogContent>
         <DialogActions>
             <Button onClick={cancel} color="primary" disabled={state.loading}>Cancel</Button>
             <Button onClick={startRide} color="primary" disabled={startDisabled()}>Start</Button>
         </DialogActions>
-    </Dialog>;
+    </FormDialog>;
 }
 
 export default StartRideFormDialog;

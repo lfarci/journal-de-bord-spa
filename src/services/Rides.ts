@@ -46,7 +46,6 @@ export const isLastRideFinished = async (): Promise<boolean> => {
             if (data.rides.length > 0) {
                 isLastRideFinished = data.rides[0].arrival !== null;
             }
-            console.log(JSON.stringify(data, null, 2));
             resolve(isLastRideFinished);
         } catch (error) {
             reject(error);
