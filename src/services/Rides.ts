@@ -40,6 +40,21 @@ export const getRecentRides = async (top: number = 5): Promise<RecentRide[]> => 
     });
 }
 
+export const getLastRide = async (): Promise<Ride | undefined> => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const data = await RideService.getAll(0, 1);
+            if (data.rides.length === 0) {
+                resolve(undefined);
+            } else {
+                resolve(data.rides[0]);
+            }
+        } catch (error) {
+            reject(error);
+        }
+    });
+}
+
 export const getLastRecentRide = async (): Promise<RecentRide | undefined> => {
     return new Promise(async (resolve, reject) => {
         try {

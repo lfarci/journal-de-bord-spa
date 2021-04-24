@@ -11,7 +11,7 @@ import FinishRideFormDialog from "./dialogs/FinishRideFormDialog";
 import { useEffect } from "react";
 import RideService, { getLastRecentRide, isLastRideFinished } from "../../../../services/Rides";
 import { useCallback } from "react";
-import { RecentRide, Ride } from "../../../../types";
+import { RecentRide } from "../../../../types";
 
 export function LoadingRideControlCardSkeleton(props: { title: string, description: string }) {
     return <>
@@ -62,7 +62,7 @@ export default function RideControlCard(props: {}) {
         if (!initialized) {
             initialize();
         }
-    }, []);
+    }, [initialized]);
 
     return <Card elevation={12} className="home-control-card">
         { tracking
