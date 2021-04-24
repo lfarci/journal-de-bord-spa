@@ -8,6 +8,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 import RecentRides from "./RecentRides";
 import { getRecentRides } from "../../../../services/Rides";
+import DriverService from "../../../../services/DriverService";
 
 interface IRecentRidesCardState {
     isLoading: boolean;
@@ -57,6 +58,7 @@ const RecentRidesCard = (props: IRecentRidesCardProps) => {
 
     const fetchRecentRides = useCallback(async () => {
         try {
+            if (!(await DriverService.hasCurrentUserADriver())) return;
             if (!state.initialized) {
                 const rides = await getRecentRides(size());
                 setState(prev => ({ ...prev, rides: rides, isLoading: false, initialized: true }));
