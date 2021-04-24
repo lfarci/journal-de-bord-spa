@@ -19,6 +19,7 @@ interface ILocationFieldProps {
     options: Location[];
     value: Location;
     onChange: (locationId: number) => void;
+    onLocationCreated: () => void;
     onError?: (error: Error) => void;
 }
 
@@ -48,11 +49,8 @@ function LocationField(props: ILocationFieldProps) {
 
     const createLocation = async (name: string): Promise<boolean> => {
         try {
-            await LocationService.create({
-                name: name,
-                longitude: 0.0,
-                latitude: 0.0
-            });
+            await LocationService.create({ name: name, longitude: 0.0, latitude: 0.0 });
+            props.onLocationCreated();
             return true;
         } catch (error) {
             if (props.onError) {
@@ -66,14 +64,13 @@ function LocationField(props: ILocationFieldProps) {
         const askForCurrentLocation = async (locationName: string) => {
             setCurrentLocation(await GeolocationService.makeCurrentLocation(locationName));
         }
-
         if (locationOption) {
-            let location = findLocation(locationOption.label, locations);
             const askable = !currentLocation || currentLocation.name !== locationOption.label;
-            if (!location && askable) { 
+            let location = findLocation(locationOption.label, locations);
+            if (!location && askable) {
                 askForCurrentLocation(locationOption.label);
             }
-            if (!location && currentLocation) { 
+            if (!location && currentLocation) {
                 location = currentLocation;
             }
             if (location && location.id) {

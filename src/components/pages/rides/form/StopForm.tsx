@@ -6,6 +6,7 @@ import DatetimeField from './fields/DatetimeField';
 import { Typography, Divider } from '@material-ui/core';
 import LocationService from '../../../../services/LocationService';
 import { StopData } from '../../../../services/StopService';
+import { useCallback } from 'react';
 
 interface IStopFormProps {
     title?: string;
@@ -53,18 +54,17 @@ function StopForm(props: IStopFormProps) {
     const { id: stopId } = { ...props.value };
     const { onError } = { ...props };
 
+    const fetchAvailableLocations = useCallback(async () => {
+        try {
+            const data: Location[] = await LocationService.getAll();
+            setLocations(data);
+        } catch (error) {
+            if (onError) onError(error);
+        }
+    }, [onError]);
+
     useEffect(() => {
-
-        const fetchAvailableLocations = async () => {
-            try {
-                const data: Location[] = await LocationService.getAll();
-                setLocations(data);
-            } catch (error) {
-                if (onError) onError(error);
-            }
-        };
         fetchAvailableLocations();
-
         if (locationId !== undefined && moment !== undefined) {
             handleStopChange({
                 id: stopId ? stopId : undefined,
@@ -74,14 +74,14 @@ function StopForm(props: IStopFormProps) {
             });
         }
 
-    }, [moment, odometer, location, locationId, handleStopChange, onError, stopId]);
+    }, [moment, odometer, location, locationId, handleStopChange, onError, stopId, fetchAvailableLocations]);
 
     return (
         <div>
             {
                 hasTitle() && <div>
                     <Typography variant="h6">{props.title}</Typography>
-                    <Divider/>
+                    <Divider />
                 </div>
             }
             <OdometerField
@@ -100,9 +100,10 @@ function StopForm(props: IStopFormProps) {
                 hint="Enter your current location name"
                 options={locations}
                 value={location}
+                onLocationCreated={fetchAvailableLocations}
                 onChange={setLocationId}
             />
-            { showDateTime() && <DatetimeField
+            {showDateTime() && <DatetimeField
                 id="stop-datetime"
                 label="Date and time"
                 hint="Enter the stop date and time."
