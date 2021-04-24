@@ -1,11 +1,10 @@
 import React, { useCallback, useState } from 'react';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import { Stop } from "../../../../../types";
 import { Button, DialogContentText } from '@material-ui/core';
 import StopForm from '../../../rides/form/StopForm';
 import RideService, { isLastRideFinished } from '../../../../../services/Rides';
-import StopService from '../../../../../services/StopService';
+import StopService, { StopData } from '../../../../../services/StopService';
 
 import "./StartRideFormDialog.scss";
 import { useEffect } from 'react';
@@ -29,7 +28,7 @@ function StartRideFormDialog(props: IStartRideFormDialogProps) {
         error: undefined
     });
 
-    const [stop, setStop] = useState<Stop | undefined>(undefined);
+    const [stop, setStop] = useState<StopData | undefined>(undefined);
 
     const startDisabled = () => state.loading || state.error !== undefined;
 

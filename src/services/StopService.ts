@@ -10,10 +10,14 @@ export type StopData = {
 
 export default class StopService {
 
-    public static async create(stop: Stop): Promise<number> {
+    private static isStopData(stop: Stop | StopData): boolean {
+        return "locationId" in stop && !("location" in stop);
+    }
+
+    public static async create(stop: Stop | StopData): Promise<number> {
         return new Promise(async (resolve, reject) => {
             try {
-                const data = StopService.makeStopData(stop);
+                const data: StopData = this.isStopData(stop) ? stop as StopData : StopService.makeStopData(stop as Stop);
                 const url = await HttpService.makeUrlForCurrentDriver("/stops");
                 const response = await HttpService.post<StopData>(url, data);
                 if ("stopId" in response) {
@@ -27,10 +31,10 @@ export default class StopService {
         });
     }
 
-    public static async update(stop: Stop): Promise<void> {
+    public static async update(stop: Stop | StopData): Promise<void> {
         return new Promise(async (resolve, reject) => {
             try {
-                const data = StopService.makeStopData(stop);
+                const data: StopData = this.isStopData(stop) ? stop as StopData : StopService.makeStopData(stop as Stop);
                 const url = await HttpService.makeUrlForCurrentDriver(`/stops/${stop.id}`);
                 await HttpService.put<StopData>(url, data);
                 resolve();
@@ -40,7 +44,7 @@ export default class StopService {
         });
     }
 
-    private static makeStopData(stop: Stop): StopData {
+    public static makeStopData(stop: Stop): StopData {
         if (!stop.location?.id && !stop.moment) {
             throw new Error("Invalid stop.");
         }
