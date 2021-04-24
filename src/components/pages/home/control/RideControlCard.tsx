@@ -7,15 +7,11 @@ import "./RideControlCard.scss";
 import { Skeleton } from "@material-ui/lab";
 import { StartRideFormDialog } from "./dialogs";
 import { useState } from "react";
-
-interface IRideControlCardProps {
-    tracking: boolean;
-    departureLocationName: string;
-    trackingMilliseconds: number;
-    isLoading?: boolean;
-    onCancelRide?: () => void;
-    onFinishRide?: () => void;
-}
+import FinishRideFormDialog from "./dialogs/FinishRideFormDialog";
+import { useEffect } from "react";
+import RideService, { getLastRecentRide, isLastRideFinished } from "../../../../services/Rides";
+import { useCallback } from "react";
+import { RecentRide, Ride } from "../../../../types";
 
 export function LoadingRideControlCardSkeleton(props: { title: string, description: string }) {
     return <>
@@ -28,49 +24,87 @@ export function LoadingRideControlCardSkeleton(props: { title: string, descripti
     </>;
 }
 
-export default function RideControlCard(props: IRideControlCardProps) {
+export default function RideControlCard(props: {}) {
 
+    const [ initialized, setInitialized ] = useState<boolean>(false);
+    const [ loading, setLoading ] = useState<boolean>(true);
+    const [ lastRide, setLastRide ] = useState<RecentRide | undefined>(undefined);
+    const [ tracking, setTracking ] = useState<boolean>(false);
     const [ showStartDialog, setShowStartDialog ] = useState<boolean>(false);
+    const [ showFinishDialog, setShowFinishDialog ] = useState<boolean>(false);
 
     const startTitle = "Start a new ride";
     const startDescription = "Start tracking your ride. The tracked ride will be logged into your journal when you finish tracking.";
     const trackingDescription = "When you reach your destination you can finish tracking the ride. A new record will be created in your journal.";
 
-    const isLoading = () => props.isLoading === undefined ? false : props.isLoading;
-    const onStart = () => { setShowStartDialog(true) };
-    const onCancel = () => { if (props.onCancelRide !== undefined) props.onCancelRide() };
-    const onFinish = () => { if (props.onFinishRide !== undefined) props.onFinishRide() };
+    const onStart = () => { setShowStartDialog(true); };
+    const onCancel = () => { cancelTracking(); };
+    const onFinish = () => { setShowFinishDialog(true); };
+
+    const cancelTracking = useCallback(async () => {
+        setLoading(true);
+        const lastRecentRide = await getLastRecentRide();
+        if (lastRecentRide !== undefined) {
+            await RideService.deleteById(lastRecentRide.id);
+            setTracking(false);
+        }
+        setLoading(false);
+    }, []);
+
+    useEffect(() => {
+        const initialize = async () => {
+            setTracking(!await isLastRideFinished());
+            setLastRide(await getLastRecentRide());
+            setLoading(false);
+            setInitialized(true);
+            console.log("Initializing the ride control card.");
+        };
+        if (!initialized) {
+            initialize();
+        }
+    }, []);
 
     return <Card elevation={12} className="home-control-card">
-        {props.tracking
+        { tracking
             ? <RideControlCardContent
-                locationName={props.departureLocationName}
-                trackingMilliseconds={props.trackingMilliseconds}
+                locationName={lastRide ? lastRide.departureLocationName : "Unknown"}
+                trackingMilliseconds={ 12222 }
                 description={trackingDescription}
-                loading={isLoading()}
+                loading={loading}
             />
             : <RideControlCardContent
                 title={startTitle}
                 description={startDescription}
-                loading={isLoading()}
+                loading={loading}
             />
         }
         <CardActions className="home-control-card-actions">
-            {isLoading()
+            { loading
                 ? <div className="home-control-card-buttons">
                     <Skeleton><RideControlCardAction text="Start tracking" /></Skeleton>
                 </div>
                 : <div className="home-control-card-buttons">
-                    {!props.tracking && <RideControlCardAction text="Start tracking" onClick={onStart} />}
-                    {props.tracking && <RideControlCardAction text="Cancel" onClick={onCancel} color="secondary" />}
-                    {props.tracking && <RideControlCardAction text="Finish tracking" onClick={onFinish} />}
+                    { !tracking && <RideControlCardAction text="Start tracking" onClick={onStart} /> }
+                    { tracking && <RideControlCardAction text="Cancel" onClick={onCancel} color="secondary" /> }
+                    { tracking && <RideControlCardAction text="Finish tracking" onClick={onFinish} /> }
                 </div>
             }
         </CardActions>
         <StartRideFormDialog
             open={showStartDialog}
-            onSubmit={ () => { setShowStartDialog(false); }}
+            onSubmit={ () => { 
+                setShowStartDialog(false);
+                setTracking(true);
+            }}
             onCancel={ () => setShowStartDialog(false) }
+        />
+        <FinishRideFormDialog
+            open={showFinishDialog}
+            onSubmit={ () => { 
+                setShowFinishDialog(false);
+                setTracking(false);
+            }}
+            onCancel={ () => setShowFinishDialog(false) }
         />
     </Card >;
 }

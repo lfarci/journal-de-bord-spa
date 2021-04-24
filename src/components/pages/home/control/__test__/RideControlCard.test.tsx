@@ -10,7 +10,7 @@ describe("<RideControlCard />", () => {
         ReactDOM.render(<RideControlCard tracking
             departureLocationName="WORK"
             trackingMilliseconds={ 3600000 * 24}
-            onStartRide={() => console.log("Start a new ride")}
+            onRideStarted={() => console.log("Start a new ride")}
             onCancelRide={() => console.log("Cancel a new ride")}
             onFinishRide={() => console.log("Finish a new ride")}
         />, div);
