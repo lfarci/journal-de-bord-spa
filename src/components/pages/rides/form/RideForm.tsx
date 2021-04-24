@@ -7,7 +7,7 @@ import StopForm from './StopForm';
 
 import "./RideForm.scss";
 import { RideData } from '../../../../services/Rides';
-import StopService from '../../../../services/StopService';
+import StopService, { StopData } from '../../../../services/StopService';
 
 interface IRideFormProps {
     /**
@@ -41,15 +41,22 @@ const makeRide = (dep: Stop, arr: Stop, tc: TrafficCondition, com: string | unde
     driverPseudonym: undefined
 });
 
+const makeStopForValidation = (data: StopData): Stop => ({
+    id: data.id,
+    location: { id: data.locationId, name: "", latitude: 0.0, longitude: 0.0 },
+    moment: new Date(data.moment),
+    odometerValue: data.odometerValue
+});
+
 const RideForm = (props: IRideFormProps) => {
 
-    const getDefaultDeparture = () => props.ride ? props.ride.departure : undefined;
-    const getDefaultArrival = () => props.ride && props.ride.arrival ? props.ride.arrival : undefined;
+    const getDefaultDeparture = () => props.ride ? StopService.makeStopData(props.ride.departure) : undefined;
+    const getDefaultArrival = () => props.ride && props.ride.arrival ? StopService.makeStopData(props.ride.arrival) : undefined;
     const getDefaultTrafficCondition = () => props.ride ? props.ride.trafficCondition : TrafficCondition.CALM;
     const getDefaultComment = () => props.ride ? props.ride.comment : undefined;
 
-    const [departure, setDeparture] = useState<Stop | undefined>(getDefaultDeparture());
-    const [arrival, setArrival] = useState<Stop | undefined>(getDefaultArrival());
+    const [departure, setDeparture] = useState<StopData | undefined>(getDefaultDeparture());
+    const [arrival, setArrival] = useState<StopData | undefined>(getDefaultArrival());
     const [trafficCondition, setTrafficCondition] = useState<TrafficCondition>(getDefaultTrafficCondition());
     const [comment, setComment] = useState<string | undefined>(getDefaultComment());
 
@@ -68,10 +75,13 @@ const RideForm = (props: IRideFormProps) => {
     useEffect(() => {
         if (departure) {
             setArrivalOdometerMin(departure.odometerValue + 1);
-            setArrivalMomentMin(departure.moment);
+            setArrivalMomentMin(new Date(departure.moment));
         }
         if (departure && arrival && trafficCondition) {
-            let ride: Ride = makeRide(departure!!, arrival!!, trafficCondition, comment);
+            // TODO: the validation does not care about the location so i create a blank one
+            const d = makeStopForValidation(departure);
+            const a = makeStopForValidation(arrival);
+            let ride: Ride = makeRide(d, a, trafficCondition, comment);
             if (props.ride && props.ride.id !== undefined)
                 ride = { ...ride, id: props.ride.id };
             setValidation((prev => ({
