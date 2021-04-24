@@ -28,27 +28,16 @@ interface IStopFormProps {
  */
 function StopForm(props: IStopFormProps) {
 
-    const DEFAULT_LOCATION = { name: "Home", latitude: 0.0, longitude: 0.0 };
-
     const { onChange: handleStopChange } = props;
     const hasTitle = () => props.title !== undefined;
     const showDateTime = () => props.datetime === undefined ? false : props.datetime;
     const getOdometerMin = () => props.odometerMin === undefined ? 0 : props.odometerMin;
-
     const getDefaultMoment = () => props.value ? new Date(props.value.moment) : new Date();
     const getDefaultOdometer = () => props.value ? props.value.odometerValue : 0;
-    const getLocations = () => props.availableLocations === undefined ? [] : props.availableLocations;
-    const getDefaultLocation = () => {
-        const locations = getLocations();
-        return locations.length === 0 ? DEFAULT_LOCATION : locations[0];
-    };
 
     const [moment, setMoment] = useState<Date>(getDefaultMoment());
     const [odometer, setOdometer] = useState<number>(getDefaultOdometer());
-    const [location] = useState<Location>(getDefaultLocation());
-
     const [locationId, setLocationId] = useState<number | undefined>(undefined);
-
     const [locations, setLocations] = useState<Location[]>([]);
 
     const { id: stopId } = { ...props.value };
@@ -74,7 +63,7 @@ function StopForm(props: IStopFormProps) {
             });
         }
 
-    }, [moment, odometer, location, locationId, handleStopChange, onError, stopId, fetchAvailableLocations]);
+    }, [moment, odometer, locationId, handleStopChange, onError, stopId, fetchAvailableLocations]);
 
     return (
         <div>
@@ -99,7 +88,7 @@ function StopForm(props: IStopFormProps) {
                 placeholder="e.g. Home"
                 hint="Enter your current location name"
                 options={locations}
-                value={location}
+                value={locationId === undefined ? 0 : locationId}
                 onLocationCreated={fetchAvailableLocations}
                 onChange={setLocationId}
             />

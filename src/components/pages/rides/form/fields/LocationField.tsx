@@ -17,7 +17,7 @@ interface ILocationFieldProps {
     placeholder: string;
     hint: string;
     options: Location[];
-    value: Location;
+    value: number;
     onChange: (locationId: number) => void;
     onLocationCreated: () => void;
     onError?: (error: Error) => void;
@@ -36,13 +36,11 @@ const findLocation = (optionLabel: string, locations: Location[]): Location | un
  */
 function LocationField(props: ILocationFieldProps) {
 
-    const [locationOption, setLocation] = useState<LocationOption | null>({
-        label: props.value.name
-    });
-
+    const [initilized, setInitialized] = useState<boolean>(false);
+    const [locationOption, setLocation] = useState<LocationOption | null>(null);
     const [currentLocation, setCurrentLocation] = useState<Location | undefined>(undefined);
 
-    const { onChange: handleChange, options: locations } = props;
+    const { value, onChange: handleChange, options: locations } = props;
 
     const filter = createFilterOptions<LocationOption>();
     const options: LocationOption[] = props.options.map(option => ({ label: option.name }));
@@ -64,6 +62,13 @@ function LocationField(props: ILocationFieldProps) {
         const askForCurrentLocation = async (locationName: string) => {
             setCurrentLocation(await GeolocationService.makeCurrentLocation(locationName));
         }
+        if (!initilized && locations.length > 0 && locationOption == null) {
+            const location = locations.find(l => l.id === value);
+            if (location !== undefined) {
+                setLocation({ label: location.name });
+            }
+            setInitialized(true);
+        }
         if (locationOption) {
             const askable = !currentLocation || currentLocation.name !== locationOption.label;
             let location = findLocation(locationOption.label, locations);
@@ -77,7 +82,7 @@ function LocationField(props: ILocationFieldProps) {
                 handleChange(location.id);
             }
         }
-    }, [locationOption, currentLocation, locations, handleChange]);
+    }, [locationOption, currentLocation, locations, handleChange, initilized, value]);
 
     return <Autocomplete freeSolo
         options={options}
