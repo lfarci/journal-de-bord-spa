@@ -9,6 +9,18 @@ export type DriverStatisticsData = {
     locations: number;
 }
 
+export const hasCurrentUserADriver = (): Promise<boolean> => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const userUrl = await HttpService.makeUrlForCurrentDriver();
+            resolve(await HttpService.exist(userUrl));
+        } catch (error) {
+            reject(error);
+        }
+    });
+};
+
+
 export default class DriverService {
 
     public static async hasCurrentUserADriver(): Promise<boolean> {

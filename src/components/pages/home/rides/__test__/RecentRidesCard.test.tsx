@@ -1,17 +1,17 @@
-import React, { Component } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
 import RecentRidesCard, { RecentRidesSkeleton } from '../RecentRidesCard';
 import { RecentRide } from '../../../../../types';
 import { mount, ReactWrapper, shallow } from 'enzyme';
 import { makeRecentRides, waitForUpdate } from './helpers';
 import { getRecentRides } from '../../../../../services/Rides';
-import { findByTestId, wait } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
 import RecentRides from '../RecentRides';
 import RecentRideListItem from '../RecentRideListItem';
-import { size } from 'lodash';
+import DriverService, { hasCurrentUserADriver } from '../../../../../services/DriverService';
 
 jest.mock('../../../../../services/Rides', () => ({ getRecentRides: jest.fn() }));
+jest.mock('../../../../../services/DriverService', () => ({ hasCurrentUserADriver: jest.fn() }));
 
 const mountUpdatedRecentRidesCard = async (
     props: { title: string, size: number} = { title: "Recent rides", size: 5 }
@@ -29,6 +29,7 @@ const mountRecentRidesCardWith = async (
     title: string = "Recent rides"
 ): Promise<ReactWrapper> => {
     return new Promise(async (resolve) => {
+        (hasCurrentUserADriver as jest.Mock).mockResolvedValue(true);
         (getRecentRides as jest.Mock).mockResolvedValue(recentRides);
         const wrapper = mountUpdatedRecentRidesCard({title: title, size: size});
         resolve(wrapper);
@@ -80,6 +81,7 @@ describe("<RecentRidesCard />", () => {
     });
 
     it('renders an error message when the recent rides could not be loaded', async () => {
+        (hasCurrentUserADriver as jest.Mock).mockResolvedValue(true);
         (getRecentRides as jest.Mock).mockRejectedValue(new Error());
         const wrapper = await mountUpdatedRecentRidesCard();
         expect(wrapper.exists(".home-rides-card-error")).toBeTruthy();

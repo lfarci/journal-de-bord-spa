@@ -17,14 +17,16 @@ export type RidesData = {
     isLastPage: boolean;
 }
 
-const recentRides = (rides: Ride[]): RecentRide[] => {
-    return rides.map(ride => ({
+const recentRide = (ride: Ride): RecentRide => ({
         id: ride.id === undefined ? 0 : ride.id,
         departureLocationName: ride.departure.location.name,
         arrivalLocationName: ride.arrival?.location.name === undefined ? "" : ride.arrival?.location.name,
         distance: getRideDistance(ride),
         date: ride.departure.moment
-    }));
+});
+
+const recentRides = (rides: Ride[]): RecentRide[] => {
+    return rides.map(ride => recentRide(ride));
 }
 
 export const getRecentRides = async (top: number = 5): Promise<RecentRide[]> => {
@@ -37,6 +39,37 @@ export const getRecentRides = async (top: number = 5): Promise<RecentRide[]> => 
         }
     });
 }
+
+export const getLastRide = async (): Promise<Ride | undefined> => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const data = await RideService.getAll(0, 1);
+            if (data.rides.length === 0) {
+                resolve(undefined);
+            } else {
+                resolve(data.rides[0]);
+            }
+        } catch (error) {
+            reject(error);
+        }
+    });
+}
+
+export const getLastRecentRide = async (): Promise<RecentRide | undefined> => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const data = await RideService.getAll(0, 1);
+            if (data.rides.length === 0) {
+                resolve(undefined);
+            } else {
+                resolve(recentRide(data.rides[0]));
+            }
+        } catch (error) {
+            reject(error);
+        }
+    });
+}
+
 
 export const isLastRideFinished = async (): Promise<boolean> => {
     return new Promise(async (resolve, reject) => {
