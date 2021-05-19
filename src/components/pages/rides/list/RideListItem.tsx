@@ -56,12 +56,12 @@ function RideListItem(props: IRideListItem) {
 	}
 
 	const getDistance = (ride: Ride) => {
-		if (ride.arrival == null) throw new RangeError();
+		if (ride.arrival == null) return 0;
 		return ride.arrival?.odometerValue - ride.departure.odometerValue;
 	}
 
 	const getDuration = (ride: Ride): number => {
-		if (ride.arrival == null) throw new RangeError();
+		if (ride.arrival == null) return 0;
 		const departureDate = moment(ride.departure.moment);
 		const arrivalDate = moment(ride.arrival.moment);
 		const duration = moment.duration(departureDate.diff(arrivalDate));
@@ -120,7 +120,7 @@ function RideListItem(props: IRideListItem) {
 			</CardContent>
 			<CardActions>
 				<Button size="small" color="primary" onClick={props.onDetails}>Details</Button>
-				<Button size="small" color="primary" onClick={props.onDelete}>Remove</Button>
+				<Button size="small" color="primary" onClick={props.onDelete}>Delete</Button>
 			</CardActions>
 		</Card>
 	);

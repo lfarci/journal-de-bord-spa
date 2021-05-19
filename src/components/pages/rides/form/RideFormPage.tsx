@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { RouteComponentProps } from "react-router-dom";
-import RideService, { RideData } from "../../../../services/RideService";
+import RideService, { RideData } from "../../../../services/Rides";
 import { Ride } from "../../../../types";
 import { Page } from "../../../common";
 import RideForm from "./RideForm";

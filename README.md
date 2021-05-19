@@ -3,6 +3,14 @@
 
 This project is a single page application inteded to provide a web client for the Journal de bord project. It is developed using React and TypeScript.
 
+### Prerequisites
+You should install Node.js and `npm`.
+
+```bash
+> sudo apt install npm
+> sudo apt install nodejs
+```
+
 ## Getting started
 The project documentation can be found [here](https://farci-logan.gitbook.io/journal-de-bord/). Note that you can find the documentation concerning this partical repository in the frontend section.
 
@@ -26,6 +34,9 @@ cp .env.example .env
 
 # Edit the .env file and set the variables values
 vi .env
+
+# Intall dependencies
+npm install
 
 # And run it!
 npm start

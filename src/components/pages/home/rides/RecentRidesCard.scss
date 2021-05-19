@@ -1,28 +1,35 @@
+@import '../../../../styles/layout.scss';
+
 .home-rides-card {
 
     width: 100%;
-    margin-top: 1em;
-    padding-bottom: 16px;
+    margin-top: $base-margin;
+    padding-bottom: $base-margin;
 
     .home-rides-card-title {
-        margin: 16px 16px 0 16px;
+        margin: $base-margin $base-margin 0 $base-margin;
     }
 
-    .home-rides-card-empty {
-        margin: 16px 16px 0 16px;
-    }
+    .home-rides-card-list {
 
-    .recent-ride-list-item {
-
-        .recent-ride-list-item-content {
-            display: flex;
-            flex-direction: row;
-            justify-content: space-between;
-            align-items: center;
-            margin: .5em 1em .5em 1em;
-
+        .home-rides-card-empty {
+            margin: $base-margin $base-margin 0 $base-margin;
         }
 
+        .recent-ride-list-item {
+            .recent-ride-list-item-content {
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+                margin: 0.5em 1em 0.5em 1em;
+            }
+        }
+
+    }
+
+    .recent-ride-skeleton {
+        margin: $base-margin $base-margin 0 $base-margin;
     }
 
 }
