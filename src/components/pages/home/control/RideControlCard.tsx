@@ -57,7 +57,6 @@ export default function RideControlCard(props: {}) {
             setLastRide(await getLastRecentRide());
             setLoading(false);
             setInitialized(true);
-            console.log("Initializing the ride control card.");
         };
         if (!initialized) {
             initialize();
