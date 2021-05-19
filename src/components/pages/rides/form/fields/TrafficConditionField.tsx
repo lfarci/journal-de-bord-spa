@@ -32,7 +32,6 @@ function TrafficConditionField(props: ITrafficConditionFieldProps) {
 			onChange={(event: React.ChangeEvent<any>) => {
 				const value: TrafficCondition = event.target.value;
 				props.onChange(value);
-				console.log("value: " + value);
 			}}
 			label={props.label}
 		>
