@@ -18,6 +18,7 @@ interface IStopFormProps {
     datetime?: boolean;
     availableLocations?: Location[];
     onError?: (error: Error) => void;
+    onOdometerChange?: (value: number) => void;
 }
 
 /**
@@ -52,6 +53,11 @@ function StopForm(props: IStopFormProps) {
         }
     }, [onError]);
 
+    const handleOdometerChange = (value: number) => {
+        setOdometer(value);
+        if (props.onOdometerChange) props.onOdometerChange(value);
+    };
+
     useEffect(() => {
         fetchAvailableLocations();
         if (locationId !== undefined && moment !== undefined) {
@@ -80,7 +86,7 @@ function StopForm(props: IStopFormProps) {
                 hint="Enter the current odometer value of your vehicle."
                 value={odometer}
                 min={getOdometerMin()}
-                onChange={setOdometer}
+                onChange={handleOdometerChange}
             />
             <LocationField
                 id="stop-location"
