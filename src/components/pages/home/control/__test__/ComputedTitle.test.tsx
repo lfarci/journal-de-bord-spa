@@ -29,17 +29,7 @@ describe("computeStatusTitle", () => {
     const HOUR = 3600000;
 
     it("computes a title as expected when locationName and duration are valid", () => {
-        const expected = "You left brussels 1 hour ago";
-        expect(computeStatusTitle("Brussels", HOUR)).toBe(expected);
-    });
-
-    it("shows locationName as lower case when it is all caps", () => {
-        const expected = "You left brussels 1 hour ago";
-        expect(computeStatusTitle("BRUSSELS", HOUR)).toBe(expected);
-    });
-
-    it("shows locationName as lower case when the first letter is capitalized", () => {
-        const expected = "You left brussels 1 hour ago";
+        const expected = "You left Brussels 1 hour ago";
         expect(computeStatusTitle("Brussels", HOUR)).toBe(expected);
     });
 

@@ -7,6 +7,7 @@ import { Typography, Divider } from '@material-ui/core';
 import LocationService from '../../../../services/LocationService';
 import { StopData } from '../../../../services/StopService';
 import { useCallback } from 'react';
+import { getMomentLocalISOString } from '../../../../types/Stop';
 
 interface IStopFormProps {
     title?: string;
@@ -48,22 +49,26 @@ function StopForm(props: IStopFormProps) {
         try {
             const data: Location[] = await LocationService.getAll();
             setLocations(data);
+            if (locationId === undefined && data.length > 0) {
+                setLocationId(data[0].id);
+            }
         } catch (error) {
-            if (onError) onError(error);
+            if (onError) onError(error as Error);
         }
-    }, [onError]);
+    }, [onError, locationId]);
 
     const handleOdometerChange = (value: number) => {
         setOdometer(value);
         if (props.onOdometerChange) props.onOdometerChange(value);
     };
 
+
     useEffect(() => {
         fetchAvailableLocations();
         if (locationId !== undefined && moment !== undefined) {
             handleStopChange({
                 id: stopId ? stopId : undefined,
-                moment: moment.toISOString(),
+                moment: getMomentLocalISOString(new Date()),
                 locationId: locationId,
                 odometerValue: odometer
             });
@@ -94,7 +99,7 @@ function StopForm(props: IStopFormProps) {
                 placeholder="e.g. Home"
                 hint="Enter your current location name"
                 options={locations}
-                value={locationId === undefined ? 0 : locationId}
+                value={locationId === undefined ? -1 : locationId}
                 onLocationCreated={fetchAvailableLocations}
                 onChange={setLocationId}
             />

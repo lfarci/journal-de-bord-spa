@@ -51,6 +51,17 @@ export default function RideControlCard(props: {}) {
         setLoading(false);
     }, []);
 
+    const handleStart = useCallback(async () => {
+        const updatedLastRide = await getLastRecentRide();
+        setLoading(true);
+        if (lastRide && updatedLastRide && lastRide.id !== updatedLastRide.id) {
+            setLastRide(updatedLastRide);
+        }
+        setTracking(true);
+        setLoading(false)
+        setShowStartDialog(false);
+    }, [lastRide]);
+
     useEffect(() => {
         const initialize = async () => {
             setTracking(!await isLastRideFinished());
@@ -61,13 +72,18 @@ export default function RideControlCard(props: {}) {
         if (!initialized) {
             initialize();
         }
+        
     }, [initialized]);
+
+    const getTranckingMilliseconds = (date: Date): number => {
+        return new Date().getTime() - date.getTime();
+    }
 
     return <Card elevation={12} className="home-control-card">
         { tracking
             ? <RideControlCardContent
                 locationName={lastRide ? lastRide.departureLocationName : "Unknown"}
-                trackingMilliseconds={ 12222 }
+                trackingMilliseconds={lastRide ? getTranckingMilliseconds(lastRide.date) : 0}
                 description={trackingDescription}
                 loading={loading}
             />
@@ -91,10 +107,7 @@ export default function RideControlCard(props: {}) {
         </CardActions>
         <StartRideFormDialog
             open={showStartDialog}
-            onSubmit={ () => { 
-                setShowStartDialog(false);
-                setTracking(true);
-            }}
+            onSubmit={ handleStart }
             onCancel={ () => setShowStartDialog(false) }
         />
         <FinishRideFormDialog

@@ -30,11 +30,12 @@ function StartRideFormDialog(props: IStartRideFormDialogProps) {
 
     const [stop, setStop] = useState<StopData | undefined>(undefined);
 
-    const startDisabled = () => state.loading || state.error !== undefined;
+    const validOdometer = () => stop && stop.odometerValue >= 0;
+    const startDisabled = () => !validOdometer() && (state.loading || state.error !== undefined);
 
     const requireLastRideToBeFinished = useCallback(async (): Promise<void> => {
         try {
-            setState(prev => ({...prev, loading: true}));
+            setState(prev => ({...prev, loading: true, error: undefined }));
             if (await isLastRideFinished()) {
                 setState(prev => ({...prev, loading: false}));
             } else {
