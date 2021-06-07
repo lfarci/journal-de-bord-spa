@@ -10,6 +10,7 @@ interface IOdometerFieldProps {
 	value: number;
 	onChange: (odometerValue: number) => void;
 	min?: number;
+	setValid?: (value: boolean) => void;
 }
 
 /**
@@ -20,8 +21,7 @@ interface IOdometerFieldProps {
  */
 function OdometerField(props: IOdometerFieldProps) {
 
-	const { hint, min, onChange } = { ...props };
-
+	const { hint, min, onChange, setValid } = { ...props };
 	const [text, setText] = useState<string>(props.value.toString());
 	const [value, setValue] = useState<number>(props.value);
 	const [validation, setValidation] = useState({
@@ -30,11 +30,12 @@ function OdometerField(props: IOdometerFieldProps) {
 	});
 
 	useEffect(() => {
-		const isValid = value >= (min ? min : 0);
-		let h = isValid ? hint : `The odometer must be greater than ${min ? min : 0} km.`;
+		const isValid = text !== "" && value >= (min ? min : 0);
+		let h = isValid ? hint : `The odometer must be a positive number greater than ${min ? min : 0} km.`;
 		setValidation({ valid: isValid, hint: h });
+		if (setValid) setValid(isValid);
 		onChange(value);
-	}, [value, min, hint, onChange]);
+	}, [value, min, hint, onChange, setValid, text]);
 
 	return <TextField required
 		id={props.id}
@@ -46,14 +47,18 @@ function OdometerField(props: IOdometerFieldProps) {
 		fullWidth={true}
 		helperText={validation.hint}
 		margin="normal"
-		InputProps={{ endAdornment: <InputAdornment position="end">Km</InputAdornment>, inputProps: {min: min} }}
+		InputProps={{ endAdornment: <InputAdornment position="end">Km</InputAdornment>, inputProps: {min: min } }}
 		onChange={(event: React.ChangeEvent<any>) => {
 			if (event.target.value === "") {
 				setText("");
-				setValidation({ valid: false, hint: "Please, complete the field properly." });
+				if (props.setValid) props.setValid(false);
 			} else {
-				setText(event.target.value);
-				setValue(parseInt(event.target.value));
+				const parsedOdometerValue = parseInt(event.target.value);
+				const re = /^[0-9\b]+$/;
+				if (parsedOdometerValue && re.test(event.target.value)) {
+					setText(parsedOdometerValue.toString());
+					setValue(parsedOdometerValue);
+				}
 			}
 		}}
 		error={!validation.valid}

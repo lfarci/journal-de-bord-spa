@@ -5,6 +5,7 @@ import { Location } from '../../../../../types';
 import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
 import { GeolocationService } from '../../../../../services/GeolocationService';
 import LocationService from '../../../../../services/LocationService';
+import { isReturnStatement } from 'typescript';
 
 interface LocationOption {
     userInput?: string;
@@ -21,6 +22,7 @@ interface ILocationFieldProps {
     onChange: (locationId: number) => void;
     onLocationCreated: () => void;
     onError?: (error: Error) => void;
+    setValid?: (value: boolean) => void;
 }
 
 const findLocation = (optionLabel: string, locations: Location[]): Location | undefined => {
@@ -38,6 +40,7 @@ function LocationField(props: ILocationFieldProps) {
 
     const [locationOption, setLocation] = useState<LocationOption | null>(null);
     const [currentLocation, setCurrentLocation] = useState<Location | undefined>(undefined);
+    const [valid, setValid] = useState<boolean>(true);
 
     const { value, onChange: handleChange, options: locations } = props;
 
@@ -64,7 +67,6 @@ function LocationField(props: ILocationFieldProps) {
         if (locations.length > 0 && locationOption == null) {
             const location = locations.find(l => l.id === value);
             if (location !== undefined) {
-                console.log("Setting label")
                 setLocation({ label: location.name });
             }
         }
@@ -78,7 +80,6 @@ function LocationField(props: ILocationFieldProps) {
                 location = currentLocation;
             }
             if (location && location.id) {
-                console.log("New location ", location)
                 handleChange(location.id);
             }
         }
@@ -103,12 +104,16 @@ function LocationField(props: ILocationFieldProps) {
                 fullWidth={true}
                 margin="normal"
                 helperText={props.hint}
-                error={false}
+                error={!valid}
             />
         )}
         onChange={async (event: React.ChangeEvent<any>, newValue: string | LocationOption | null) => {
+            if (newValue === null && props.setValid) {
+                props.setValid(false);
+                setValid(false);
+                return;
+            }
             if (typeof newValue === 'string') {
-                console.log("set option", newValue)
                 setLocation({ label: newValue });
             } else if (newValue && newValue.userInput) {
                 if (await createLocation(newValue.userInput)) {
@@ -116,6 +121,10 @@ function LocationField(props: ILocationFieldProps) {
                 }
             } else if (newValue && newValue.label) {
                 setLocation(newValue);
+            }
+            if (props.setValid) { 
+                props.setValid(true);
+                setValid(true);
             }
         }}
         filterOptions={(options, params) => {
