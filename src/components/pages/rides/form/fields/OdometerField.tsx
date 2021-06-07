@@ -46,7 +46,7 @@ function OdometerField(props: IOdometerFieldProps) {
 		fullWidth={true}
 		helperText={validation.hint}
 		margin="normal"
-		InputProps={{ endAdornment: <InputAdornment position="end">Km</InputAdornment>, }}
+		InputProps={{ endAdornment: <InputAdornment position="end">Km</InputAdornment>, inputProps: {min: min} }}
 		onChange={(event: React.ChangeEvent<any>) => {
 			if (event.target.value === "") {
 				setText("");
