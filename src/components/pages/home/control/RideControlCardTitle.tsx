@@ -41,6 +41,9 @@ export function BaseTitle(props: IBaseTitleProps) {
 
 export function ComputedTitle(props: IComputedTitleProps) {
     const getName = () => props.locationName === undefined ? "" : props.locationName;
+    if (props.trackingMilliseconds <= 60_000) {
+        return <BaseTitle text={`You just started tracking a ride from ${getName()}`} />;
+    }
     const text = computeStatusTitle(getName(), props.trackingMilliseconds);
     return <BaseTitle text={text} />;
 }
