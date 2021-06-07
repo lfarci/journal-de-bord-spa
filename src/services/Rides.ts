@@ -1,6 +1,7 @@
 import { TrafficCondition } from "../components/pages/rides/form/fields";
 import { getRideDistance, Ride } from "../types";
 import { RecentRide } from "../types/RecentRide";
+import { getMomentLocalISOString } from "../types/Stop";
 import HttpService from "./HttpService";
 
 export type RideData = {
@@ -22,7 +23,7 @@ const recentRide = (ride: Ride): RecentRide => ({
         departureLocationName: ride.departure.location.name,
         arrivalLocationName: ride.arrival?.location.name === undefined ? "" : ride.arrival?.location.name,
         distance: getRideDistance(ride),
-        date: ride.departure.moment
+        date: new Date(getMomentLocalISOString(new Date(ride.departure.moment)))
 });
 
 const recentRides = (rides: Ride[]): RecentRide[] => {
@@ -135,7 +136,7 @@ export default class RideService {
             departureLocationName: ride.departure.location.name,
             arrivalLocationName: ride.arrival?.location.name === undefined ? "" : ride.arrival?.location.name,
             distance: getRideDistance(ride),
-            date: ride.departure.moment
+            date: new Date(getMomentLocalISOString(new Date(ride.departure.moment)))
         }));
     }
 
@@ -170,7 +171,7 @@ export default class RideService {
     }
 
     private static formatted = (ride: Ride): Ride => {
-        ride.departure.moment = new Date(ride.departure.moment);
+        ride.departure.moment = new Date(getMomentLocalISOString(new Date(ride.departure.moment)));
         if (isNaN(ride.departure.moment.getTime()))
             throw new Error("Invalid departure date.");
         if (ride.arrival) {

@@ -7,6 +7,7 @@ import { Typography, Divider } from '@material-ui/core';
 import LocationService from '../../../../services/LocationService';
 import { StopData } from '../../../../services/StopService';
 import { useCallback } from 'react';
+import { getMomentLocalISOString } from '../../../../types/Stop';
 
 interface IStopFormProps {
     title?: string;
@@ -58,12 +59,13 @@ function StopForm(props: IStopFormProps) {
         if (props.onOdometerChange) props.onOdometerChange(value);
     };
 
+
     useEffect(() => {
         fetchAvailableLocations();
         if (locationId !== undefined && moment !== undefined) {
             handleStopChange({
                 id: stopId ? stopId : undefined,
-                moment: moment.toISOString(),
+                moment: getMomentLocalISOString(new Date()),
                 locationId: locationId,
                 odometerValue: odometer
             });
