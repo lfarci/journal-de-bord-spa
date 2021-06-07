@@ -27,11 +27,10 @@ function StartRideFormDialog(props: IStartRideFormDialogProps) {
         loading: false,
         error: undefined
     });
-
+    const [valid, setValid] = useState<boolean>(false);
     const [stop, setStop] = useState<StopData | undefined>(undefined);
 
-    const validOdometer = () => stop && stop.odometerValue >= 0;
-    const startDisabled = () => !validOdometer() && (state.loading || state.error !== undefined);
+    const startDisabled = () => !valid || state.loading || state.error !== undefined;
 
     const requireLastRideToBeFinished = useCallback(async (): Promise<void> => {
         try {
@@ -78,7 +77,7 @@ function StartRideFormDialog(props: IStartRideFormDialogProps) {
             <DialogContentText>
                 Fill the form and click save to start tracking your ride.
             </DialogContentText>
-            <StopForm onChange={setStop} />
+            <StopForm onChange={setStop} setValid={setValid} />
         </DialogContent>
         <DialogActions>
             <Button onClick={cancel} color="primary" disabled={state.loading}>Cancel</Button>

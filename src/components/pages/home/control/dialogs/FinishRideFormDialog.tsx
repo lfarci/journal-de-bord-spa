@@ -32,13 +32,14 @@ function FinishRideFormDialog(props: IFinishRideFormDialogProps) {
         error: undefined
     });
 
+    const [valid, setValid] = useState<boolean>(true);
     const [stop, setStop] = useState<StopData | undefined>(undefined);
     const [trafficCondition, setTrafficCondition] = useState<TrafficCondition>(TrafficCondition.CALM);
     const [comment, setComment] = useState<string | undefined>(undefined);
 
     const hasOdometerValues = () => departure?.odometerValue !== undefined && arrivalOdometerValue !== undefined;
     const validOdometer = () => hasOdometerValues() && departure?.odometerValue!! < arrivalOdometerValue!!;
-    const finishDisabled = () => state.loading || state.error !== undefined || !validOdometer();
+    const finishDisabled = () => state.loading || state.error !== undefined || !validOdometer() || !valid;
 
     const initialize = useCallback(async (): Promise<void> => {
         try {
@@ -106,6 +107,7 @@ function FinishRideFormDialog(props: IFinishRideFormDialogProps) {
                 odometerMin={(departure?.odometerValue ?? 0) + 1}
                 onOdometerChange={setArrivalOdometerValue}
                 onChange={setStop}
+                setValid={setValid}
             />
             <TrafficConditionField
                 id="traffic-condition"
