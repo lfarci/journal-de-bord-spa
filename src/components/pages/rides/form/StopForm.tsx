@@ -20,6 +20,7 @@ interface IStopFormProps {
     availableLocations?: Location[];
     onError?: (error: Error) => void;
     onOdometerChange?: (value: number) => void;
+    setValid?: (value: boolean) => void;
 }
 
 /**
@@ -30,7 +31,7 @@ interface IStopFormProps {
  */
 function StopForm(props: IStopFormProps) {
 
-    const { onChange: handleStopChange } = props;
+    const { onChange: handleStopChange, setValid } = props;
     const hasTitle = () => props.title !== undefined;
     const showDateTime = () => props.datetime === undefined ? false : props.datetime;
     const getOdometerMin = () => props.odometerMin === undefined ? 0 : props.odometerMin;
@@ -41,6 +42,7 @@ function StopForm(props: IStopFormProps) {
     const [odometer, setOdometer] = useState<number>(getDefaultOdometer());
     const [locationId, setLocationId] = useState<number | undefined>(undefined);
     const [locations, setLocations] = useState<Location[]>([]);
+    const [validOdometer, setValidOdometer] = useState<boolean>(true);
 
     const { id: stopId } = { ...props.value };
     const { onError } = { ...props };
@@ -66,6 +68,7 @@ function StopForm(props: IStopFormProps) {
     useEffect(() => {
         fetchAvailableLocations();
         if (locationId !== undefined && moment !== undefined) {
+            if (setValid) setValid(validOdometer);
             handleStopChange({
                 id: stopId ? stopId : undefined,
                 moment: getMomentLocalISOString(new Date()),
@@ -74,7 +77,7 @@ function StopForm(props: IStopFormProps) {
             });
         }
 
-    }, [moment, odometer, locationId, handleStopChange, onError, stopId, fetchAvailableLocations]);
+    }, [moment, odometer, locationId, handleStopChange, onError, stopId, fetchAvailableLocations, setValid, validOdometer]);
 
     return (
         <div>
@@ -91,6 +94,7 @@ function StopForm(props: IStopFormProps) {
                 hint="Enter the current odometer value of your vehicle."
                 value={odometer}
                 min={getOdometerMin()}
+                setValid={setValidOdometer}
                 onChange={handleOdometerChange}
             />
             <LocationField

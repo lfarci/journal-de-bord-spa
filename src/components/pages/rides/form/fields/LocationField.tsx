@@ -64,7 +64,6 @@ function LocationField(props: ILocationFieldProps) {
         if (locations.length > 0 && locationOption == null) {
             const location = locations.find(l => l.id === value);
             if (location !== undefined) {
-                console.log("Setting label")
                 setLocation({ label: location.name });
             }
         }
@@ -78,7 +77,6 @@ function LocationField(props: ILocationFieldProps) {
                 location = currentLocation;
             }
             if (location && location.id) {
-                console.log("New location ", location)
                 handleChange(location.id);
             }
         }
