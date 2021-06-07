@@ -9,7 +9,7 @@ import { useEffect } from 'react';
 import { FormDialog } from '.';
 import StopForm from '../../../rides/form/StopForm';
 import { CommentField, TrafficCondition, TrafficConditionField } from '../../../rides/form/fields';
-import { Ride } from '../../../../../types';
+import { Ride, Stop } from '../../../../../types';
 import { getMomentLocalISOString } from '../../../../../types/Stop';
 
 interface IFinishRideFormDialogProps {
@@ -25,10 +25,7 @@ interface IFinishRideFormDialogState {
 
 function FinishRideFormDialog(props: IFinishRideFormDialogProps) {
 
-    const [initialized, setInitialized] = useState<boolean>(false);
-    const [departureOdometerValue, setDepartureOdometerValue] = useState<number | undefined>(undefined);
-    const [departureMoment, setDepartureMoment] = useState<string>(getMomentLocalISOString(new Date()));
-    const [departureLocationId, setDepartureLocationId] = useState<number | undefined>(undefined);
+    const [departure, setDeparture] = useState<Stop | undefined>(undefined);
     const [arrivalOdometerValue, setArrivalOdometerValue] = useState<number | undefined>(undefined);
     const [state, setState] = useState<IFinishRideFormDialogState>({
         loading: false,
@@ -39,38 +36,28 @@ function FinishRideFormDialog(props: IFinishRideFormDialogProps) {
     const [trafficCondition, setTrafficCondition] = useState<TrafficCondition>(TrafficCondition.CALM);
     const [comment, setComment] = useState<string | undefined>(undefined);
 
-    const hasOdometerValues = () => departureOdometerValue !== undefined && arrivalOdometerValue !== undefined;
-    const validOdometer = () => hasOdometerValues() && departureOdometerValue!! <= arrivalOdometerValue!!;
+    const hasOdometerValues = () => departure?.odometerValue !== undefined && arrivalOdometerValue !== undefined;
+    const validOdometer = () => hasOdometerValues() && departure?.odometerValue!! < arrivalOdometerValue!!;
     const finishDisabled = () => state.loading || state.error !== undefined || !validOdometer();
 
-    const requireToBeTracking = useCallback(async (): Promise<void> => {
+    const initialize = useCallback(async (): Promise<void> => {
         try {
             setState(prev => ({ ...prev, loading: true, error: undefined }));
-            if (!(await isLastRideFinished())) {
-                setState(prev => ({ ...prev, loading: false }));
-            } else {
+            if (await isLastRideFinished()) {
                 const error = new Error("You cannot finish a ride because you are not tracking a ride.");
-                setState(prev => ({ ...prev, loading: false, error: error }));
+                setState(prev => ({ ...prev, error: error }));
+            } else {
+                const ride: Ride | undefined = await getLastRide();
+                if (ride?.departure && (departure === undefined || ride?.departure.id !== departure?.id)) {
+                    setDeparture(ride?.departure);
+                }
             }
+            setState(prev => ({ ...prev, loading: false }));
         } catch (error) {
             const e = new Error("An error occured while loading the dialog. Try again.");
             setState(prev => ({ ...prev, loading: false, error: e }));
         }
-    }, []);
-
-    const initialize = async (): Promise<void> => {
-        try {
-            const ride: Ride | undefined = await getLastRide();
-            if (ride?.departure && ride.departure.odometerValue) {
-                setDepartureOdometerValue(ride.departure.odometerValue);
-                setDepartureLocationId(ride.departure.location.id);
-                setDepartureMoment(getMomentLocalISOString(ride.departure.moment));
-            }
-        } catch (error) {
-            const e = new Error("An error occured while finishing your ride.");
-            setState(prev => ({ ...prev, loading: false, error: e }));
-        }
-    };
+    }, [departure]);
 
     const finishRide = async (): Promise<void> => {
         try {
@@ -102,12 +89,8 @@ function FinishRideFormDialog(props: IFinishRideFormDialogProps) {
     };
 
     useEffect(() => {
-        requireToBeTracking();
-        if (!initialized) {
-            initialize();
-            setInitialized(true);
-        }
-    }, [requireToBeTracking, props.open, initialized]);
+        initialize();
+    }, [initialize, props.open]);
 
     return <FormDialog title="Finish tracking your ride" open={props.open} onClose={cancel} loading={state.loading} error={state.error}>
         <DialogContent>
@@ -116,11 +99,11 @@ function FinishRideFormDialog(props: IFinishRideFormDialogProps) {
             </DialogContentText>
             <StopForm
                 value = {{ 
-                    locationId: departureLocationId ?? 0,
-                    odometerValue: departureOdometerValue ?? 0,
-                    moment: departureMoment
+                    locationId: departure?.location.id ?? 0,
+                    odometerValue: departure?.odometerValue ?? 0,
+                    moment: getMomentLocalISOString(departure?.moment ?? new Date())
                 }}
-                odometerMin={departureOdometerValue ?? 0}
+                odometerMin={(departure?.odometerValue ?? 0) + 1}
                 onOdometerChange={setArrivalOdometerValue}
                 onChange={setStop}
             />

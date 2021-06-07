@@ -32,7 +32,6 @@ function RideFormPage({ match }: RideFormPageProps) {
             const fetchRide = async () => {
                 try {
                     const ride = await RideService.findById(rideId);
-                    console.log(JSON.stringify(ride, null, 2));
                     setState(prev => ({ ...prev, ride: ride, isLoading: false }));
                 } catch (error) {
                     setState(prev => ({ ...prev, error: error, isLoading: false }));
