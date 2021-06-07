@@ -36,7 +36,6 @@ const findLocation = (optionLabel: string, locations: Location[]): Location | un
  */
 function LocationField(props: ILocationFieldProps) {
 
-    const [initilized, setInitialized] = useState<boolean>(false);
     const [locationOption, setLocation] = useState<LocationOption | null>(null);
     const [currentLocation, setCurrentLocation] = useState<Location | undefined>(undefined);
 
@@ -62,12 +61,11 @@ function LocationField(props: ILocationFieldProps) {
         const askForCurrentLocation = async (locationName: string) => {
             setCurrentLocation(await GeolocationService.makeCurrentLocation(locationName));
         }
-        if (!initilized && locations.length > 0 && locationOption == null) {
+        if (locations.length > 0 && locationOption == null) {
             const location = locations.find(l => l.id === value);
             if (location !== undefined) {
                 setLocation({ label: location.name });
             }
-            setInitialized(true);
         }
         if (locationOption) {
             const askable = !currentLocation || currentLocation.name !== locationOption.label;
@@ -82,7 +80,7 @@ function LocationField(props: ILocationFieldProps) {
                 handleChange(location.id);
             }
         }
-    }, [locationOption, currentLocation, locations, handleChange, initilized, value]);
+    }, [locationOption, currentLocation, locations, handleChange, value]);
 
     return <Autocomplete freeSolo
         options={options}

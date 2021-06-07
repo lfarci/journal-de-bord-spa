@@ -49,10 +49,13 @@ function StopForm(props: IStopFormProps) {
         try {
             const data: Location[] = await LocationService.getAll();
             setLocations(data);
+            if (locationId === undefined && data.length > 0) {
+                setLocationId(data[0].id);
+            }
         } catch (error) {
-            if (onError) onError(error);
+            if (onError) onError(error as Error);
         }
-    }, [onError]);
+    }, [onError, locationId]);
 
     const handleOdometerChange = (value: number) => {
         setOdometer(value);
@@ -96,7 +99,7 @@ function StopForm(props: IStopFormProps) {
                 placeholder="e.g. Home"
                 hint="Enter your current location name"
                 options={locations}
-                value={locationId === undefined ? 0 : locationId}
+                value={locationId === undefined ? -1 : locationId}
                 onLocationCreated={fetchAvailableLocations}
                 onChange={setLocationId}
             />
