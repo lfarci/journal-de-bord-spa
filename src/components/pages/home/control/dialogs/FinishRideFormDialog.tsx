@@ -10,6 +10,7 @@ import { FormDialog } from '.';
 import StopForm from '../../../rides/form/StopForm';
 import { CommentField, TrafficCondition, TrafficConditionField } from '../../../rides/form/fields';
 import { Ride } from '../../../../../types';
+import { getMomentLocalISOString } from '../../../../../types/Stop';
 
 interface IFinishRideFormDialogProps {
     open: boolean;
@@ -26,6 +27,8 @@ function FinishRideFormDialog(props: IFinishRideFormDialogProps) {
 
     const [initialized, setInitialized] = useState<boolean>(false);
     const [departureOdometerValue, setDepartureOdometerValue] = useState<number | undefined>(undefined);
+    const [departureMoment, setDepartureMoment] = useState<string>(getMomentLocalISOString(new Date()));
+    const [departureLocationId, setDepartureLocationId] = useState<number | undefined>(undefined);
     const [arrivalOdometerValue, setArrivalOdometerValue] = useState<number | undefined>(undefined);
     const [state, setState] = useState<IFinishRideFormDialogState>({
         loading: false,
@@ -60,6 +63,8 @@ function FinishRideFormDialog(props: IFinishRideFormDialogProps) {
             const ride: Ride | undefined = await getLastRide();
             if (ride?.departure && ride.departure.odometerValue) {
                 setDepartureOdometerValue(ride.departure.odometerValue);
+                setDepartureLocationId(ride.departure.location.id);
+                setDepartureMoment(getMomentLocalISOString(ride.departure.moment));
             }
         } catch (error) {
             const e = new Error("An error occured while finishing your ride.");
@@ -109,8 +114,13 @@ function FinishRideFormDialog(props: IFinishRideFormDialogProps) {
             <DialogContentText>
                 This is the finish dialog form
             </DialogContentText>
-            <StopForm 
-                odometerMin={departureOdometerValue}
+            <StopForm
+                value = {{ 
+                    locationId: departureLocationId ?? 0,
+                    odometerValue: departureOdometerValue ?? 0,
+                    moment: departureMoment
+                }}
+                odometerMin={departureOdometerValue ?? 0}
                 onOdometerChange={setArrivalOdometerValue}
                 onChange={setStop}
             />
