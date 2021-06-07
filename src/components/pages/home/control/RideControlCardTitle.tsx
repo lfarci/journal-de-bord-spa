@@ -29,11 +29,10 @@ function toHumanReadableDuration(milliseconds: number): string {
 }
 
 export function computeStatusTitle(locationName: string, trackingMilliseconds: number) {
-    const name = locationName.toLowerCase();
     const duration = toHumanReadableDuration(trackingMilliseconds);
     return locationName.length === 0
         ? `You left ${duration} ago`
-        : `You left ${name} ${duration} ago`;
+        : `You left ${locationName} ${duration} ago`;
 }
 
 export function BaseTitle(props: IBaseTitleProps) {

@@ -75,11 +75,15 @@ export default function RideControlCard(props: {}) {
         
     }, [initialized]);
 
+    const getTranckingMilliseconds = (date: Date): number => {
+        return new Date().getTime() - date.getTime();
+    }
+
     return <Card elevation={12} className="home-control-card">
         { tracking
             ? <RideControlCardContent
                 locationName={lastRide ? lastRide.departureLocationName : "Unknown"}
-                trackingMilliseconds={ 12222 }
+                trackingMilliseconds={lastRide ? getTranckingMilliseconds(lastRide.date) : 0}
                 description={trackingDescription}
                 loading={loading}
             />
