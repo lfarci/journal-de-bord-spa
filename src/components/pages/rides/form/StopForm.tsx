@@ -43,6 +43,7 @@ function StopForm(props: IStopFormProps) {
     const [locationId, setLocationId] = useState<number | undefined>(undefined);
     const [locations, setLocations] = useState<Location[]>([]);
     const [validOdometer, setValidOdometer] = useState<boolean>(true);
+    const [validLocation, setValidLocation] = useState<boolean>(true);
 
     const { id: stopId } = { ...props.value };
     const { onError } = { ...props };
@@ -68,7 +69,9 @@ function StopForm(props: IStopFormProps) {
     useEffect(() => {
         fetchAvailableLocations();
         if (locationId !== undefined && moment !== undefined) {
-            if (setValid) setValid(validOdometer);
+            if (setValid) {
+                setValid(validOdometer && validLocation);
+            }
             handleStopChange({
                 id: stopId ? stopId : undefined,
                 moment: getMomentLocalISOString(new Date()),
@@ -77,7 +80,7 @@ function StopForm(props: IStopFormProps) {
             });
         }
 
-    }, [moment, odometer, locationId, handleStopChange, onError, stopId, fetchAvailableLocations, setValid, validOdometer]);
+    }, [moment, odometer, locationId, handleStopChange, onError, stopId, fetchAvailableLocations, setValid, validOdometer, validLocation]);
 
     return (
         <div>
@@ -106,6 +109,7 @@ function StopForm(props: IStopFormProps) {
                 value={locationId === undefined ? -1 : locationId}
                 onLocationCreated={fetchAvailableLocations}
                 onChange={setLocationId}
+                setValid={setValidLocation}
             />
             {showDateTime() && <DatetimeField
                 id="stop-datetime"
