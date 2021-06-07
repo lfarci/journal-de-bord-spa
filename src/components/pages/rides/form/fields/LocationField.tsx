@@ -5,7 +5,6 @@ import { Location } from '../../../../../types';
 import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
 import { GeolocationService } from '../../../../../services/GeolocationService';
 import LocationService from '../../../../../services/LocationService';
-import { isReturnStatement } from 'typescript';
 
 interface LocationOption {
     userInput?: string;
