@@ -34,7 +34,7 @@ function StartRideFormDialog(props: IStartRideFormDialogProps) {
 
     const requireLastRideToBeFinished = useCallback(async (): Promise<void> => {
         try {
-            setState(prev => ({...prev, loading: true}));
+            setState(prev => ({...prev, loading: true, error: undefined }));
             if (await isLastRideFinished()) {
                 setState(prev => ({...prev, loading: false}));
             } else {

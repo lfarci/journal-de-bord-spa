@@ -76,10 +76,7 @@ export const isLastRideFinished = async (): Promise<boolean> => {
     return new Promise(async (resolve, reject) => {
         try {
             const data = await RideService.getAll(0, 1);
-            let isLastRideFinished = data.rides.length === 0
-                ? true
-                : data.rides[0].arrival !== null;
-            resolve(isLastRideFinished);
+            resolve(data.rides.length === 0 || data.rides[0].arrival !== null);
         } catch (error) {
             reject(error);
         }
